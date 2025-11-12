@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
 import VisiMisi from "../Components/VisiMisi";
+import BeritaSection from "../Components/BeritaSection"; 
 
 
 export default function Welcome({ auth, laravelVersion, phpVersion })  {
@@ -8,7 +9,6 @@ export default function Welcome({ auth, laravelVersion, phpVersion })  {
         <MainLayout>
             <Head title="Selamat Datang di CDC YARSI" />
 
-            {/* Hero Section */}
             <div
                 className="relative flex h-[calc(100vh-80px)] items-center justify-center overflow-hidden"
                 style={{
@@ -36,6 +36,9 @@ export default function Welcome({ auth, laravelVersion, phpVersion })  {
             </div>
 
             <VisiMisi />
+            
+            <BeritaSection /> 
+            
         </MainLayout>
     );
 }
