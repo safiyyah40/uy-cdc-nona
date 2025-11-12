@@ -2,9 +2,10 @@ import { Link, usePage } from '@inertiajs/react';
 
 const LOGO_YARSI_CDC = '/images/LOGO CDC-UY.png';
 
+// --- Komponen NavLink ---
 function NavLink({ href, children }) {
   const { url } = usePage();
-  const isActive = url === href;
+  const isActive = url === href; 
 
   return (
     <Link
@@ -12,8 +13,8 @@ function NavLink({ href, children }) {
       className={`px-8 py-4 text-[22px] font-semibold rounded-xl transition-all duration-200
         ${
           isActive
-            ? 'bg-[#006241] text-white shadow-[0_3px_10px_rgba(0,0,0,0.18)]'
-            : 'text-gray-800 hover:bg-[#F3F4F6] hover:text-[#006241]'
+            ? 'bg-yarsi-green text-white shadow-[0_3px_10px_rgba(0,0,0,0.18)]'
+            : 'text-gray-800 hover:bg-gray-100 hover:text-yarsi-green'
         }
       `}
     >
@@ -22,10 +23,31 @@ function NavLink({ href, children }) {
   );
 }
 
-function NavDropdown({ title }) {
+// --- Komponen DropdownLink
+function DropdownLink({ href = '#', children }) {
+    return (
+        <Link
+            href={href}
+            className="block whitespace-nowrap px-6 py-3 text-lg font-semibold text-yarsi-green
+                       border-b border-gray-200 last:border-b-0
+                       hover:bg-green-50
+                       transition-colors duration-150"
+        >
+            {children}
+        </Link>
+    );
+}
+
+// --- Komponen NavDropdown
+function NavDropdown({ title, children }) {
   return (
     <div className="relative group">
-      <button className="flex items-center px-7 py-4 text-[22px] font-semibold text-gray-800 hover:text-[#006241] transition-all duration-200 rounded-xl">
+      {/* Tombol Trigger Dropdown */}
+      <button 
+          className="flex items-center px-7 py-4 text-[22px] font-semibold text-gray-800 rounded-xl 
+                     transition-all duration-200
+                     group-hover:bg-yarsi-green group-hover:text-white"
+      >
         {title}
         <svg
           className="ml-2 h-5 w-5 transition-transform duration-200 group-hover:rotate-180"
@@ -39,10 +61,21 @@ function NavDropdown({ title }) {
           />
         </svg>
       </button>
+
+      {/* Konten Menu Dropdown */}
+      <div className="absolute left-0 mt-2 min-w-full origin-top-left bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50
+                    opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:scale-100 scale-95
+                    transition-all duration-200">
+          <div className="py-1">
+              {children}
+          </div>
+      </div>
     </div>
   );
 }
 
+
+// --- KOMPONEN UTAMA: MainLayout ---
 export default function MainLayout({ children }) {
   return (
     <div className="min-h-screen bg-transparent overflow-x-hidden relative">
@@ -50,29 +83,52 @@ export default function MainLayout({ children }) {
         className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-xl
         rounded-b-[80px]
         shadow-[0_25px_60px_rgba(0,0,0,0.25)]
-        transition-all duration-300
-        overflow-hidden"
+        transition-all duration-300" 
       >
-        <nav className="w-full flex items-center justify-between px-12 lg:px-20 py-5">
+        <nav className="w-full flex items-center px-12 lg:px-20 py-5">
 
-          <Link href="/" className="flex-shrink-0 flex items-center space-x-3">
-            <img
-              src={LOGO_YARSI_CDC}
-              alt="Logo CDC YARSI"
-              className="h-[92px] object-contain ml-2"
-            />
-          </Link>
+          {/* Grup Kiri: Logo + Nav Links */}
+          <div className="flex items-center space-x-8">
+            <Link href="/" className="flex-shrink-0">
+              <img
+                src={LOGO_YARSI_CDC}
+                alt="Logo CDC YARSI"
+                className="h-[92px] object-contain"
+              />
+            </Link>
 
-          <div className="hidden md:flex items-center space-x-6">
-            <NavLink href="/">BERANDA</NavLink>
-            <NavDropdown title="PROFIL" />
-            <NavDropdown title="PROGRAM" />
-            <NavDropdown title="LAYANAN" />
-            <NavDropdown title="PELUANG KARIR" />
+            {/* Nav Links */}
+            <div className="hidden md:flex items-center space-x-6">
+              <NavLink href="/">BERANDA</NavLink>
+              
+              <NavDropdown title="PROFIL">
+                  <DropdownLink href="#">PUSKAKA-UY</DropdownLink>
+                  <DropdownLink href="#">KONSELOR</DropdownLink>
+                  <DropdownLink href="#">DEVELOPER</DropdownLink>
+              </NavDropdown>
+
+              <NavDropdown title="PROGRAM">
+                  <DropdownLink href="#">ORIENTASI DUNIA KERJA</DropdownLink>
+                  <DropdownLink href="#">CAMPUS HIRING</DropdownLink>
+                  <DropdownLink href="#">SEMINAR</DropdownLink>
+                  <DropdownLink href="#">TIPS AND TRIK</DropdownLink>
+              </NavDropdown>
+
+              <NavDropdown title="LAYANAN">
+                  <DropdownLink href="#">KONSULTASI</DropdownLink>
+                  <DropdownLink href="#">CV REVIEW</DropdownLink>
+                  <DropdownLink href="#">TES MINAT DAN BAKAT</DropdownLink>
+              </NavDropdown>
+              
+              <NavDropdown title="PELUANG KARIR">
+                  <DropdownLink href="#">MAGANG</DropdownLink>
+                  <DropdownLink href="#">LOWONGAN KERJA</DropdownLink>
+              </NavDropdown>
+            </div>
           </div>
 
-          <div className="flex items-center space-x-6 mr-4">
-
+          {/* Grup Kanan: Tombol (Dengan ml-auto untuk mendorong ke kanan) */}
+          <div className="flex items-center space-x-6 ml-auto">
             <Link
               href={route('login')}
               className="hidden md:inline-flex items-center rounded-[10px] bg-yarsi-gradient-button
@@ -83,13 +139,8 @@ export default function MainLayout({ children }) {
               MASUK
             </Link>
 
-            <button className="inline-flex items-center justify-center rounded-md p-3 text-gray-700 hover:bg-gray-100 hover:text-[#006241] transition-all duration-200">
-              <svg
-                className="h-14 w-14"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+            <button className="inline-flex md:hidden items-center justify-center rounded-md p-3 text-gray-700 hover:bg-gray-100 hover:text-yarsi-green transition-all duration-200">
+              <svg className="h-14 w-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

@@ -11,13 +11,12 @@ export default {
     ],
 
     theme: {
-        extend: { // <-- BUKA 'extend'
+        extend: { 
             
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
 
-            // PINDAHKAN KE DALAM 'extend'
             colors: {
                 'yarsi-green': {
                     'DEFAULT': '#044732',
@@ -27,13 +26,12 @@ export default {
                 'yarsi-accent': '#34A853',
             },
 
-            // PINDAHKAN KE DALAM 'extend' JUGA
             backgroundImage: {
               'yarsi-gradient-button': 'linear-gradient(to right, #1B523B, #3DB884)',
             }
 
-        }, // <-- TUTUP 'extend'
-    }, // <-- TUTUP 'theme'
+        },
+    },
 
     plugins: [forms],
 };

@@ -3,7 +3,7 @@ import MainLayout from '@/Layouts/MainLayout';
 import VisiMisi from "../Components/VisiMisi";
 
 
-export default function Welcome(props) {
+export default function Welcome({ auth, laravelVersion, phpVersion })  {
     return (
         <MainLayout>
             <Head title="Selamat Datang di CDC YARSI" />

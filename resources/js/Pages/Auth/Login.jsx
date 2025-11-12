@@ -99,6 +99,21 @@ export default function Login({ status }) {
                         <InputError message={errors.password} className="mt-2" />
                     </div>
 
+                    {/* Checkbox "Ingat Saya" */}
+                    <div className="mt-4 flex justify-end">
+                        <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                name="remember"
+                                className="rounded border-gray-300 text-yarsi-green shadow-sm focus:ring-yarsi-green"
+                                checked={data.remember}
+                                onChange={(e) => setData('remember', e.target.checked)}
+                            />
+                            <span className="ml-2 text-sm text-gray-600">Ingat saya</span>
+                        </label>
+                    </div>
+                    
+
                     {/* Tombol Masuk */}
                     <div className="mt-6">
                         <PrimaryButton className="w-full justify-center rounded-lg bg-yarsi-gradient-button py-3 text-sm font-semibold text-white shadow-lg hover:opacity-90 transition-opacity" disabled={processing}>

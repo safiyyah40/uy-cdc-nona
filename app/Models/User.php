@@ -22,8 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'npm', // <-- TAMBAHKAN INI
-        'no_hp', // <-- TAMBAHKAN INI
+        'npm',
+        'no_hp',
     ];
 
     /**
