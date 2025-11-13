@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\PuskakaTeams\Tables;
+namespace App\Filament\Resources\PuskakaTeamResource\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -16,30 +17,29 @@ class PuskakaTeamsTable
     {
         return $table
             ->columns([
+                ImageColumn::make('photo_path')
+                    ->label('Foto'),
                 TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('photo_path')
-                    ->searchable(),
+                    ->label('Nama')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('title')
+                    ->label('Jabatan')
+                    ->wrap(),
                 IconColumn::make('is_active')
+                    ->label('Aktif')
                     ->boolean(),
                 TextColumn::make('sort_order')
-                    ->numeric()
+                    ->label('Urutan')
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('sort_order', 'asc')
             ->filters([
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

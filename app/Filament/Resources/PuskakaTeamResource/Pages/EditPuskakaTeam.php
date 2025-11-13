@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\PuskakaTeamResource\Pages;
 
-use App\Filament\Resources\PuskakaTeams\PuskakaTeamResource;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\ViewAction;
+use App\Filament\Resources\PuskakaTeamResource;
+use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditPuskakaTeam extends EditRecord
@@ -14,8 +13,7 @@ class EditPuskakaTeam extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            ViewAction::make(),
-            DeleteAction::make(),
+            Actions\DeleteAction::make(),
         ];
     }
 }

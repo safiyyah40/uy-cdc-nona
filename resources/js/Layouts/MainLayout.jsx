@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
 
 const LOGO_YARSI_CDC = '/images/LOGO CDC-UY.png';
@@ -14,9 +15,8 @@ function NavLink({ href, children }) {
         ${
           isActive
             ? 'bg-[#006241] text-white shadow-[0_3px_10px_rgba(0,0,0,0.18)]'
-            : 'text-gray-800 hover:text-white hover:bg-[#006241]'
-        }
-      `}
+            : 'text-[#006241] hover:bg-[#006241] hover:text-white'
+        }`}
     >
       {children}
     </Link>
@@ -26,7 +26,7 @@ function NavLink({ href, children }) {
 // === Dropdown Link
 function DropdownLink({ href = '#', children }) {
   const { url } = usePage();
-  const isActive = url === href || url.startsWith(href + '/');
+  const isActive = url.startsWith(href);
 
   return (
     <Link
@@ -36,7 +36,7 @@ function DropdownLink({ href = '#', children }) {
         ${
           isActive
             ? 'bg-[#006241] text-white'
-            : 'text-gray-800 hover:bg-[#E6F4EA] hover:text-[#006241]'
+            : 'text-[#006241] hover:bg-[#006241] hover:text-white'
         }`}
     >
       {children}
@@ -47,23 +47,28 @@ function DropdownLink({ href = '#', children }) {
 // === Dropdown Utama
 function NavDropdown({ title, children, basePath }) {
   const { url } = usePage();
-  const isActive = url === basePath || url.startsWith(basePath + '/');
+  const isActive =
+    url.startsWith(basePath) ||
+    React.Children.toArray(children).some(
+      (child) => child.props.href && url.startsWith(child.props.href)
+    );
 
   return (
     <div className="relative group">
-      {/* Tombol Utama Dropdown */}
       <button
         className={`flex items-center px-7 py-4 text-[22px] font-semibold rounded-xl transition-all duration-200
           ${
             isActive
               ? 'bg-[#006241] text-white shadow-[0_3px_10px_rgba(0,0,0,0.18)]'
-              : 'text-gray-800 hover:bg-[#006241] hover:text-white'
+              : 'text-[#006241] hover:bg-[#006241] hover:text-white'
           }`}
       >
         {title}
         <svg
           className={`ml-2 h-5 w-5 transition-transform duration-200 ${
-            isActive ? 'rotate-180' : 'group-hover:rotate-180'
+            isActive
+              ? 'rotate-180 text-white'
+              : 'text-[#006241] group-hover:text-white group-hover:rotate-180'
           }`}
           viewBox="0 0 20 20"
           fill="currentColor"
@@ -76,7 +81,6 @@ function NavDropdown({ title, children, basePath }) {
         </svg>
       </button>
 
-      {/* Isi Dropdown */}
       <div
         className="absolute left-0 mt-2 min-w-full origin-top-left bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50
                    opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:scale-100 scale-95
@@ -114,63 +118,41 @@ export default function MainLayout({ children }) {
               <NavLink href="/">BERANDA</NavLink>
 
               <NavDropdown title="PROFIL" basePath="/profil">
-                <DropdownLink href={route('profil.puskaka')}>
-                  PUSKAKA-UY
-                </DropdownLink>
-                <DropdownLink href="#">
-                  KONSELOR
-                </DropdownLink>
-                <DropdownLink href="#">
-                  DEVELOPER
-                </DropdownLink>
+                <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
+                <DropdownLink href="#">KONSELOR</DropdownLink>
+                <DropdownLink href="#">DEVELOPER</DropdownLink>
               </NavDropdown>
 
               <NavDropdown title="PROGRAM" basePath="/program">
-                <DropdownLink href="#">
-                  ORIENTASI DUNIA KERJA
-                </DropdownLink>
-                <DropdownLink href="#">
-                  CAMPUS HIRING
-                </DropdownLink>
-                <DropdownLink href="#">
-                  SEMINAR
-                </DropdownLink>
-                <DropdownLink href="#">
-                  TIPS DAN TRIK
-                </DropdownLink>
+                <DropdownLink href="#">ORIENTASI DUNIA KERJA</DropdownLink>
+                <DropdownLink href="#">CAMPUS HIRING</DropdownLink>
+                <DropdownLink href="#">SEMINAR</DropdownLink>
+                <DropdownLink href="#">TIPS DAN TRIK</DropdownLink>
               </NavDropdown>
 
               <NavDropdown title="LAYANAN" basePath="/layanan">
-                <DropdownLink href="#">
-                  KONSULTASI
-                </DropdownLink>
-                <DropdownLink href="#">
-                  CV REVIEW
-                </DropdownLink>
-                <DropdownLink href="#">
-                  TES MINAT DAN BAKAT
-                </DropdownLink>
+                <DropdownLink href="#">KONSULTASI</DropdownLink>
+                <DropdownLink href="#">CV REVIEW</DropdownLink>
+                <DropdownLink href="#">TES MINAT DAN BAKAT</DropdownLink>
               </NavDropdown>
 
               <NavDropdown title="PELUANG KARIR" basePath="/peluang-karir">
-                <DropdownLink href="#">
-                  MAGANG
-                </DropdownLink>
-                <DropdownLink href="#">
-                  LOWONGAN KERJA
-                </DropdownLink>
+                <DropdownLink href="#">MAGANG</DropdownLink>
+                <DropdownLink href="#">LOWONGAN KERJA</DropdownLink>
               </NavDropdown>
             </div>
           </div>
 
-          {/* Tombol Masuk (Kanan) */}
+          {/* Tombol Masuk */}
           <div className="flex items-center space-x-6 ml-auto">
             <Link
               href={route('login')}
-              className="hidden md:inline-flex items-center rounded-[10px] bg-yarsi-gradient-button
+              className="hidden md:inline-flex items-center justify-center rounded-[10px]
+              bg-gradient-to-r from-[#09AD79] to-[#044732]
               px-9 py-4 text-[22px] font-semibold text-white
-              shadow-[0_6px_15px_rgba(0,0,0,0.2)] hover:brightness-110
-              transition-all duration-200"
+              shadow-[0_6px_15px_rgba(0,0,0,0.25)]
+              hover:scale-105 hover:brightness-110
+              transition-all duration-300"
             >
               MASUK
             </Link>

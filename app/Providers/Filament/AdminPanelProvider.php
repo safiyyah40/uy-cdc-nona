@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Providers\Filament;
-
+use App\Filament\Resources\PuskakaTeamResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -28,6 +28,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->resources([
+                PuskakaTeamResource::class,
+            ])
             ->colors([
                 'primary' => Color::Amber,
             ])
