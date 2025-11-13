@@ -3,6 +3,12 @@ import MainLayout from '@/Layouts/MainLayout';
 import VisiMisi from "../Components/VisiMisi";
 import BeritaSection from "../Components/BeritaSection";
 import KalenderSection from "../Components/KalenderSection"; 
+import StatistikLayanan from '../Components/StatistikLayanan';
+import LowonganPekerjaan from '../Components/LowonganPekerjaan';
+import InfoMagang from '../Components/InfoMagang';
+import TesMinatBakat from '../Components/TesMinatBakat';
+import Footer from '../Components/Footer';
+
 
 export default function Welcome({ auth, laravelVersion, phpVersion })  {
     return (
@@ -39,7 +45,17 @@ export default function Welcome({ auth, laravelVersion, phpVersion })  {
 
             <KalenderSection />
 
+            <StatistikLayanan />
+
             <BeritaSection />
+
+            <LowonganPekerjaan />
+
+            <InfoMagang />
+
+            <TesMinatBakat />
+
+            <Footer />
 
         </MainLayout>
     );
