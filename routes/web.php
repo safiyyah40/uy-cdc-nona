@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ProfilPuskakaController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -33,5 +34,8 @@ Route::get('/profil-puskaka', function () {
         'puskakaTeam' => $puskakaTeam,
     ]);
 })->name('profil.puskaka');
+
+// Route untuk halaman profil puskaka
+Route::get('/profil-puskaka', [ProfilPuskakaController::class, 'index'])->name('profil.puskaka');
 
 require __DIR__.'/auth.php';

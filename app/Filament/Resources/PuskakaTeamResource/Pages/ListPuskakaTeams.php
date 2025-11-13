@@ -2,18 +2,18 @@
 
 namespace App\Filament\Resources\PuskakaTeamResource\Pages;
 
-use App\Filament\Resources\PuskakaTeams\PuskakaTeamResource;
-use Filament\Actions\EditAction;
-use Filament\Resources\Pages\ViewRecord;
+use App\Filament\Resources\PuskakaTeamResource;
+use Filament\Actions;
+use Filament\Resources\Pages\ListRecords;
 
-class ViewPuskakaTeam extends ViewRecord
+class ListPuskakaTeams extends ListRecords
 {
     protected static string $resource = PuskakaTeamResource::class;
-
+    
     protected function getHeaderActions(): array
     {
         return [
-            EditAction::make(),
+            Actions\CreateAction::make(),
         ];
     }
 }

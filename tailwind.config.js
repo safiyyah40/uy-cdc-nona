@@ -15,6 +15,8 @@ export default {
             
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Instrument Sans', ...defaultTheme.fontFamily.sans],
+                kaisei: ['Kaisei Tokumin', 'serif'],
             },
 
             colors: {
