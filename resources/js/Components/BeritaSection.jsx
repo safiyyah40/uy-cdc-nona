@@ -34,11 +34,11 @@ const BeritaSection = () => {
                 <div className="text-center mb-10 font-serif">
 
 
-                    <h2 className="text-4xl md:text-5xl font-light tracking-wider mb-4 text-yarsi-green">
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-wider mb-4 text-yarsi-green">
                         BERITA
                     </h2>
 
-                    <p className="text-2xl text-gray-700 max-w-3xl mx-auto mb-4">
+                    <p className="text-2xl text-gray-800 max-w-3xl mx-auto mb-4">
                         Dapatkan informasi terbaru seputar kegiatan, pengumuman, dan
                         perkembangan terkini di lingkungan Universitas YARSI.
                     </p>
