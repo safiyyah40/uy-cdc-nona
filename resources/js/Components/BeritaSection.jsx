@@ -1,5 +1,3 @@
-// src/Components/BeritaSection.jsx
-
 import React from 'react';
 
 const IMAGE_PATH = '/images/berita.jpeg'; 

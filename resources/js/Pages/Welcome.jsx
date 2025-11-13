@@ -1,8 +1,8 @@
 import { Head } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
 import VisiMisi from "../Components/VisiMisi";
-import BeritaSection from "../Components/BeritaSection"; 
-
+import BeritaSection from "../Components/BeritaSection";
+import KalenderSection from "../Components/KalenderSection"; 
 
 export default function Welcome({ auth, laravelVersion, phpVersion })  {
     return (
@@ -36,9 +36,11 @@ export default function Welcome({ auth, laravelVersion, phpVersion })  {
             </div>
 
             <VisiMisi />
-            
-            <BeritaSection /> 
-            
+
+            <KalenderSection />
+
+            <BeritaSection />
+
         </MainLayout>
     );
 }
