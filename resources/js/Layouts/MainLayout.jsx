@@ -120,7 +120,7 @@ export default function MainLayout({ children }) {
               <NavDropdown title="PROFIL" basePath="/profil">
                 <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
                 <DropdownLink href="#">KONSELOR</DropdownLink>
-                <DropdownLink href="#">DEVELOPER</DropdownLink>
+                <DropdownLink href={route('profil.developer')}>DEVELOPER</DropdownLink>
               </NavDropdown>
 
               <NavDropdown title="PROGRAM" basePath="/program">

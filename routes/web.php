@@ -38,4 +38,9 @@ Route::get('/profil-puskaka', function () {
 // Route untuk halaman profil puskaka
 Route::get('/profil-puskaka', [ProfilPuskakaController::class, 'index'])->name('profil.puskaka');
 
+// Route untuk halaman profil developer
+Route::get('/profil/developer', function () {
+    return Inertia::render('Profile/Developer');
+})->name('profil.developer');
+
 require __DIR__.'/auth.php';
