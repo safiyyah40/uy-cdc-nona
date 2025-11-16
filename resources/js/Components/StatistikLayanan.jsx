@@ -63,10 +63,10 @@ const StatistikLayanan = () => {
 
             <div className="container mx-auto px-4 md:px-8 max-w-6xl">
                 <div className="flex items-center mb-10">
-                    <h2 className="text-5xl font-serif text-green-900 pr-4 whitespace-nowrap">
+                    <h2 className="text-5xl font-serif font-bold text-white pr-4 whitespace-nowrap">
                         STATISTIK LAYANAN
                     </h2>
-                    <div className="flex-grow border-b-4 border-green-700 h-px"></div>
+                    <div className="flex-grow border-b-4 border-white h-px"></div>
                 </div>
             </div>
 

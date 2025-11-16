@@ -39,6 +39,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/profil-puskaka', [ProfilPuskakaController::class, 'index'])
     ->name('profil.puskaka');
 
+// Route untuk halaman profil developer
+Route::get('/profil-developer', [ProfilPuskakaController::class, 'index'])
+    ->name('profil.developer');
+
 // Route akun profile
     Route::middleware(['auth'])->group(function () {
     Route::get('/akun', [ProfileController::class, 'show'])->name('profile.show');

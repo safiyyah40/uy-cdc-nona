@@ -1,11 +1,13 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
+const LOKER_IMAGE_URL = "/images/loker.jpeg";
+
 const LOWONGAN = [
     {
         id: 1,
         title: "IT Business Analyst",
         company: "PT. Kolaborasi Tujuh Pelangi",
-        logoUrl: "https://placehold.co/80x80/004d00/FFFFFF?text=Logo",
+        logoUrl: LOKER_IMAGE_URL,
         type: "Full-Time",
         location: "On-site",
         education: "Minimum Associate Degree",
@@ -15,7 +17,7 @@ const LOWONGAN = [
         id: 2,
         title: "Digital Marketing Specialist",
         company: "PT. Inovasi Cepat",
-        logoUrl: "https://placehold.co/80x80/006666/FFFFFF?text=Logo",
+        logoUrl: LOKER_IMAGE_URL,
         type: "Part-Time",
         location: "Remote",
         education: "Minimum Bachelor Degree",
@@ -25,8 +27,8 @@ const LOWONGAN = [
         id: 3,
         title: "Data Scientist Junior",
         company: "Grup Teknologi Alpha",
-        logoUrl: "https://placehold.co/80x80/3A2B58/FFFFFF?text=Logo",
-        type: "Full-Time",
+        logoUrl: LOKER_IMAGE_URL,
+        type: "Hybrid",
         location: "Hybrid",
         education: "Minimum Bachelor Degree",
         experience: "Fresh Graduate welcome"
@@ -35,7 +37,7 @@ const LOWONGAN = [
         id: 4,
         title: "Human Resources Staff",
         company: "Yayasan Cipta Karya",
-        logoUrl: "https://placehold.co/80x80/6A3E3E/FFFFFF?text=Logo",
+        logoUrl: LOKER_IMAGE_URL,
         type: "Contract",
         location: "On-site",
         education: "Minimum Diploma",
@@ -43,7 +45,7 @@ const LOWONGAN = [
     }
 ];
 
-const CARD_WIDTH = 320;
+const CARD_WIDTH = 380;
 
 const JobCard = ({ job, index, activeIndex, totalJobs }) => {
     const distance = index - activeIndex;
@@ -82,8 +84,13 @@ const JobCard = ({ job, index, activeIndex, totalJobs }) => {
         >
             <div className="w-full h-full p-4 rounded-xl flex flex-col items-center text-gray-800">
 
-                <div>
-                    <img src={job.logoUrl} alt="Logo Perusahaan" className="rounded-xl w-20 h-20 shadow-md" />
+                <div className="flex justify-center items-center h-20 w-20 rounded-xl overflow-hidden shadow-md bg-gray-50">
+                    <img
+                        src={job.logoUrl}
+                        alt={`Logo ${job.company}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/80x80/285E61/FFFFFF?text=Loker" }}
+                    />
                 </div>
 
                 <div className="text-center w-full mt-6">
@@ -142,26 +149,21 @@ const LowonganPekerjaan = () => {
 
     return (
         <section
-            className="py-20 relative bg-green-700"
+            // Background gradasi hijau-putih
+            className="py-20 relative bg-gradient-to-b from-green-500 to-white font-inter"
         >
 
             <div className="container mx-auto px-4 md:px-8 relative z-10">
 
-                <h2 className="text-4xl md:text-5xl font-serif text-white text-center mb-16 tracking-wider font-light">
+                <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-16 tracking-wide font-serif">
                     LOWONGAN PEKERJAAN
                 </h2>
 
-                <div className="relative flex justify-center items-center h-[500px] overflow-hidden">
-
-                    <div className="absolute left-0 top-0 bottom-0 w-32 z-20 pointer-events-none
-                                         bg-gradient-to-r from-green-700 via-green-700/80 to-transparent"></div>
-
-                    <div className="absolute right-0 top-0 bottom-0 w-32 z-20 pointer-events-none
-                                         bg-gradient-to-l from-green-700 via-green-700/80 to-transparent"></div>
+                <div className="relative flex justify-center items-center h-[550px] overflow-hidden">
 
                     <button
                         onClick={prevSlide}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 z-30 p-3 ml-4 rounded-full bg-white/30 hover:bg-white/50 transition-colors focus:outline-none"
+                        className="absolute left-0 top-1/2 -translate-y-1/2 z-30 p-3 ml-4 rounded-full bg-white/30 hover:bg-white/50 transition-colors focus:outline-none shadow-lg"
                         aria-label="Previous job posting"
                     >
                         <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M15 19l-7-7 7-7"/></svg>
@@ -169,13 +171,13 @@ const LowonganPekerjaan = () => {
 
                     <button
                         onClick={nextSlide}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 z-30 p-3 mr-4 rounded-full bg-white/30 hover:bg-white/50 transition-colors focus:outline-none"
+                        className="absolute right-0 top-1/2 -translate-y-1/2 z-30 p-3 mr-4 rounded-full bg-white/30 hover:bg-white/50 transition-colors focus:outline-none shadow-lg"
                         aria-label="Next job posting"
                     >
                         <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7"/></svg>
                     </button>
 
-                    <div className="relative w-full h-[450px]">
+                    <div className="relative w-full h-[500px]">
                         {LOWONGAN.map((job, index) => (
                             <JobCard
                                 key={job.id}
@@ -195,7 +197,7 @@ const LowonganPekerjaan = () => {
                             key={index}
                             onClick={() => setActiveIndex(index)}
                             className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                                activeIndex === index ? 'bg-white scale-110' : 'bg-white/50 hover:bg-white/80'
+                                activeIndex === index ? 'bg-green-700 scale-110 shadow-md' : 'bg-gray-400 hover:bg-green-300'
                             }`}
                             aria-label={`Go to slide ${index + 1}`}
                         />
@@ -205,7 +207,7 @@ const LowonganPekerjaan = () => {
                 <div className="text-center mt-16">
                     <a
                         href="#"
-                        className="inline-block px-12 py-3 text-lg font-bold rounded-full bg-white text-green-700 shadow-xl hover:bg-gray-100 transition-all transform hover:scale-[1.05]"
+                        className="inline-block px-12 py-3 text-lg font-bold rounded-full text-white shadow-xl hover:bg-teal-400 transition-all transform hover:scale-[1.05] bg-gradient-to-r from-teal-300 to-green-700/80"
                     >
                         SELENGKAPNYA
                     </a>

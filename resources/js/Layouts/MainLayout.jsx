@@ -213,11 +213,11 @@ export default function MainLayout({ children }) {
                                 BERANDA
                             </NavLink>
 
-                            <NavDropdown title="PROFIL" basePath="/profil">
-                                <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
-                                <DropdownLink href="#">KONSELOR</DropdownLink>
-                                <DropdownLink href="#">DEVELOPER</DropdownLink>
-                            </NavDropdown>
+              <NavDropdown title="PROFIL" basePath="/profil">
+                <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
+                <DropdownLink href="#">KONSELOR</DropdownLink>
+                <DropdownLink href="#">PENGEMBANG</DropdownLink>
+              </NavDropdown>
 
                             <NavDropdown title="PROGRAM" basePath="/program">
                                 <DropdownLink href="#">ORIENTASI DUNIA KERJA</DropdownLink>
@@ -379,7 +379,7 @@ export default function MainLayout({ children }) {
                             <MobileDropdown title="PROFIL">
                                 <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
                                 <DropdownLink href="#">KONSELOR</DropdownLink>
-                                <DropdownLink href="#">DEVELOPER</DropdownLink>
+                                <DropdownLink href="{route('profil.developer')}">PENGEMBANG</DropdownLink>
                             </MobileDropdown>
 
                             {/* Dropdown PROGRAM */}

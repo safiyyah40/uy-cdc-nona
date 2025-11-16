@@ -96,7 +96,7 @@ const KalenderSection = () => {
                 
                 {/* Judul dan Garis */}
                 <div className="flex items-center mb-10">
-                    <h2 className="text-5xl font-serif text-green-900 pr-4 whitespace-nowrap">
+                    <h2 className="text-5xl font-serif font-bold text-green-900 pr-4 whitespace-nowrap">
                         KALENDER
                     </h2>
                     <div className="flex-grow border-b-4 border-green-700 h-px"></div>

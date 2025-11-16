@@ -11,10 +11,8 @@ export default {
     ],
 
     theme: {
-        extend: { 
-            
+        extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
                 sans: ['Instrument Sans', ...defaultTheme.fontFamily.sans],
                 kaisei: ['Kaisei Tokumin', 'serif'],
             },
@@ -26,12 +24,22 @@ export default {
                     'dark': '#022A1E',
                 },
                 'yarsi-accent': '#34A853',
+                'cdc-green-dark': '#006241',
+            },
+
+            animation: {
+                fadeIn: 'fadeIn 1s ease-in-out forwards',
+            },
+            keyframes: {
+                fadeIn: {
+                    '0%': { opacity: '0', transform: 'translateY(10px)' },
+                    '100%': { opacity: '1', transform: 'translateY(0)' },
+                },
             },
 
             backgroundImage: {
-              'yarsi-gradient-button': 'linear-gradient(to right, #1B523B, #3DB884)',
+                'yarsi-gradient-button': 'linear-gradient(to right, #1B523B, #3DB884)',
             }
-
         },
     },
 
