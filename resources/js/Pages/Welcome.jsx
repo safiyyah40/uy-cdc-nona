@@ -2,7 +2,7 @@ import { Head } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
 import VisiMisi from "../Components/VisiMisi";
 import BeritaSection from "../Components/BeritaSection";
-import KalenderSection from "../Components/KalenderSection"; 
+import KalenderSection from "../Components/KalenderSection";
 import StatistikLayanan from '../Components/StatistikLayanan';
 import LowonganPekerjaan from '../Components/LowonganPekerjaan';
 import InfoMagang from '../Components/InfoMagang';
@@ -33,7 +33,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion })  {
                     </div>
 
                     <h1 className="text-5xl font-extrabold text-yarsi-green md:text-6xl">
-                        CAREER DEVELOPMENT CENTER
+                        CAREER DEVELOPMENT CENTRE
                     </h1>
                     <h1 className="text-5xl font-extrabold text-yarsi-green md:text-6xl">
                         UNIVERSITAS YARSI

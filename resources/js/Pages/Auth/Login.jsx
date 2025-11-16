@@ -1,5 +1,3 @@
-// resources/js/Pages/Auth/Login.jsx
-
 import { useEffect, useState } from 'react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
@@ -31,7 +29,6 @@ export default function Login({ status }) {
     return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4"
              style={{ backgroundImage: 'url(/images/bg-swirl.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-             {}
 
             <Head title="Masuk" />
 

@@ -2,28 +2,22 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -32,54 +26,122 @@ class LoginRequest extends FormRequest
         ];
     }
 
-    /**
-     * Attempt to authenticate the request's credentials.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('username', 'password'), $this->boolean('remember'))) { 
-        RateLimiter::hit($this->throttleKey());
+        // Ambil data dari Simulasi LDAP
+        $ldapData = $this->authenticateWithLDAP(
+            $this->input('username'),
+            $this->input('password')
+        );
 
-        throw ValidationException::withMessages([
-            'username' => __('auth.failed'),
-        ]);
+        if (!$ldapData) {
+            RateLimiter::hit($this->throttleKey());
+            throw ValidationException::withMessages([
+                'username' => __('auth.failed'),
+            ]);
         }
+
+        // Cek apakah user sudah ada di database lokal?
+        $user = User::where('username', $ldapData['username'])->first();
+
+        if ($user) {
+            $user->update([
+                'name' => $ldapData['name'],
+                'id_number' => $ldapData['id_number'],
+                'email' => $ldapData['email'],
+                'password' => $ldapData['password'] ? Hash::make($ldapData['password']) : $user->password,
+                'role' => $ldapData['role'],
+            ]);
+        } else {
+            $user = User::create([
+                'username' => $ldapData['username'],
+                'name' => $ldapData['name'],
+                'id_number' => $ldapData['id_number'],
+                'email' => $ldapData['email'],
+                'password' => $ldapData['password'] ? Hash::make($ldapData['password']) : null,
+                'role' => $ldapData['role'],
+                'phone' => null,
+                'is_profile_complete' => false
+            ]);
+        }
+
+        // Login User
+        Auth::login($user, $this->boolean('remember'));
 
         RateLimiter::clear($this->throttleKey());
     }
-
-    /**
-     * Ensure the login request is not rate limited.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function ensureIsNotRateLimited(): void
+    
+    private function authenticateWithLDAP(string $username, string $password): ?array
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
-            return;
+        $ldapUsers = [
+            'admin' => [
+                'username' => 'admin',
+                'name' => 'Admin CDC',
+                'id_number' => '199001012020011001',
+                'email' => 'admin@yarsi.ac.id',
+                'password' => 'password',
+                'role' => 'admin',
+            ],
+            'konselor' => [
+                'username' => 'konselor',
+                'name' => 'Konselor CDC',
+                'id_number' => '198505152015011002',
+                'email' => 'konselor@yarsi.ac.id',
+                'password' => 'password',
+                'role' => 'konselor',
+            ],
+            'budi.konselor' => [
+                'username' => 'budi.konselor',
+                'name' => 'Budi Konselor',
+                'id_number' => '198505152015011003',
+                'email' => 'budi.konselor@yarsi.ac.id',
+                'password' => 'budikonselor123',
+                'role' => 'konselor',
+            ],
+            'adzana.ashel' => [
+                'username' => 'adzana.ashel',
+                'name' => 'Adzana Ashel',
+                'id_number' => '1402023200',
+                'email' => 'adzana.ashel@yarsi.ac.id',
+                'password' => 'adzanaashel123',
+                'role' => 'mahasiswa',
+            ],
+            'farhan.jijima' => [
+                'username' => 'farhan.jijima',
+                'name' => 'Farhan Jijima',
+                'id_number' => '1402021201',
+                'email' => 'farhan.jijima@yarsi.ac.id',
+                'password' => 'farhanjijima123',
+                'role' => 'mahasiswa',
+            ],
+        ];
+
+        if (isset($ldapUsers[$username]) && $ldapUsers[$username]['password'] === $password) {
+            return $ldapUsers[$username];
         }
 
+        return null;
+    }
+    
+    public function ensureIsNotRateLimited(): void
+    {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+            return;
+        }
         event(new Lockout($this));
-
         $seconds = RateLimiter::availableIn($this->throttleKey());
-
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            'username' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
         ]);
     }
 
-    /**
-     * Get the rate limiting throttle key for the request.
-     */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('username')) . '|' . $this->ip());
     }
 }

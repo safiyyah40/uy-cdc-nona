@@ -18,8 +18,8 @@ class ProfilPuskakaController extends Controller
                     'id' => $member->id,
                     'name' => $member->name,
                     'title' => $member->title,
-                    'photo_url' => $member->photo_path 
-                        ? Storage::url($member->photo_path) 
+                    'photo_url' => $member->photo_path
+                        ? Storage::url($member->photo_path)
                         : asset('images/placeholder-avatar.png'),
                     'sort_order' => $member->sort_order,
                 ];
