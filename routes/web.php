@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Models\PuskakaTeam;
+use App\Http\Controllers\ProfilKonselorController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -35,11 +36,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('profile.complete.store');
 });
 
-// Route akun profil puskaka
+// Route profil puskaka
 Route::get('/profil/puskaka', [ProfilPuskakaController::class, 'index'])
     ->name('profil.puskaka');
 
-// Route akun profil pengembang
+// Route profil konselor
+Route::get('/profil-konselor', ProfilKonselorController::class, 'index')
+    ->name('profil.konselor');
+
+// Route profil pengembang
 Route::get('/profil/developer', function () {
     return Inertia::render('Profil/Developer');
 })->name('profil.developer');

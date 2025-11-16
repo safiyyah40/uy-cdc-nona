@@ -220,7 +220,7 @@ export default function MainLayout({ children }) {
 
                            <NavDropdown title="PROFIL" basePath={['/profil-puskaka', '/profil-developer']}>
                                 <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
-                                <DropdownLink href="#">KONSELOR</DropdownLink>
+                                <DropdownLink href={route('profil.konselor')}>KONSELOR</DropdownLink>
                                 <DropdownLink href={route('profil.developer')}>PENGEMBANG</DropdownLink>
                             </NavDropdown>
 
@@ -383,7 +383,7 @@ export default function MainLayout({ children }) {
                             {/* Dropdown PROFIL */}
                             <MobileDropdown title="PROFIL">
                                 <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
-                                <DropdownLink href="#">KONSELOR</DropdownLink>
+                                <DropdownLink href={route('profil.konselor')}>KONSELOR</DropdownLink>
                                 <DropdownLink href={route('profil.developer')}>PENGEMBANG</DropdownLink>
                             </MobileDropdown>
 
