@@ -45,21 +45,20 @@ export default function Dashboard({ auth }) {
 
             {/* Konten utama dashboard */}
             <div className="bg-white">
+                <VisiMisi />
+
                 <KalenderSection />
 
                 <StatistikLayanan />
+
+                <BeritaSection />
 
                 <LowonganPekerjaan />
 
                 <InfoMagang />
 
                 <TesMinatBakat />
-
-                <BeritaSection />
-
-                <VisiMisi />
             </div>
-
             <Footer />
         </MainLayout>
     );

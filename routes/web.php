@@ -35,13 +35,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('profile.complete.store');
 });
 
-// Halaman Profil PUSKAKA (bebas diakses tanpa login)
-Route::get('/profil-puskaka', [ProfilPuskakaController::class, 'index'])
+// Route akun profil puskaka
+Route::get('/profil/puskaka', [ProfilPuskakaController::class, 'index'])
     ->name('profil.puskaka');
 
-// Route untuk halaman profil developer
-Route::get('/profil-developer', [ProfilPuskakaController::class, 'index'])
-    ->name('profil.developer');
+// Route akun profil pengembang
+Route::get('/profil/developer', function () {
+    return Inertia::render('Profil/Developer');
+})->name('profil.developer');
+
 
 // Route akun profile
     Route::middleware(['auth'])->group(function () {

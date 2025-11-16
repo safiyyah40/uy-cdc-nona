@@ -2,7 +2,7 @@ import MainLayout from '@/Layouts/MainLayout';
 import { Head } from '@inertiajs/react';
 import Footer from '@/Components/Footer';
 
-import { useInView } from 'react-intersection-observer'; 
+import { useInView } from 'react-intersection-observer';
 import React, { useState, useRef, useCallback } from 'react';
 
 const teamMembers = [

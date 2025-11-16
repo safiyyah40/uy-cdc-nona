@@ -67,11 +67,16 @@ function ProfileDropdownLink({ href, method = 'get', as = 'a', children }) {
 // Dropdown Utama (Navigasi)
 function NavDropdown({ title, children, basePath }) {
     const { url } = usePage();
+
     const isActive =
-        (basePath && url.startsWith(basePath)) ||
+        (Array.isArray(basePath) 
+            ? basePath.some(path => url.startsWith(path))
+            : url.startsWith(basePath)
+        ) ||
         React.Children.toArray(children).some(
             (child) => child.props.href && child.props.href !== '#' && url.startsWith(child.props.href)
         );
+
 
     return (
         <div className="relative group">
@@ -213,11 +218,11 @@ export default function MainLayout({ children }) {
                                 BERANDA
                             </NavLink>
 
-              <NavDropdown title="PROFIL" basePath="/profil">
-                <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
-                <DropdownLink href="#">KONSELOR</DropdownLink>
-                <DropdownLink href="#">PENGEMBANG</DropdownLink>
-              </NavDropdown>
+                           <NavDropdown title="PROFIL" basePath={['/profil-puskaka', '/profil-developer']}>
+                                <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
+                                <DropdownLink href="#">KONSELOR</DropdownLink>
+                                <DropdownLink href={route('profil.developer')}>PENGEMBANG</DropdownLink>
+                            </NavDropdown>
 
                             <NavDropdown title="PROGRAM" basePath="/program">
                                 <DropdownLink href="#">ORIENTASI DUNIA KERJA</DropdownLink>
@@ -379,7 +384,7 @@ export default function MainLayout({ children }) {
                             <MobileDropdown title="PROFIL">
                                 <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
                                 <DropdownLink href="#">KONSELOR</DropdownLink>
-                                <DropdownLink href="{route('profil.developer')}">PENGEMBANG</DropdownLink>
+                                <DropdownLink href={route('profil.developer')}>PENGEMBANG</DropdownLink>
                             </MobileDropdown>
 
                             {/* Dropdown PROGRAM */}
