@@ -28,7 +28,7 @@ export default function ViewProfile() {
                 backgroundPosition: 'center'
             }}
         >
-            <div className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-sm">
+                <div className="rounded-[2.5rem] bg-white p-6 shadow-2xl relative w-full max-w-sm">
 
                 {/* Close button */}
                 <div className="flex justify-end">

@@ -74,23 +74,30 @@ export default function CompleteProfile({ user }) {
 
     return (
         <div
-            className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4"
-            style={{
-                backgroundImage: 'url(/images/bg-swirl.jpg)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-            }}
-        >
-            <Head title="Lengkapi Data Dirimu" />
+    className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4"
+    style={{
+        backgroundImage: 'url(/images/bg-swirl.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+    }}
+>
+    <Head title="Lengkapi Data Dirimu" />
+    <div className="w-full max-w-3xl rounded-[2.5rem] bg-white p-6 shadow-2xl relative">
+        
+        {/* Ikon Close (Tombol "X") */}
+        <button className="absolute top-4 left-4 text-gray-500 hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
 
-            <div className="w-full max-w-xl rounded-2xl bg-white p-8 shadow-2xl relative">
-                <div className="mb-6 flex justify-center">
-                    <img src={LOGO_YARSI_CDC} alt="Logo CDC YARSI" className="h-16" />
-                </div>
+        <div className="mb-6 flex justify-center">
+            <img src={LOGO_YARSI_CDC} alt="Logo CDC YARSI" className="h-16" />
+        </div>
 
-                <h2 className="mb-6 text-center text-2xl font-bold text-yarsi-green">
-                    Lengkapi Data Dirimu!
-                </h2>
+        <h2 className="mb-6 text-center text-2xl font-bold text-yarsi-green">
+            Lengkapi Data Dirimu!
+        </h2>
 
                 <form onSubmit={submit}>
                     <div className="grid grid-cols-2 gap-4">

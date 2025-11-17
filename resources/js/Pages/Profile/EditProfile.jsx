@@ -47,7 +47,7 @@ export default function EditProfile() {
         >
             <form
                 onSubmit={submit}
-                className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-sm relative"
+                className="rounded-[2.5rem] bg-white p-6 shadow-2xl relative w-full max-w-sm"
             >
                 {/* Close Button */}
                 <div className="flex justify-end">
