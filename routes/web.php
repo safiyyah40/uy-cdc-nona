@@ -10,15 +10,26 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilPuskakaController;
 use App\Http\Controllers\ProfileCompletionController;
 use App\Http\Controllers\DashboardController;
+use App\Models\BerandaSlide;
 
-
-// Halaman Utama (Sebelum Login)
 Route::get('/', function () {
+    $slides = BerandaSlide::where('is_active', true)
+        ->orderBy('sort_order')
+        ->get()
+        ->map(function ($slide) {
+            return [
+                'id' => $slide->id,
+                'photo_url' => $slide->photo_url,
+                'alt_text' => $slide->alt_text ?? 'Slideshow Beranda',
+            ];
+        });
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'slides' => $slides,
     ]);
 });
 

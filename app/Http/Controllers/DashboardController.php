@@ -2,25 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BerandaSlide;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
     public function index()
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        // Cek apakah profil belum lengkap
-        if (!$user->is_profile_complete) {
-            return redirect()->route('profile.complete');
-        }
+    $slides = BerandaSlide::where('is_active', true)
+        ->orderBy('sort_order')
+        ->get()
+        ->map(function ($slide) {
+            return [
+                'id' => $slide->id,
+                'photo_url' => $slide->photo_url,
+                'alt_text' => $slide->alt_text ?? 'Slideshow Beranda',
+            ];
+        });
 
-        // Kalau sudah lengkap, akan menampilkan Dashboard
-        return Inertia::render('Dashboard', [
-            'auth' => [
-                'user' => $user,
-            ],
-        ]);
-    }
+    return Inertia::render('Dashboard', [
+        'auth' => [
+            'user' => $user,    // bisa null kalau guest, DAN ITU NORMAL
+        ],
+        'slides' => $slides,
+    ]);
+}
+
 }

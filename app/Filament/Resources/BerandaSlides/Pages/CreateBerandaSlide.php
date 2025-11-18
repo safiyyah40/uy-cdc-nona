@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Filament\Resources\BerandaSlides\Pages;
+
+use App\Filament\Resources\BerandaSlideResource;
+use Filament\Resources\Pages\CreateRecord;
+
+class CreateBerandaSlide extends CreateRecord
+{
+    protected static string $resource = BerandaSlideResource::class;
+}

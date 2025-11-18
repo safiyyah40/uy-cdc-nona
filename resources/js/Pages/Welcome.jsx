@@ -10,7 +10,7 @@ import TesMinatBakat from '../Components/TesMinatBakat';
 import Footer from '../Components/Footer';
 
 
-export default function Welcome({ auth, laravelVersion, phpVersion })  {
+export default function Welcome({ auth, slides, laravelVersion, phpVersion })  {
     return (
         <MainLayout>
             <Head title="Selamat Datang di CDC YARSI" />
@@ -41,7 +41,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion })  {
                 </div>
             </div>
 
-            <VisiMisi />
+            <VisiMisi slides={slides} />
 
             <KalenderSection />
 
