@@ -49,6 +49,30 @@ Route::get('/profil/developer', function () {
     return Inertia::render('Profil/Developer');
 })->name('profil.developer');
 
+//Route Program Orientasi Dunia Kerja
+Route::get('/program/orientasi-dunia-kerja', function () {
+    return Inertia::render('Program/OrientasiDuniaKerja');
+})->name('program.orientasi.kerja');
+
+//Route Program Campus Hiring
+Route::get('/program/campus-hiring', function () {
+    return Inertia::render('Program/CampusHiring');
+})->name('program.campus.hiring');
+
+// Route Program Seminar
+Route::get('/program/seminar', function () {
+    return Inertia::render('Program/Seminar');
+})->name('program.seminar');
+
+// Route Program Tips dan Trik
+Route::get('/program/tips-dan-trik', function () {
+    return Inertia::render('Program/TipsDanTrik');
+})->name('program.tips.trik');
+
+// Route Halaman Berita
+Route::get('/berita', function () {
+    return Inertia::render('Berita');
+})->name('program.berita');
 
 // Route akun profile
     Route::middleware(['auth'])->group(function () {
