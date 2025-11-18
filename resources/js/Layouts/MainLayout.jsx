@@ -390,10 +390,11 @@ export default function MainLayout({ children }) {
 
                             {/* Dropdown PROGRAM */}
                             <MobileDropdown title="PROGRAM">
-                                <DropdownLink href="#">ORIENTASI DUNIA KERJA</DropdownLink>
-                                <DropdownLink href="#">CAMPUS HIRING</DropdownLink>
-                                <DropdownLink href="#">SEMINAR</DropdownLink>
-                                <DropdownLink href="#">TIPS DAN TRIK</DropdownLink>
+                                <DropdownLink href={route('program.orientasi.kerja')}>ORIENTASI DUNIA KERJA</DropdownLink>
+                                <DropdownLink href={route('program.campus.hiring')}>CAMPUS HIRING</DropdownLink>
+                                <DropdownLink href={route('program.seminar')}>SEMINAR</DropdownLink>
+                                <DropdownLink href={route('program.tips.trik')}>TIPS DAN TRIK</DropdownLink>
+                                <DropdownLink href={route('program.berita')}>BERITA</DropdownLink>
                             </MobileDropdown>
 
                             {/* Dropdown LAYANAN */}

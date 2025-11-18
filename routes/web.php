@@ -81,8 +81,8 @@ Route::get('/program/tips-dan-trik', function () {
 })->name('program.tips.trik');
 
 // Route Halaman Berita
-Route::get('/berita', function () {
-    return Inertia::render('Berita');
+Route::get('/program/berita', function () {
+    return Inertia::render('Program/Berita');
 })->name('program.berita');
 
 // Route akun profile
