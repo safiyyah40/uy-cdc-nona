@@ -63,7 +63,8 @@ export default function ProfilKonselor({ counselors }) { // <-- Terima prop 'cou
                     <p 
                         ref={heroText.ref} 
                         style={heroText.style} 
-                        className="mt-8 text-lg md:text-xl max-w-5xl mx-auto text-black"
+                        className="text-xl md:text-2xl leading-relaxed mt-8 text-gray-800 font-sans
+                                            font-light tracking-wide max-w-4xl mx-auto"
                     >
                         Kami memiliki konselor terbaik yang tidak hanya berkompeten dalam bimbingan, tetapi juga memiliki kepedulian tinggi terhadap perkembangan mahasiswa dan alumni. Dengan pengalaman, dedikasi, serta pendekatan yang personal, para konselor kami siap menjadi partner Anda dalam merencanakan karir, mengatasi tantangan, dan membantu mahasiswa memaksimalkan potensi diri serta mencapai prestasi terbaiknya.
                     </p>

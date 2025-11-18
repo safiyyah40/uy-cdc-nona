@@ -6,17 +6,17 @@ import { Navigation, Pagination, Mousewheel } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn'; 
+import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 
-// Animasi di Team Card 
+// Animasi di Team Card
 function PuskakaTeamCard({ name, title, photoUrl }) {
     const { ref, style } = useScrollFadeIn(0.1); // Tambahkan hook animasi
 
     return (
-        <div 
+        <div
             ref={ref}
             style={style}
-            className="bg-white rounded-2xl shadow-lg p-4 text-center w-full max-w-[280px] mx-auto flex flex-col items-center 
+            className="bg-white rounded-2xl shadow-lg p-4 text-center w-full max-w-[280px] mx-auto flex flex-col items-center
                        transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
         >
             <div className="relative w-full h-80 bg-[#FFF0E8] rounded-lg mb-4 overflow-hidden">
@@ -76,7 +76,7 @@ export default function ProfilPuskaka({ teamMembers, photos }) {
                     transform: scale(1.2);
                 }
             `}</style>
-            
+
             {/* Hero Section */}
             <section
                 className="relative flex h-[500px] md:h-[calc(100vh-80px)] items-center justify-center overflow-hidden bg-cover bg-no-repeat bg-center pt-32 pb-40"
@@ -84,39 +84,42 @@ export default function ProfilPuskaka({ teamMembers, photos }) {
                     backgroundImage: "url('/images/bg-dreamina.jpg')",
                 }}
             >
-                <div className="container mx-auto px-4 text-center">
-                    <h1 
-                        ref={heroTitle.ref} 
-                        style={heroTitle.style} 
-                        className="text-4xl md:text-5xl font-extrabold uppercase tracking-wider text-black font-kaisei"
-                    >
-                        Pusat Kemahasiswaan, <br /> Karir dan Alumni
-                    </h1>
-                    <p 
-                        ref={heroText.ref} 
-                        style={heroText.style} 
-                        className="mt-8 text-lg md:text-xl max-w-5xl mx-auto text-black"
-                    >
-                        Puskaka-UY (Pusat Kemahasiswaan, Karir, dan Alumni Universitas YARSI) adalah unit kerja di Bidang 1, Universitas YARSI yang bertugas mengelola berbagai layanan kemahasiswaan, pengembangan karir, dan hubungan alumni. Puskaka-UY berperan sebagai pusat pembinaan aktivitas kemahasiswaan, penguatan soft skills, penyelenggaraan bimbingan karir, serta fasilitator jejaring alumni, guna mendukung terciptanya lulusan yang unggul, kompetitif, dan berdaya saing di tingkat nasional maupun internasional.
-                    </p>
-                </div>
+        <div className="min-h-screen pt-40 pb-20 flex flex-col items-center justify-center">
+             <div className="container mx-auto px-6 max-w-5xl text-center">
+        <h1
+            ref={heroTitle.ref}
+            style={heroTitle.style}
+            className="text-4xl lg:text-5xl font-extrabold uppercase tracking-tight text-black font-kaisei whitespace-nowrap"
+        >
+            Pusat Kemahasiswaan, Karir dan Alumni
+        </h1>
+        <p
+            ref={heroText.ref}
+            style={heroText.style}
+            className="text-xl md:text-2xl leading-relaxed mt-8 text-gray-800 font-sans
+                    font-light tracking-wide max-w-4xl mx-auto"
+        >
+            Puskaka-UY (Pusat Kemahasiswaan, Karir, dan Alumni Universitas YARSI) adalah unit kerja di Bidang 1, Universitas YARSI yang bertugas mengelola berbagai layanan kemahasiswaan, pengembangan karir, dan hubungan alumni. Puskaka-UY berperan sebagai pusat pembinaan aktivitas kemahasiswaan, penguatan soft skills, penyelenggaraan bimbingan karir, serta fasilitator jejaring alumni, guna mendukung terciptanya lulusan yang unggul, kompetitif, dan berdaya saing di tingkat nasional maupun internasional.
+        </p>
+    </div>
+</div>
             </section>
 
             {/* Struktur Organisasi & Galeri */}
-            <section 
-                className="bg-yarsi-green py-20 relative bg-no-repeat" 
+            <section
+                className="bg-yarsi-green py-20 relative bg-no-repeat"
                 style={{
-                    backgroundImage: "url('/images/bg-linear.jpg')", 
+                    backgroundImage: "url('/images/bg-linear.jpg')",
                     backgroundPosition: 'top center',
-                    backgroundSize: '100% auto', 
+                    backgroundSize: '100% auto',
                 }}
             >
                 <div className="container mx-auto px-4">
-                    
+
                     {/* BAGIAN STRUKTUR ORGANISASI */}
-                    <h2 
-                        ref={teamTitle.ref} 
-                        style={teamTitle.style} 
+                    <h2
+                        ref={teamTitle.ref}
+                        style={teamTitle.style}
                         className="text-4xl font-bold text-white text-center mb-12"
                     >
                         Struktur Organisasi Puskaka
@@ -133,11 +136,11 @@ export default function ProfilPuskaka({ teamMembers, photos }) {
                             ))}
                         </div>
                     ) : (
-                        <div 
-                            ref={teamTitle.ref} 
-                            style={teamTitle.style} 
+                        <div
+                            ref={teamTitle.ref}
+                            style={teamTitle.style}
                             className="text-center font-bold text-white"
-                        > 
+                        >
                             Belum ada data anggota tim.
                         </div>
                     )}
@@ -145,11 +148,11 @@ export default function ProfilPuskaka({ teamMembers, photos }) {
 
                     {photos && photos.length > 0 && (
                         <div className="mt-20">
-                            
+
                             {/* Judul Galeri */}
-                            <h2 
-                                ref={galleryTitle.ref} 
-                                style={galleryTitle.style} 
+                            <h2
+                                ref={galleryTitle.ref}
+                                style={galleryTitle.style}
                                 className="text-4xl font-bold text-white text-center mb-12"
                             >
                                 Dokumentasi Kegiatan Puskaka
@@ -182,7 +185,7 @@ export default function ProfilPuskaka({ teamMembers, photos }) {
                     )}
                 </div>
             </section>
-            
+
             <Footer />
         </>
     );
