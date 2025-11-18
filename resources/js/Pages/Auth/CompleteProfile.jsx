@@ -29,9 +29,7 @@ export default function CompleteProfile({ user }) {
         // Hapus karakter non-digit
         const cleaned = phone.replace(/[^0-9]/g, '');
         
-        // Validasi:
-        // - Harus diawali 08 atau 628
-        // - Panjang 10-15 digit (Indonesia)
+        // Validasi: Harus diawali 08 atau 628, Panjang 10-15 digit (Indonesia)
         const isValid = /^(08|628)[0-9]{8,13}$/.test(cleaned);
         
         setPhoneStatus(isValid ? 'valid' : 'invalid');
@@ -187,10 +185,15 @@ export default function CompleteProfile({ user }) {
                     </div>
 
                     <div className="mt-3 text-center">
-                        <Link href="/" className="text-sm text-gray-400 hover:text-gray-600">
+                        <Link 
+                            href={route('logout')}
+                            method="post"
+                            as="button"
+                            className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+                        >
                             Batal
                         </Link>
-                    </div>
+                  </div>
                 </form>
             </div>
         </div>
