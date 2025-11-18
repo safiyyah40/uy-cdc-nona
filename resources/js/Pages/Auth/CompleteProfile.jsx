@@ -82,13 +82,17 @@ export default function CompleteProfile({ user }) {
     <Head title="Lengkapi Data Dirimu" />
     <div className="w-full max-w-3xl rounded-[2.5rem] bg-white p-6 shadow-2xl relative">
         
-        {/* Ikon Close (Tombol "X") */}
-        <button className="absolute top-4 left-4 text-gray-500 hover:text-gray-700">
+        <Link
+            href={route('logout')}
+            method="post"
+            as="button"
+            className="absolute top-4 left-4 text-gray-500 hover:text-gray-700 transition-colors"
+            aria-label="Batal dan Keluar"
+        >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
-        </button>
-
+        </Link>
         <div className="mb-6 flex justify-center">
             <img src={LOGO_YARSI_CDC} alt="Logo CDC YARSI" className="h-16" />
         </div>
@@ -190,17 +194,6 @@ export default function CompleteProfile({ user }) {
                             {processing ? 'Menyimpan...' : 'Simpan'}
                         </PrimaryButton>
                     </div>
-
-                    <div className="mt-3 text-center">
-                        <Link 
-                            href={route('logout')}
-                            method="post"
-                            as="button"
-                            className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
-                        >
-                            Batal
-                        </Link>
-                  </div>
                 </form>
             </div>
         </div>
