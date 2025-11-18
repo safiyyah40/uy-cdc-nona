@@ -9,9 +9,10 @@ import InfoMagang from '../Components/InfoMagang';
 import TesMinatBakat from '../Components/TesMinatBakat';
 import Footer from '../Components/Footer';
 
-export default function Dashboard({ auth }) {
+export default function Dashboard({ auth, slides }) {
     const { props } = usePage();
     const success = props.flash?.success;
+    console.log('Slides data:', slides);
     return (
         <MainLayout>
             <Head title="Dashboard Mahasiswa" />
@@ -45,7 +46,7 @@ export default function Dashboard({ auth }) {
 
             {/* Konten utama dashboard */}
             <div className="bg-white">
-                <VisiMisi />
+                <VisiMisi slides={slides} />
 
                 <KalenderSection />
 
