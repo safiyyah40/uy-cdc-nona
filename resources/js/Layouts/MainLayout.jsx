@@ -119,7 +119,7 @@ function NavDropdown({ title, children, basePath }) {
 // Mobile Nav Link
 function MobileNavLink({ href, children, onClick }) {
     const { url } = usePage();
-    const isActive = url === href || url.startsWith(href + '/');
+    const isActive = url === href || url.startsWith(href + '/'); 
 
     return (
         <Link 
@@ -218,7 +218,7 @@ export default function MainLayout({ children }) {
                                 BERANDA
                             </NavLink>
 
-                           <NavDropdown title="PROFIL" basePath={['/profil-puskaka', '/profil-developer']}>
+                           <NavDropdown title="PROFIL" basePath="/profil">
                                 <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
                                 <DropdownLink href={route('profil.konselor')}>KONSELOR</DropdownLink>
                                 <DropdownLink href={route('profil.developer')}>PENGEMBANG</DropdownLink>
