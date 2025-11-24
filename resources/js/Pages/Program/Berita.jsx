@@ -5,6 +5,7 @@ import { Head } from '@inertiajs/react';
 import NewsCard from '@/Components/NewsCard';
 
 const createNewsItems = () => {
+    // Daftar Judul Utama
     const baseItems = [
         "Universitas YARSI Terima 59 Mahasiswa Baru Penerima Beasiswa KIP Kuliah Tahun 2025",
         "Berita Tambahan Edisi Oktober",
@@ -22,9 +23,15 @@ const createNewsItems = () => {
 
     const allItems = [];
     for (let i = 0; i < 24; i++) {
+        const id = i + 1;
+        const title = `${baseItems[i % baseItems.length]} (Item ${id})`;
+        const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-*|-*$/g, '');
+
         allItems.push({
+            id: id,
             imageSrc: "/images/berita.jpeg",
-            title: `${baseItems[i % baseItems.length]} (Item ${i + 1})`
+            title: title,
+            slug: slug
         });
     }
     return allItems;
@@ -100,9 +107,6 @@ export default function Berita(props) {
                 <div className="bg-white py-16 md:py-20">
                     <div className="container mx-auto px-6 lg:px-8">
 
-                        {
-
-                        }
                         <div className="flex justify-end items-center mb-8">
                             {/* Kolom Pencarian dengan Ikon */}
                             <div className="relative w-full md:w-auto">
@@ -113,7 +117,6 @@ export default function Berita(props) {
                                     onChange={handleSearchChange}
                                     className="border border-gray-300 rounded-md shadow-sm pl-10 pr-4 py-2 w-full md:w-80 focus:outline-none focus:ring-2 focus:ring-green-500"
                                 />
-                                {/* Ikon Kaca Pembesar (SVG) */}
                                 <svg
                                     className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
                                     fill="none"
@@ -134,11 +137,12 @@ export default function Berita(props) {
                         {/* GRID BERITA */}
                         {itemsToDisplay.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
-                                {itemsToDisplay.map((item, index) => (
+                                {itemsToDisplay.map((item) => (
                                     <NewsCard
-                                        key={item.title}
+                                        key={item.id}
                                         title={item.title}
                                         imageSrc={item.imageSrc}
+                                        link={route('berita.show', { id: item.id, slug: item.slug })}
                                     />
                                 ))}
                             </div>
@@ -148,9 +152,6 @@ export default function Berita(props) {
                             </div>
                         )}
 
-                        {
-
-                        }
                         <div className="mt-8 flex justify-between items-center flex-wrap">
 
                             {/* Kotak Pilihan */}
@@ -172,11 +173,8 @@ export default function Berita(props) {
                                 </select>
                             </div>
 
-                            {
-
-                            }
                             <div className="text-gray-600">
-                                 Menampilkan {itemsToDisplay.length} dari {filteredItems.length} berita.
+                                Menampilkan {itemsToDisplay.length} dari {filteredItems.length} berita.
                             </div>
 
                         </div>

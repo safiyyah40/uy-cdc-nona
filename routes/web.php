@@ -33,57 +33,70 @@ Route::get('/', function () {
     ]);
 });
 
-// Halaman setelah login
+// Route-route yang membutuhkan otentikasi (Auth Group)
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Dashboard (hanya bisa diakses kalau profil lengkap)
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    // Lengkapi profil (hanya bisa diakses kalau login)
+    // Lengkapi profil
     Route::get('/complete-profile', [ProfileCompletionController::class, 'show'])
         ->name('profile.complete');
     Route::post('/complete-profile', [ProfileCompletionController::class, 'store'])
         ->name('profile.complete.store');
+
+    // Route akun profile
+    Route::get('/akun', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/akun/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/akun/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Route untuk logout
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('logout');
 });
 
-// Route profil puskaka
+// Route Publik Program dan Profil
 Route::get('/profil/puskaka', [ProfilPuskakaController::class, 'index'])
     ->name('profil.puskaka');
 
-// Route profil konselor
 Route::get('/profil-konselor', ProfilKonselorController::class, 'index')
     ->name('profil.konselor');
 
-// Route profil pengembang
 Route::get('/profil/developer', function () {
     return Inertia::render('Profil/Developer');
 })->name('profil.developer');
 
-//Route Program Orientasi Dunia Kerja
 Route::get('/program/orientasi-dunia-kerja', function () {
     return Inertia::render('Program/OrientasiDuniaKerja');
 })->name('program.orientasi.kerja');
 
-//Route Program Campus Hiring
 Route::get('/program/campus-hiring', function () {
     return Inertia::render('Program/CampusHiring');
 })->name('program.campus.hiring');
 
-// Route Program Seminar
 Route::get('/program/seminar', function () {
     return Inertia::render('Program/Seminar');
 })->name('program.seminar');
 
-// Route Program Tips dan Trik
 Route::get('/program/tips-dan-trik', function () {
     return Inertia::render('Program/TipsDanTrik');
 })->name('program.tips.trik');
 
-// Route Halaman Berita
 Route::get('/program/berita', function () {
     return Inertia::render('Program/Berita');
 })->name('program.berita');
+
+// Route Detail Berita
+Route::get('/berita/{id}/{slug}', function ($id) {
+    $user = auth()->guard('web')->user();
+ return Inertia::render('Program/DetailBerita', [
+        'newsId' => (int) $id,
+        'auth' => [
+            'user' => $user,
+        ],
+    ]);
+})->name('berita.show');
 
 // Route akun profile
     Route::middleware(['auth'])->group(function () {
