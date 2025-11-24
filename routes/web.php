@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Models\PuskakaTeam;
 use App\Http\Controllers\ProfilKonselorController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilPuskakaController;
 use App\Http\Controllers\ProfileCompletionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\BeritaController;
 use App\Models\BerandaSlide;
 
 Route::get('/', function () {
@@ -83,10 +83,11 @@ Route::get('/program/tips-dan-trik', function () {
     return Inertia::render('Program/TipsDanTrik');
 })->name('program.tips.trik');
 
-Route::get('/program/berita', function () {
-    return Inertia::render('Program/Berita');
-})->name('program.berita');
+// 1. Route Daftar Berita (Bisa diakses publik)
+Route::get('/program/berita', [BeritaController::class, 'index'])
+    ->name('program.berita');
 
+<<<<<<< HEAD
 // Route Layanan
 Route::prefix('layanan')->group(function () {
     Route::get('/konsultasi', function () {
@@ -113,6 +114,13 @@ Route::get('/berita/{id}/{slug}', function ($id) {
         ],
     ]);
 })->name('berita.show');
+=======
+// 2. Route Detail Berita (Jika ingin wajib login, taruh di dalam middleware auth)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/berita/{id}/{slug}', [BeritaController::class, 'show'])
+        ->name('berita.show');
+});
+>>>>>>> d4e50f59bfa08e5f0f1d95e85bc754bf2aa1de22
 
 // Route akun profile
     Route::middleware(['auth'])->group(function () {

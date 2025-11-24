@@ -1,33 +1,64 @@
 import React from 'react';
+import NewsCard from '@/Components/NewsCard';
 import { Link } from '@inertiajs/react';
 
-const IMAGE_PATH = '/images/berita.jpeg';
-
-const NewsCard = ({ title, imageSrc, link }) => {
+const BeritaSection = ({ latestNews = [] }) => {
     return (
-        <Link
-            href={link} // Inertia akan mengurus navigasi
-            className="block relative overflow-hidden rounded-3xl shadow-xl border border-gray-200 bg-white group cursor-pointer"
-        >
-            <div className="relative w-full pb-[42.85%]">
-                <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                    style={{ backgroundImage: `url(${imageSrc || IMAGE_PATH})` }}
-                >
-                    <div className="absolute inset-0 bg-black bg-opacity-30"></div>
-                    <div className="absolute bottom-4 left-4 right-4 text-white text-shadow">
-                        {/* Judul Berita */}
-                        <p className="text-lg font-semibold leading-snug">
-                            {title}
+        <section className="bg-gray-50 py-16 border-t border-gray-200">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-gray-300 pb-4">
+                    <div>
+                        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 font-kaisei mb-2">
+                            Berita <span className="text-green-600">Terbaru</span>
+                        </h2>
+                        <p className="text-gray-600">
+                            Update terkini seputar kegiatan akademik dan kemahasiswaan.
                         </p>
-                        <span className="mt-1 inline-block text-sm text-yellow-300 transition duration-300 opacity-0 group-hover:opacity-100">
-                            Baca Selengkapnya
-                        </span>
                     </div>
+
+                    <Link 
+                        href={route('program.berita')} 
+                        className="hidden md:inline-flex items-center font-semibold text-green-600 hover:text-green-800 transition-colors mt-4 md:mt-0"
+                    >
+                        Lihat Semua Arsip &rarr;
+                    </Link>
                 </div>
+
+                {/* Grid Content */}
+                {latestNews && latestNews.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {latestNews.map((item) => (
+                            // PANGGIL NEWSCARD DISINI
+                            <NewsCard 
+                                key={item.id}
+                                title={item.title}
+                                imageSrc={item.image_url}
+                                date={item.formatted_date}
+                                link={route('berita.show', { id: item.id, slug: item.slug })}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-300">
+                        <p className="text-gray-500 text-lg">Belum ada berita terbaru saat ini.</p>
+                    </div>
+                )}
+
+                {/* Tombol Mobile */}
+                <div className="mt-8 text-center md:hidden">
+                    <Link
+                        href={route('program.berita')}
+                        className="inline-block px-6 py-3 bg-white border border-gray-300 rounded-full text-gray-700 font-medium hover:bg-gray-50 transition shadow-sm"
+                    >
+                        Lihat Semua Berita
+                    </Link>
+                </div>
+
             </div>
-        </Link>
+        </section>
     );
 };
 
-export default NewsCard;
+export default BeritaSection;

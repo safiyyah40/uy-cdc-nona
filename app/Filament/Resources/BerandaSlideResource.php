@@ -24,7 +24,7 @@ class BerandaSlideResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Manajemen Konten Beranda';
 
-    protected static ?string $recordTitleAttribute = 'BerandaSlide';
+    protected static ?string $recordTitleAttribute = 'alt_text';
 
         public static function getModelLabel(): string
     {
