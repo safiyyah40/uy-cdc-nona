@@ -53,7 +53,7 @@ function ProfileDropdownLink({ href, method = 'get', as = 'a', children }) {
             method={method}
             as={as}
             className="
-                block w-full px-5 py-3 text-left text-lg font-semibold 
+                block w-full px-5 py-3 text-left text-lg font-semibold
                 text-[#006241]
                 transition-all duration-200
                 hover:bg-[#006241] hover:text-white
@@ -69,7 +69,7 @@ function NavDropdown({ title, children, basePath }) {
     const { url } = usePage();
 
     const isActive =
-        (Array.isArray(basePath) 
+        (Array.isArray(basePath)
             ? basePath.some(path => url.startsWith(path))
             : url.startsWith(basePath)
         ) ||
@@ -119,10 +119,10 @@ function NavDropdown({ title, children, basePath }) {
 // Mobile Nav Link
 function MobileNavLink({ href, children, onClick }) {
     const { url } = usePage();
-    const isActive = url === href || url.startsWith(href + '/'); 
+    const isActive = url === href || url.startsWith(href + '/');
 
     return (
-        <Link 
+        <Link
             href={href}
             onClick={onClick}
             className={`block px-6 py-4 text-lg font-semibold rounded-lg transition-all duration-200
@@ -178,7 +178,7 @@ export default function MainLayout({ children }) {
     // Efek untuk menutup dropdown profil jika klik di luar
         useEffect(() => {
             function handleClickOutside(event) {
-                if (profileDropdownRef.current && 
+                if (profileDropdownRef.current &&
                     !profileDropdownRef.current.contains(event.target)
                 ) {
                     setIsProfileOpen(false);
@@ -204,10 +204,10 @@ export default function MainLayout({ children }) {
                     {/* Logo dan Navigasi */}
                     <div className="flex items-center space-x-8">
                         <Link href="/" className="flex-shrink-0">
-                            <img 
-                                src={LOGO_YARSI_CDC} 
-                                alt="Logo CDC YARSI" 
-                                className="h-[92px] object-contain" 
+                            <img
+                                src={LOGO_YARSI_CDC}
+                                alt="Logo CDC YARSI"
+                                className="h-[92px] object-contain"
                                 onError={(e) => e.target.src = 'https://placehold.co/200x92/006241/white?text=LOGO'}
                             />
                         </Link>
@@ -233,9 +233,9 @@ export default function MainLayout({ children }) {
                             </NavDropdown>
 
                             <NavDropdown title="LAYANAN" basePath="/layanan">
-                                <DropdownLink href="#">KONSULTASI</DropdownLink>
-                                <DropdownLink href="#">CV REVIEW</DropdownLink>
-                                <DropdownLink href="#">TES MINAT DAN BAKAT</DropdownLink>
+                                <DropdownLink href={route('layanan.konsultasi')}>KONSULTASI</DropdownLink>
+                                <DropdownLink href={route('layanan.cv.review')}>CV REVIEW</DropdownLink>
+                                <DropdownLink href={route('layanan.tes.minat.bakat')}>TES MINAT DAN BAKAT</DropdownLink>
                             </NavDropdown>
 
                             <NavDropdown title="PELUANG KARIR" basePath="/peluang-karir">
@@ -253,24 +253,24 @@ export default function MainLayout({ children }) {
                                 <button
                                     onClick={() => setIsProfileOpen(prev => !prev)}
                                     className={`
-                                        flex items-center justify-center 
-                                        rounded-xl p-3 transition-all duration-200 
+                                        flex items-center justify-center
+                                        rounded-xl p-3 transition-all duration-200
                                         relative
-                                        ${isProfileOpen 
+                                        ${isProfileOpen
                                             ? 'bg-[#006241] text-white shadow-[0_3px_10px_rgba(0,0,0,0.18)] scale-[1.03]'
                                             : 'text-[#006241] hover:bg-[#006241] hover:text-white hover:shadow-[0_3px_10px_rgba(0,0,0,0.18)]'
                                         }
                                     `}
                                 >
-                                    <svg 
-                                        className={`h-10 w-10 transition-all duration-300 
+                                    <svg
+                                        className={`h-10 w-10 transition-all duration-300
                                             ${isProfileOpen ? 'rotate-90' : ''}
                                         `}
-                                        fill="none" 
-                                        stroke="currentColor" 
+                                        fill="none"
+                                        stroke="currentColor"
                                         viewBox="0 0 24 24"
                                     >
-                                        <path 
+                                        <path
                                             strokeLinecap="round"
                                             strokeLinejoin="round"
                                             strokeWidth="2.5"
@@ -282,7 +282,7 @@ export default function MainLayout({ children }) {
                         {/* Dropdown Profil */}
                         {isProfileOpen && (
                             <div className="absolute top-full right-0 mt-4 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50">
-                                
+
                                 {/* Header User */}
                                 <div className="px-5 py-4 border-b bg-gray-50 border-gray-200">
                                     <p className="text-sm text-gray-500">Masuk sebagai</p>
@@ -347,8 +347,8 @@ export default function MainLayout({ children }) {
                             </div>
                         ) : (
                             // Jika masih tamu menampilkan Tombol Masuk
-                            <Link 
-                                href={route('login')} 
+                            <Link
+                                href={route('login')}
                                 className="hidden md:inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[#09AD79] to-[#044732] px-9 py-4 text-[22px] font-semibold text-white shadow-[0_6px_15px_rgba(0,0,0,0.25)] hover:scale-105 hover:brightness-110 transition-all duration-300"
                             >
                                 MASUK
@@ -356,8 +356,8 @@ export default function MainLayout({ children }) {
                         )}
 
                         {/* Tombol Hamburger (Mobile) */}
-                        <button 
-                            onClick={() => setIsMobileMenuOpen(prev => !prev)} 
+                        <button
+                            onClick={() => setIsMobileMenuOpen(prev => !prev)}
                             className="inline-flex md:hidden items-center justify-center rounded-md p-3 text-gray-700 hover:bg-gray-100 hover:text-[#006241] transition-all duration-200"
                         >
                             <svg className="h-14 w-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -412,7 +412,7 @@ export default function MainLayout({ children }) {
 
                             {/* Tombol Masuk untuk Tamu */}
                             {!auth.user && (
-                                <Link 
+                                <Link
                                     href={route('login')}
                                     className="mt-4 block text-center rounded-lg bg-gradient-to-r from-[#09AD79] to-[#044732] px-6 py-4 text-lg font-semibold text-white shadow-lg"
                                 >

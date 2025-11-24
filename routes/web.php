@@ -87,6 +87,22 @@ Route::get('/program/berita', function () {
     return Inertia::render('Program/Berita');
 })->name('program.berita');
 
+// Route Layanan
+Route::prefix('layanan')->group(function () {
+    Route::get('/konsultasi', function () {
+        return Inertia::render('Layanan/Konsultasi');
+    })->name('layanan.konsultasi');
+
+     Route::get('/cv-review', function () {
+         return Inertia::render('Layanan/CvReview');
+     })->name('layanan.cv.review');
+
+    Route::get('/tes-minat-bakat', function () {
+        return Inertia::render('Layanan/TesMinatBakat');
+     })->name('layanan.tes.minat.bakat');
+
+});
+
 // Route Detail Berita
 Route::get('/berita/{id}/{slug}', function ($id) {
     $user = auth()->guard('web')->user();
