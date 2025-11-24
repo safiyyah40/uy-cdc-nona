@@ -52,7 +52,7 @@ export default function Dashboard({ auth, slides }) {
 
                 <StatistikLayanan />
 
-                <BeritaSection />
+                <BeritaSection  />
 
                 <LowonganPekerjaan />
 

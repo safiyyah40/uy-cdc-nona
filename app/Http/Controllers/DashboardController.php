@@ -25,7 +25,7 @@ class DashboardController extends Controller
 
     return Inertia::render('Dashboard', [
         'auth' => [
-            'user' => $user,    // bisa null kalau guest, DAN ITU NORMAL
+            'user' => $user,
         ],
         'slides' => $slides,
     ]);
