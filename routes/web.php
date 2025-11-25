@@ -75,9 +75,72 @@ Route::get('/program/campus-hiring', function () {
     return Inertia::render('Program/CampusHiring');
 })->name('program.campus.hiring');
 
+// Route Detail Campus Hiring
+Route::get('/program/campus-hiring/{id}/{slug}', function ($id) {
+    $dummyCampusHiringData = [
+        'id' => (int) $id,
+        'title' => 'Campus Hiring BRILiaN Internship Program (BIP)',
+        'company' => 'PT Bank Rakyat Indonesia (Persero) Tbk.',
+        'location' => 'Kampus Universitas YARSI, Jakarta',
+        'date' => '2025-09-19',
+        'time' => '09:00 - 16:00 WIB',
+        'description' => 'Program magang eksklusif dari BRI untuk mahasiswa dan alumni YARSI. Peluang untuk menjadi bagian dari bank terbesar di Indonesia.',
+        'content' => '
+            <div class="space-y-4">
+                <p>Campus Hiring BRILiaN Internship Program (BIP) adalah jalur cepat bagi mahasiswa/lulusan YARSI yang ingin mengembangkan karir di dunia perbankan. Program ini menekankan pada penempatan di berbagai unit kerja strategis BRI.</p>
+                <h4 class="font-semibold text-lg text-gray-800">Manfaat Program:</h4>
+                <ul class="list-disc list-inside">
+                    <li>Pengalaman kerja nyata di lingkungan korporat.</li>
+                    <li>Tunjangan dan fasilitas yang kompetitif.</li>
+                    <li>Kesempatan untuk diangkat menjadi karyawan tetap.</li>
+                </ul>
+                <h4 class="font-semibold text-lg text-gray-800">Persyaratan Khusus:</h4>
+                <ul class="list-disc list-inside">
+                    <li>Pendidikan minimal S1/D3 dari semua jurusan terakreditasi A/B.</li>
+                    <li>Usia maksimal 25 tahun (belum berulang tahun ke-26 saat seleksi).</li>
+                    <li>Bersedia mengikuti seluruh rangkaian program.</li>
+                </ul>
+            </div>
+        ',
+        'imageSrc' => '/images/campushiring.jpg',
+        'registration_link' => 'https://bit.ly/daftar-bip-yarsi',
+    ];
+
+    $user = auth()->guard('web')->user();
+    return Inertia::render('Program/DetailCampusHiring', [
+        'campusHiring' => $dummyCampusHiringData,
+        'auth' => [
+            'user' => $user,
+        ],
+    ]);
+})->name('program.campus.hiring.show');
+
+
 Route::get('/program/seminar', function () {
     return Inertia::render('Program/Seminar');
 })->name('program.seminar');
+
+// Route Detail Seminar
+Route::get('/program/seminar/{id}/{slug}', function ($id) {
+    $dummySeminarData = [
+        'id' => (int) $id,
+        'title' => 'Pokok-Pokok Pikiran Tentang Universitas Islam Ideal dan Aplikasinya di Indonesia',
+        'speaker' => 'Dr. Budi Santoso',
+        'published_date' => '2025-11-20',
+        'description' => 'Ringkasan singkat tentang pentingnya visi Islam integral dalam dunia pendidikan tinggi.',
+        'content' => '<p>Konten lengkap seminar dalam format HTML. Ini adalah detail mendalam tentang visi dan misi keislaman Universitas YARSI.</p><p>Seminar ini bertujuan untuk memberikan wawasan komprehensif kepada para mahasiswa dan alumni.</p>',
+        'images' => ['/images/seminar.jfif', '/images/seminar.jfif'],
+        'registration_link' => 'https://bit.ly/daftar-seminar',
+    ];
+
+    $user = auth()->guard('web')->user();
+    return Inertia::render('Program/DetailSeminar', [
+        'seminar' => $dummySeminarData,
+        'auth' => [
+            'user' => $user,
+        ],
+    ]);
+})->name('program.seminar.show');
 
 Route::get('/program/tips-dan-trik', function () {
     return Inertia::render('Program/TipsDanTrik');
@@ -87,7 +150,6 @@ Route::get('/program/tips-dan-trik', function () {
 Route::get('/program/berita', [BeritaController::class, 'index'])
     ->name('program.berita');
 
-<<<<<<< HEAD
 // Route Layanan
 Route::prefix('layanan')->group(function () {
     Route::get('/konsultasi', function () {
@@ -114,13 +176,12 @@ Route::get('/berita/{id}/{slug}', function ($id) {
         ],
     ]);
 })->name('berita.show');
-=======
+
 // 2. Route Detail Berita (Jika ingin wajib login, taruh di dalam middleware auth)
 Route::middleware(['auth'])->group(function () {
     Route::get('/berita/{id}/{slug}', [BeritaController::class, 'show'])
         ->name('berita.show');
 });
->>>>>>> d4e50f59bfa08e5f0f1d95e85bc754bf2aa1de22
 
 // Route akun profile
     Route::middleware(['auth'])->group(function () {

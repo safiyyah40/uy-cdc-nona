@@ -22,15 +22,12 @@ const Footer = () => {
                 <div className="container mx-auto px-4 md:px-8 max-w-6xl">
                     <div className="flex flex-col md:flex-row justify-between items-start">
 
-                        {/* LEFT SECTION: Logo & Address Block */}
                         <div className="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-12 mb-8 md:mb-0 w-full md:w-auto">
 
-                            {/* Logo: Dibuat lebih besar dan rata kiri */}
                             <div className="flex-shrink-0 pt-2">
                                 <img src={LOGO_CDC_URL} alt="Logo CDC Universitas YARSI" className="h-40 w-auto" />
                             </div>
 
-                            {/* Address Block: Rata tengah secara vertikal dengan logo */}
                             <div className="flex flex-col justify-start space-y-4 text-gray-700">
                                 <div>
                                     <p className="font-bold text-base mb-1 text-black">Universitas Yarsi</p>
@@ -74,7 +71,7 @@ const Footer = () => {
                 <div className="container mx-auto px-4 md:px-8 max-w-6xl text-center text-gray-800 text-sm">
                     <p className="flex items-center justify-center space-x-1 font-bold">
                         <CopyrightIcon className="w-4 h-4 inline" />
-                        <span>2025 Universitas YARSI All Rights Reserved.</span>
+                         <span>2025 Universitas YARSI All Rights Reserved.</span>
                     </p>
                 </div>
             </div>
