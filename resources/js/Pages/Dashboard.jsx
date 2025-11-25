@@ -36,7 +36,7 @@ export default function Dashboard({ auth, slides }) {
                     </div>
 
                     <h1 className="text-5xl font-extrabold text-yarsi-green md:text-6xl">
-                        CAREER DEVELOPMENT CENTRE
+                        CAREER DEVELOPMENT CENTER
                     </h1>
                     <h1 className="text-5xl font-extrabold text-yarsi-green md:text-6xl">
                         UNIVERSITAS YARSI

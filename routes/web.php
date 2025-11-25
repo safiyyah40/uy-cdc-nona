@@ -33,40 +33,33 @@ Route::get('/', function () {
     ]);
 });
 
-// Route-route yang membutuhkan otentikasi (Auth Group)
+// --- GROUP AUTH ---
 Route::middleware(['auth', 'verified'])->group(function () {
-
-    // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
-
-    // Lengkapi profil
-    Route::get('/complete-profile', [ProfileCompletionController::class, 'show'])
-        ->name('profile.complete');
-    Route::post('/complete-profile', [ProfileCompletionController::class, 'store'])
-        ->name('profile.complete.store');
-
-    // Route akun profile
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Profil Lengkap & Akun
+    Route::get('/complete-profile', [ProfileCompletionController::class, 'show'])->name('profile.complete');
+    Route::post('/complete-profile', [ProfileCompletionController::class, 'store'])->name('profile.complete.store');
     Route::get('/akun', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/akun/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/akun/update', [ProfileController::class, 'update'])->name('profile.update');
 
-    // Route untuk logout
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
-// Route Publik Program dan Profil
-Route::get('/profil/puskaka', [ProfilPuskakaController::class, 'index'])
-    ->name('profil.puskaka');
+// --- GROUP PUBLIC ---
 
-Route::get('/profil-konselor', ProfilKonselorController::class, 'index')
+// 1. Profil
+Route::get('/profil/puskaka', [ProfilPuskakaController::class, 'index'])->name('profil.puskaka');
+
+Route::get('/profil-konselor', [ProfilKonselorController::class, 'index'])
     ->name('profil.konselor');
 
 Route::get('/profil/developer', function () {
     return Inertia::render('Profil/Developer');
 })->name('profil.developer');
 
+// 2. Program
 Route::get('/program/orientasi-dunia-kerja', function () {
     return Inertia::render('Program/OrientasiDuniaKerja');
 })->name('program.orientasi.kerja');
@@ -83,55 +76,22 @@ Route::get('/program/tips-dan-trik', function () {
     return Inertia::render('Program/TipsDanTrik');
 })->name('program.tips.trik');
 
-// 1. Route Daftar Berita (Bisa diakses publik)
-Route::get('/program/berita', [BeritaController::class, 'index'])
-    ->name('program.berita');
+// 3. Berita
+Route::get('/program/berita', [BeritaController::class, 'index'])->name('program.berita');
+Route::get('/berita/{id}/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
-<<<<<<< HEAD
-// Route Layanan
+// 4. Layanan
 Route::prefix('layanan')->group(function () {
-    Route::get('/konsultasi', function () {
-        return Inertia::render('Layanan/Konsultasi');
-    })->name('layanan.konsultasi');
+    Route::get('/konsultasi', [ProfilKonselorController::class, 'layanan'])
+        ->name('layanan.konsultasi');
 
-     Route::get('/cv-review', function () {
-         return Inertia::render('Layanan/CvReview');
-     })->name('layanan.cv.review');
+    Route::get('/cv-review', function () {
+        return Inertia::render('Layanan/CvReview');
+    })->name('layanan.cv.review');
 
     Route::get('/tes-minat-bakat', function () {
         return Inertia::render('Layanan/TesMinatBakat');
-     })->name('layanan.tes.minat.bakat');
-
+    })->name('layanan.tes.minat.bakat');
 });
-
-// Route Detail Berita
-Route::get('/berita/{id}/{slug}', function ($id) {
-    $user = auth()->guard('web')->user();
- return Inertia::render('Program/DetailBerita', [
-        'newsId' => (int) $id,
-        'auth' => [
-            'user' => $user,
-        ],
-    ]);
-})->name('berita.show');
-=======
-// 2. Route Detail Berita (Jika ingin wajib login, taruh di dalam middleware auth)
-Route::middleware(['auth'])->group(function () {
-    Route::get('/berita/{id}/{slug}', [BeritaController::class, 'show'])
-        ->name('berita.show');
-});
->>>>>>> d4e50f59bfa08e5f0f1d95e85bc754bf2aa1de22
-
-// Route akun profile
-    Route::middleware(['auth'])->group(function () {
-    Route::get('/akun', [ProfileController::class, 'show'])->name('profile.show');
-    Route::get('/akun/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::post('/akun/update', [ProfileController::class, 'update'])->name('profile.update');
-});
-
-// Route untuk logout
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth')
-    ->name('logout');
 
 require __DIR__.'/auth.php';

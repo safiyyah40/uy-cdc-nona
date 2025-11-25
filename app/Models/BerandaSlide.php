@@ -27,9 +27,8 @@ class BerandaSlide extends Model
      */
     public function getPhotoUrlAttribute()
     {
-        if ($this->image_path) {
-            return Storage::disk('public')->url($this->image_path);
-        }
-        return null; // akan menampilkan placeholder
+        return $this->image_path
+        ? asset($this->image_path)
+        : null;
     }
 }
