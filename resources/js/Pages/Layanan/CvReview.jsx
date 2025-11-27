@@ -1,8 +1,14 @@
 import React from 'react';
+import { router } from '@inertiajs/react'; 
 import MainLayout from '../../Layouts/MainLayout';
 
 
-const Konsultasi = () => {
+const Konsultasi = () => { // Nama komponen dikembalikan ke Konsultasi
+
+  const handleMulaiSekarang = () => {
+    router.visit('/layanan/tabel-cv-review');
+  };
+
   return (
     <MainLayout>
 
@@ -23,14 +29,15 @@ const Konsultasi = () => {
               </h1>
 
               <p className="text-xl md:text-2xl leading-relaxed mb-6 text-gray-800 font-sans
-                                          font-light tracking-wide">
+                                  font-light tracking-wide">
                   Kami membantu meninjau dan menyempurnakan CV-mu agar tampil lebih rapi, relevan, dan menarik di mata perekrut.
-                  Melalur evaluasi menyelurun ternadap ist, struktur, dan tampilan, Kamu akan mendapatkan masukan protesional yane membantu menonjolkan kekuatan serta pencapaianmu secara efektif.
+                  Melalui evaluasi menyeluruh terhadap isi, struktur, dan tampilan, Kamu akan mendapatkan masukan profesional yang membantu menonjolkan kekuatan serta pencapaianmu secara efektif.
                   Dengan CV yang tersusun lebih strategis, kamu bisa meningkatkan peluang untuk menarik perhatian dan melangkah lebih dekat menuju karier impianmu.
               </p>
-              
+
               <div>
                 <button
+                  onClick={handleMulaiSekarang}
                   className="px-10 py-3 bg-[#004d40] text-white font-semibold text-lg rounded-lg shadow-xl hover:bg-green-700 transition duration-300 transform hover:scale-[1.05]"
                 >
                     Mulai Sekarang

@@ -36,7 +36,7 @@ Route::get('/', function () {
 // --- GROUP AUTH ---
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Profil Lengkap & Akun
     Route::get('/complete-profile', [ProfileCompletionController::class, 'show'])->name('profile.complete');
     Route::post('/complete-profile', [ProfileCompletionController::class, 'store'])->name('profile.complete.store');
@@ -143,11 +143,7 @@ Route::get('/program/tips-dan-trik', function () {
 Route::get('/program/berita', [BeritaController::class, 'index'])->name('program.berita');
 Route::get('/berita/{id}/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
-<<<<<<< HEAD
 // Route Layanan
-=======
-// 4. Layanan
->>>>>>> b21644b441f3cea5032eeef10df738e493c1cd12
 Route::prefix('layanan')->group(function () {
     Route::get('/konsultasi', [ProfilKonselorController::class, 'layanan'])
         ->name('layanan.konsultasi');
@@ -156,12 +152,15 @@ Route::prefix('layanan')->group(function () {
         return Inertia::render('Layanan/CvReview');
     })->name('layanan.cv.review');
 
+    Route::get('/tabel-cv-review', function () {
+        return Inertia::render('Layanan/TabelCvReview');
+    })->name('layanan.tabel.cv.review');
+
     Route::get('/tes-minat-bakat', function () {
         return Inertia::render('Layanan/TesMinatBakat');
     })->name('layanan.tes.minat.bakat');
 });
 
-<<<<<<< HEAD
 // Route Detail Berita
 Route::get('/berita/{id}/{slug}', function ($id) {
     $user = auth()->guard('web')->user();
@@ -192,6 +191,3 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->name('logout');
 
 require __DIR__.'/auth.php';
-=======
-require __DIR__.'/auth.php';
->>>>>>> b21644b441f3cea5032eeef10df738e493c1cd12
