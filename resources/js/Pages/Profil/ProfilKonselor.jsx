@@ -49,7 +49,7 @@ const Icons = {
     )
 };
 
-// --- KOMPONEN KARTU KONSELOR (REDESIGNED with YARSI THEME) ---
+// --- KOMPONEN KARTU KONSELOR ---
 function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
     const { ref, style } = useScrollFadeIn(0.1); 
     const [imageError, setImageError] = useState(false);
@@ -63,7 +63,7 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
         >
             {/* Header dengan Foto Profil */}
             <div className="relative">
-                {/* Background Pattern - MENGGUNAKAN YARSI GREEN */}
+                {/* Background Pattern*/}
                 <div className="h-36 bg-gradient-to-br from-yarsi-green via-yarsi-green-light to-yarsi-green-dark relative overflow-hidden">
                     {/* Decorative Circles */}
                     <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/5 rounded-full"></div>
@@ -141,7 +141,7 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
                     )}
                 </div>
 
-                {/* Action Button - Menggunakan Custom Gradient YARSI */}
+                {/* Action Button */}
                 <div className="mt-6 pt-6 border-t border-gray-100">
                     <Link
                         href="/layanan/konsultasi"
@@ -178,23 +178,19 @@ export default function ProfilKonselor({ counselors }) {
         <MainLayout>
             <Head title="Profil Konselor - CDC YARSI" />
             
-            {/* --- HERO SECTION (YARSI BRANDING) --- */}
+            {/* --- HERO SECTION --- */}
             <section className="relative pt-28 pb-20 lg:pt-36 lg:pb-32 overflow-hidden bg-gray-50">
                 
-                {/* 1. Dekorasi Latar Belakang */}
+                {/* Dekorasi Latar Belakang */}
                 <div className="absolute inset-0 opacity-[0.05]" 
                      style={{ backgroundImage: 'radial-gradient(circle, #044732 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
                 </div>
-                {/* Menggunakan Yarsi Green & Accent untuk blob */}
                 <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-yarsi-accent/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply animate-blob"></div>
                 <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-yarsi-green/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply animate-blob animation-delay-2000"></div>
 
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-                        
-                        {/* --- KOLOM KIRI (TEKS & STATS) --- */}
                         <div className="lg:w-1/2 text-center lg:text-left">
-                            
                             {/* Badge */}
                             <div 
                                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-yarsi-green/20 shadow-sm text-yarsi-green text-xs font-bold uppercase tracking-wider mb-6"
@@ -208,7 +204,7 @@ export default function ProfilKonselor({ counselors }) {
                                 Career Development Center
                             </div>
 
-                            {/* Main Heading - Menggunakan Font KAISEI (Sesuai Config) */}
+                            {/* Main Heading */}
                             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 font-kaisei mb-6 leading-tight">
                                 Tim Konselor <br/>
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-yarsi-green to-yarsi-accent">
@@ -242,7 +238,7 @@ export default function ProfilKonselor({ counselors }) {
                             </div>
                         </div>
 
-                        {/* --- KOLOM KANAN (VISUAL CARD) --- */}
+                        {/* --- (VISUAL CARD) */}
                         <div className="lg:w-1/2 relative w-full" ref={heroImage.ref} style={heroImage.style}>
                             {/* Card Background menggunakan Yarsi Green */}
                             <div className="aspect-[4/3] relative rounded-[2rem] overflow-hidden shadow-2xl bg-yarsi-green flex items-center justify-center p-8 border-[6px] border-white ring-1 ring-gray-100 transform rotate-1 hover:rotate-0 transition-transform duration-500">
@@ -291,7 +287,6 @@ export default function ProfilKonselor({ counselors }) {
                             Berkenalan dengan Konselor Kami!
                         </h2>
                         <div className="w-20 h-1.5 bg-gradient-to-r from-yarsi-green to-yarsi-accent mx-auto rounded-full mb-6"></div>
-                       
                     </div>
 
                     {/* Grid Konselor */}
