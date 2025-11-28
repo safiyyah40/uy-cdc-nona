@@ -143,11 +143,7 @@ Route::get('/program/tips-dan-trik', function () {
 Route::get('/program/berita', [BeritaController::class, 'index'])->name('program.berita');
 Route::get('/berita/{id}/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
-<<<<<<< HEAD
 // Route Layanan
-=======
-// 4. Layanan
->>>>>>> b21644b441f3cea5032eeef10df738e493c1cd12
 Route::prefix('layanan')->group(function () {
     Route::get('/konsultasi', [ProfilKonselorController::class, 'layanan'])
         ->name('layanan.konsultasi');
@@ -161,7 +157,6 @@ Route::prefix('layanan')->group(function () {
     })->name('layanan.tes.minat.bakat');
 });
 
-<<<<<<< HEAD
 // Route Detail Berita
 Route::get('/berita/{id}/{slug}', function ($id) {
     $user = auth()->guard('web')->user();
@@ -192,6 +187,3 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->name('logout');
 
 require __DIR__.'/auth.php';
-=======
-require __DIR__.'/auth.php';
->>>>>>> b21644b441f3cea5032eeef10df738e493c1cd12
