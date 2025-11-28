@@ -36,7 +36,7 @@ Route::get('/', function () {
 // --- GROUP AUTH ---
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Profil Lengkap & Akun
     Route::get('/complete-profile', [ProfileCompletionController::class, 'show'])->name('profile.complete');
     Route::post('/complete-profile', [ProfileCompletionController::class, 'store'])->name('profile.complete.store');
@@ -150,6 +150,10 @@ Route::prefix('layanan')->group(function () {
     Route::get('/cv-review', function () {
         return Inertia::render('Layanan/CvReview');
     })->name('layanan.cv.review');
+
+    Route::get('/tabel-cv-review', function () {
+        return Inertia::render('Layanan/TabelCvReview');
+    })->name('layanan.tabel.cv.review');
 
     Route::get('/tes-minat-bakat', function () {
         return Inertia::render('Layanan/TesMinatBakat');
