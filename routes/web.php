@@ -43,7 +43,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/akun', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/akun/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/akun/update', [ProfileController::class, 'update'])->name('profile.update');
-
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
