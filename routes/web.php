@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfilPuskakaController;
 use App\Http\Controllers\ProfileCompletionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\CampusHiringController;
 use App\Models\BerandaSlide;
 
 Route::get('/', function () {
@@ -43,13 +44,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/akun', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/akun/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/akun/update', [ProfileController::class, 'update'])->name('profile.update');
-
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
 // --- GROUP PUBLIC ---
 
-// 1. Profil
+// Profil
 Route::get('/profil/puskaka', [ProfilPuskakaController::class, 'index'])->name('profil.puskaka');
 
 Route::get('/profil-konselor', [ProfilKonselorController::class, 'index'])
@@ -59,54 +59,19 @@ Route::get('/profil/developer', function () {
     return Inertia::render('Profil/Developer');
 })->name('profil.developer');
 
-// 2. Program
+// Program
 Route::get('/program/orientasi-dunia-kerja', function () {
     return Inertia::render('Program/OrientasiDuniaKerja');
 })->name('program.orientasi.kerja');
 
-Route::get('/program/campus-hiring', function () {
-    return Inertia::render('Program/CampusHiring');
-})->name('program.campus.hiring');
+// Route Campus Hiring
+Route::get('/program/campus-hiring', [CampusHiringController::class, 'index'])
+    ->name('program.campus.hiring');
 
-// Route Detail Campus Hiring
-Route::get('/program/campus-hiring/{id}/{slug}', function ($id) {
-    $dummyCampusHiringData = [
-        'id' => (int) $id,
-        'title' => 'Campus Hiring BRILiaN Internship Program (BIP)',
-        'company' => 'PT Bank Rakyat Indonesia (Persero) Tbk.',
-        'location' => 'Kampus Universitas YARSI, Jakarta',
-        'date' => '2025-09-19',
-        'time' => '09:00 - 16:00 WIB',
-        'description' => 'Program magang eksklusif dari BRI untuk mahasiswa dan alumni YARSI. Peluang untuk menjadi bagian dari bank terbesar di Indonesia.',
-        'content' => '
-            <div class="space-y-4">
-                <p>Campus Hiring BRILiaN Internship Program (BIP) adalah jalur cepat bagi mahasiswa/lulusan YARSI yang ingin mengembangkan karir di dunia perbankan. Program ini menekankan pada penempatan di berbagai unit kerja strategis BRI.</p>
-                <h4 class="font-semibold text-lg text-gray-800">Manfaat Program:</h4>
-                <ul class="list-disc list-inside">
-                    <li>Pengalaman kerja nyata di lingkungan korporat.</li>
-                    <li>Tunjangan dan fasilitas yang kompetitif.</li>
-                    <li>Kesempatan untuk diangkat menjadi karyawan tetap.</li>
-                </ul>
-                <h4 class="font-semibold text-lg text-gray-800">Persyaratan Khusus:</h4>
-                <ul class="list-disc list-inside">
-                    <li>Pendidikan minimal S1/D3 dari semua jurusan terakreditasi A/B.</li>
-                    <li>Usia maksimal 25 tahun (belum berulang tahun ke-26 saat seleksi).</li>
-                    <li>Bersedia mengikuti seluruh rangkaian program.</li>
-                </ul>
-            </div>
-        ',
-        'imageSrc' => '/images/campushiring.jpg',
-        'registration_link' => 'https://bit.ly/daftar-bip-yarsi',
-    ];
-
-    $user = auth()->guard('web')->user();
-    return Inertia::render('Program/DetailCampusHiring', [
-        'campusHiring' => $dummyCampusHiringData,
-        'auth' => [
-            'user' => $user,
-        ],
-    ]);
-})->name('program.campus.hiring.show');
+// Route Detail Campus Hiring 
+Route::get('/program/campus-hiring/{id}/{slug}', [CampusHiringController::class, 'show'])
+    ->middleware(['auth'])
+    ->name('program.campus.hiring.show');
 
 
 Route::get('/program/seminar', function () {
@@ -139,7 +104,7 @@ Route::get('/program/tips-dan-trik', function () {
     return Inertia::render('Program/TipsDanTrik');
 })->name('program.tips.trik');
 
-// 3. Berita
+// Berita
 Route::get('/program/berita', [BeritaController::class, 'index'])->name('program.berita');
 Route::get('/berita/{id}/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
@@ -172,7 +137,7 @@ Route::get('/berita/{id}/{slug}', function ($id) {
     ]);
 })->name('berita.show');
 
-// 2. Route Detail Berita (Jika ingin wajib login, taruh di dalam middleware auth)
+// Route Detail Berita (Jika ingin wajib login, taruh di dalam middleware auth)
 Route::middleware(['auth'])->group(function () {
     Route::get('/berita/{id}/{slug}', [BeritaController::class, 'show'])
         ->name('berita.show');
