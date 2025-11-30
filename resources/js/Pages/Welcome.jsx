@@ -27,7 +27,7 @@ export default function Welcome({ auth, slides, laravelVersion, phpVersion })  
                             </h3>
 
                             <h1 className="text-5xl md:text-6xl font-kaisei font-extrabold text-white leading-tight whitespace-nowrap drop-shadow-xl">
-                                Career Development Center Universitas Yarsi
+                                Career Development Center Universitas YARSI
                             </h1>
 
                         </div>

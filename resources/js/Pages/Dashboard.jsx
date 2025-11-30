@@ -9,57 +9,35 @@ import InfoMagang from '../Components/InfoMagang';
 import TesMinatBakat from '../Components/TesMinatBakat';
 import Footer from '../Components/Footer';
 
-export default function Dashboard({ auth, slides }) {
+export default function Dashboard({ auth, slides})  {
     const { props } = usePage();
     const success = props.flash?.success;
-    console.log('Slides data:', slides);
     return (
         <MainLayout>
-            <Head title="Dashboard Mahasiswa" />
-
-            {/* Section Setelah Login */}
-            <div
-                className="relative flex h-[calc(100vh-80px)] items-center justify-center overflow-hidden"
-                style={{
-                    backgroundImage: 'url(/images/bg-dreamina.jpg)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                }}
-            >
-                <div className="z-10 text-center">
-                    <div className="relative mb-4 inline-block">
-                        <span className="absolute left-[-110px] top-1/2 block h-0.5 w-24 bg-gray-800"></span>
-                        <h3 className="text-xl font-medium text-gray-700">
-                            SELAMAT DATANG, {auth?.user?.name?.toUpperCase() || 'PENGGUNA'}!
-                        </h3>
-                        <span className="absolute right-[-110px] top-1/2 block h-0.5 w-24 bg-gray-800"></span>
+            <Head title="Dashboard" />
+            <section
+                className="relative flex flex-col items-start justify-start overflow-hidden w-full h-64 mt-[-5rem] md:mt-[-3rem] bg-[#2BB673]">
+                <div className="z-20 absolute left-0 md:left-0 w-full pt-24">
+                    <div className="relative w-full max-w-screen-xl **2xl:mx-auto**">
+                        <div className="px-6 md:px-16 lg:px-24">
+                            <h3 className="text-xl md:text-3xl font-sans uppercase font-extrabold text-white tracking-widest leading-tight drop-shadow-lg mb-2">
+                                SELAMAT DATANG, {auth?.user?.name?.toUpperCase() || 'PENGGUNA'}!
+                            </h3>
+                            <h1 className="text-5xl md:text-6xl font-kaisei font-extrabold text-white leading-tight whitespace-nowrap drop-shadow-xl">
+                                Career Development Center Universitas YARSI
+                            </h1>
+                        </div>
                     </div>
-
-                    <h1 className="text-5xl font-extrabold text-yarsi-green md:text-6xl">
-                        CAREER DEVELOPMENT CENTER
-                    </h1>
-                    <h1 className="text-5xl font-extrabold text-yarsi-green md:text-6xl">
-                        UNIVERSITAS YARSI
-                    </h1>
                 </div>
-            </div>
+            </section>
 
-            {/* Konten utama dashboard */}
-            <div className="bg-white">
-                <VisiMisi slides={slides} />
-
-                <KalenderSection />
-
-                <StatistikLayanan />
-
-                <BeritaSection  />
-
-                <LowonganPekerjaan />
-
-                <InfoMagang />
-
-                <TesMinatBakat />
-            </div>
+            <VisiMisi slides={slides} />
+            <KalenderSection />
+            <StatistikLayanan />
+            <BeritaSection />
+            <LowonganPekerjaan />
+            <InfoMagang />
+            <TesMinatBakat />
             <Footer />
         </MainLayout>
     );

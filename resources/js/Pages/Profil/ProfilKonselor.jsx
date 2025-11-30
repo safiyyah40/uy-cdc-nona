@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import { Head, Link } from '@inertiajs/react';
 import Footer from '@/Components/Footer';
-import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn'; 
+import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 
 // --- ICON COMPONENTS ---
 const Icons = {
@@ -44,34 +44,65 @@ const Icons = {
     ),
     TeamIcon: () => (
         <svg className="w-24 h-24 text-white opacity-20" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+        </svg>
+    ),
+    Search: () => (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+    ),
+    Filter: () => (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+        </svg>
+    ),
+    X: () => (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+    ),
+    ChevronDown: () => (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+        </svg>
+    ),
+    ChevronLeft: () => (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+        </svg>
+    ),
+    ChevronRight: () => (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
         </svg>
     )
 };
 
 // --- KOMPONEN KARTU KONSELOR ---
 function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
-    const { ref, style } = useScrollFadeIn(0.1); 
+    const { ref, style } = useScrollFadeIn(0.1);
     const [imageError, setImageError] = useState(false);
 
     return (
-        <div 
-            ref={ref} 
-            style={style} 
+        <div
+            ref={ref}
+            style={style}
             className="group bg-white rounded-2xl shadow-md hover:shadow-2xl border border-gray-100 hover:border-yarsi-accent/30 
-                       overflow-hidden transition-all duration-500 hover:-translate-y-2 w-full"
+                       overflow-hidden transition-all duration-500 hover:-translate-y-2 w-full flex flex-col h-full"
         >
             {/* Header dengan Foto Profil */}
             <div className="relative">
-                {/* Background Pattern*/}
-                <div className="h-36 bg-gradient-to-br from-yarsi-green via-yarsi-green-light to-yarsi-green-dark relative overflow-hidden">
+                {/* Background Pattern */}
+                <div className="h-48 bg-gradient-to-br from-yarsi-green via-yarsi-green-light to-yarsi-green-dark relative overflow-hidden">
                     {/* Decorative Circles */}
                     <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/5 rounded-full"></div>
                     <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-white/5 rounded-full"></div>
-                    
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/3 rounded-full blur-3xl"></div>
+
                     {/* Verified Badge */}
                     <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-full px-3 py-1.5 
-                                    flex items-center gap-1.5 shadow-lg border border-yarsi-green/20">
+                                    flex items-center gap-1.5 shadow-lg border border-yarsi-green/20 z-10">
                         <div className="text-yarsi-green">
                             <Icons.CheckBadge />
                         </div>
@@ -79,79 +110,123 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
                     </div>
                 </div>
 
-                {/* Foto Profil - Floating */}
-                <div className="absolute -bottom-16 left-1/2 -translate-x-1/2">
+                {/* Foto Profil */}
+                <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 z-10">
                     <div className="relative">
-                        <div className="w-32 h-32 rounded-2xl bg-white p-1.5 shadow-xl ring-4 ring-white 
-                                        group-hover:ring-yarsi-accent/20 transition-all duration-300">
-                            <div className="w-full h-full rounded-xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-                                <img
-                                    src={!imageError && photoUrl ? photoUrl : '/images/placeholder-avatar.png'}
-                                    alt={name}
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                    onError={() => setImageError(true)}
-                                />
+                        {/* Shadow Layer untuk depth */}
+                        <div className="absolute inset-0 bg-yarsi-green/20 rounded-3xl blur-2xl scale-105 opacity-0 
+                                        group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                        {/* Frame Foto */}
+                        <div className="relative w-40 h-40 rounded-3xl bg-gradient-to-br from-white to-gray-50 p-2 
+                                        shadow-2xl ring-4 ring-white group-hover:ring-yarsi-accent/30 
+                                        transition-all duration-300 group-hover:scale-105">
+                            <div className="w-full h-full rounded-2xl overflow-hidden relative
+                                            group-hover:shadow-inner transition-all duration-300">
+                                {/* Background Gradient Layer */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50 z-0"></div>
+
+                                {/* Image Container dengan aspect ratio terjaga */}
+                                <div className="absolute inset-0 z-10">
+                                    <img
+                                        src={!imageError && photoUrl ? photoUrl : '/images/placeholder-avatar.png'}
+                                        alt={name}
+                                        className="w-full h-full object-cover object-center mix-blend-multiply
+                                                 group-hover:scale-110 transition-transform duration-700 ease-out"
+                                        onError={() => setImageError(true)}
+                                        loading="lazy"
+                                    />
+                                </div>
+
+                                {/* Overlay gradient saat hover */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-yarsi-green/10 to-transparent 
+                                              opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20"></div>
                             </div>
                         </div>
-                        {/* Status Online Indicator */}
-                        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-yarsi-accent rounded-full border-4 border-white 
-                                      shadow-lg group-hover:scale-110 transition-transform"></div>
+
+                        {/* Status Online */}
+                        <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-yarsi-accent rounded-full 
+                                      border-4 border-white shadow-lg group-hover:scale-110 transition-transform 
+                                      flex items-center justify-center">
+                            <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                        </div>
+
+                        {/* Decorative Corner Elements */}
+                        <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-yarsi-accent/40 
+                                      rounded-tl-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-yarsi-accent/40 
+                                      rounded-tr-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                 </div>
             </div>
 
             {/* Content Area */}
-            <div className="pt-20 pb-6 px-6">
+            <div className="pt-24 pb-6 px-6 flex-grow flex flex-col">
                 {/* Nama & Gelar */}
                 <div className="text-center mb-4">
-                    <h3 className="text-xl font-bold font-kaisei text-gray-900 mb-2 group-hover:text-yarsi-green 
-                                 transition-colors leading-tight">
+                    <h3 className="text-xl font-bold font-kaisei text-gray-900 mb-2 
+                                 group-hover:text-yarsi-green transition-colors leading-tight min-h-[3.5rem] 
+                                 flex items-center justify-center">
                         {name}
                     </h3>
-                    
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg mb-3 border border-gray-100">
-                        <div className="text-yarsi-green">
+
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-gray-50 to-white 
+                                  rounded-xl mb-3 border border-gray-200 shadow-sm group-hover:border-yarsi-green/30 
+                                  transition-all duration-300 min-h-[2.5rem]">
+                        <div className="text-yarsi-green flex-shrink-0">
                             <Icons.Academic />
                         </div>
                         <span className="text-sm font-semibold text-yarsi-green-light">{title}</span>
                     </div>
                 </div>
 
-                {/* Divider */}
-                <div className="w-16 h-1 bg-gradient-to-r from-transparent via-yarsi-accent to-transparent mx-auto mb-4"></div>
+                {/* Divider dengan animasi */}
+                <div className="relative h-1 mb-5 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yarsi-accent to-transparent 
+                                  scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-center"></div>
+                </div>
 
                 {/* Info Tambahan */}
-                <div className="space-y-2.5 text-sm">
+                <div className="space-y-3 text-sm flex-grow mb-6">
                     {faculty && (
-                        <div className="flex items-start gap-2.5 text-gray-600">
-                            <div className="mt-0.5 text-yarsi-green">
+                        <div className="flex items-start gap-3 text-gray-600 group-hover:text-gray-700 
+                                      transition-colors p-2 rounded-lg hover:bg-gray-50 min-h-[2.5rem]">
+                            <div className="mt-0.5 text-yarsi-green flex-shrink-0">
                                 <Icons.Building />
                             </div>
-                            <span className="leading-relaxed">{faculty}</span>
+                            <span className="leading-relaxed font-medium">{faculty}</span>
                         </div>
                     )}
-                    
+
                     {expertise && (
-                        <div className="flex items-start gap-2.5 text-gray-600">
-                            <div className="mt-0.5 text-yarsi-green">
+                        <div className="flex items-start gap-3 text-gray-600 group-hover:text-gray-700 
+                                      transition-colors p-2 rounded-lg hover:bg-gray-50 min-h-[2.5rem]">
+                            <div className="mt-0.5 text-yarsi-green flex-shrink-0">
                                 <Icons.Sparkles />
                             </div>
-                            <span className="leading-relaxed">{expertise}</span>
+                            <span className="leading-relaxed font-medium">{expertise}</span>
                         </div>
                     )}
                 </div>
 
                 {/* Action Button */}
-                <div className="mt-6 pt-6 border-t border-gray-100">
+                <div className="mt-auto pt-6 border-t border-gray-100">
                     <Link
                         href="/layanan/konsultasi"
                         className="flex items-center justify-center gap-2 w-full bg-yarsi-gradient-button
-                                 hover:brightness-110 text-white font-semibold py-3 px-4 rounded-xl 
-                                 transition-all duration-300 shadow-md hover:shadow-lg group/btn"
+                                 hover:brightness-110 active:scale-98 text-white font-semibold py-3.5 px-4 
+                                 rounded-xl transition-all duration-300 shadow-md hover:shadow-xl group/btn
+                                 relative overflow-hidden"
                     >
-                        <Icons.Calendar />
-                        <span>Lihat Jadwal</span>
-                        <div className="group-hover/btn:translate-x-1 transition-transform">
+                        {/* effect hover */}
+                        <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full 
+                                      bg-gradient-to-r from-transparent via-white/20 to-transparent 
+                                      transition-transform duration-1000 ease-in-out"></div>
+
+                        <Icons.Calendar className="relative z-10" />
+                        <span className="relative z-10">Lihat Jadwal</span>
+                        <div className="group-hover/btn:translate-x-1 transition-transform relative z-10">
                             <Icons.ArrowRight />
                         </div>
                     </Link>
@@ -159,9 +234,12 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
             </div>
 
             {/* Footer Branding */}
-            <div className="bg-gray-50 py-3 border-t border-gray-100">
-                <div className="text-center text-xs font-bold text-yarsi-green tracking-wider uppercase">
-                    Universitas YARSI
+            <div className="bg-gradient-to-r from-gray-50 via-white to-gray-50 py-3 border-t border-gray-100">
+                <div className="text-center text-xs font-bold text-yarsi-green tracking-widest uppercase 
+                              flex items-center justify-center gap-2">
+                    <div className="w-1 h-1 bg-yarsi-accent rounded-full"></div>
+                    UNIVERSITAS YARSI
+                    <div className="w-1 h-1 bg-yarsi-accent rounded-full"></div>
                 </div>
             </div>
         </div>
@@ -169,21 +247,45 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
 }
 
 // --- HALAMAN UTAMA ---
-export default function ProfilKonselor({ counselors }) { 
+export default function ProfilKonselor({ counselors }) {
     const heroTitle = useScrollFadeIn(0.2);
     const heroText = useScrollFadeIn(0.3);
     const heroImage = useScrollFadeIn(0.4);
 
+    // State untuk search dan filter
+    const [searchTerm, setSearchTerm] = useState('');
+    const [perPage, setPerPage] = useState(8);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    // Filter dan pagination
+    const filteredCounselors = counselors?.filter(counselor => {
+        const searchLower = searchTerm.toLowerCase();
+        return (
+            counselor.name.toLowerCase().includes(searchLower) ||
+            counselor.title?.toLowerCase().includes(searchLower) ||
+            counselor.faculty?.toLowerCase().includes(searchLower) ||
+            counselor.expertise?.toLowerCase().includes(searchLower)
+        );
+    }) || [];
+
+    // Pagination logic
+    const totalPages = perPage === 'all' ? 1 : Math.ceil(filteredCounselors.length / perPage);
+    const startIndex = perPage === 'all' ? 0 : (currentPage - 1) * perPage;
+    const endIndex = perPage === 'all' ? filteredCounselors.length : startIndex + parseInt(perPage);
+
+    // Reset ke halaman 1 ketika search atau filter berubah
+    React.useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, perPage]);
+
     return (
         <MainLayout>
-            <Head title="Profil Konselor - CDC YARSI" />
-            
+            <Head title="Profil Konselor - CDC Universitas YARSI" />
             {/* --- HERO SECTION --- */}
-            <section className="relative pt-28 pb-20 lg:pt-36 lg:pb-32 overflow-hidden bg-gray-50">
-                
+            <section className="relative w-full py-24 md:py-36 bg-gradient-to-br from-white to-emerald-50 overflow-hidden">
                 {/* Dekorasi Latar Belakang */}
-                <div className="absolute inset-0 opacity-[0.05]" 
-                     style={{ backgroundImage: 'radial-gradient(circle, #044732 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
+                <div className="absolute inset-0 opacity-[0.05]"
+                    style={{ backgroundImage: 'radial-gradient(circle, #044732 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
                 </div>
                 <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-yarsi-accent/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply animate-blob"></div>
                 <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-yarsi-green/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply animate-blob animation-delay-2000"></div>
@@ -192,7 +294,7 @@ export default function ProfilKonselor({ counselors }) {
                     <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
                         <div className="lg:w-1/2 text-center lg:text-left">
                             {/* Badge */}
-                            <div 
+                            <div
                                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-yarsi-green/20 shadow-sm text-yarsi-green text-xs font-bold uppercase tracking-wider mb-6"
                                 ref={heroTitle.ref}
                                 style={heroTitle.style}
@@ -206,16 +308,16 @@ export default function ProfilKonselor({ counselors }) {
 
                             {/* Main Heading */}
                             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 font-kaisei mb-6 leading-tight">
-                                Tim Konselor <br/>
+                                Tim Konselor <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-yarsi-green to-yarsi-accent">
                                     Profesional
                                 </span>
                             </h1>
-                            
+
                             {/* Description */}
-                            <p 
-                                ref={heroText.ref} 
-                                style={heroText.style} 
+                            <p
+                                ref={heroText.ref}
+                                style={heroText.style}
                                 className="text-lg text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light mb-8"
                             >
                                 Kami memiliki konselor terbaik yang tidak hanya berkompeten, tetapi juga peduli pada perkembangan mahasiswa YARSI. Dengan pendekatan personal, kami siap mendampingi langkah akademik maupun karir Anda.
@@ -238,39 +340,33 @@ export default function ProfilKonselor({ counselors }) {
                             </div>
                         </div>
 
-                        {/* --- (VISUAL CARD) */}
-                        <div className="lg:w-1/2 relative w-full" ref={heroImage.ref} style={heroImage.style}>
-                            {/* Card Background menggunakan Yarsi Green */}
-                            <div className="aspect-[4/3] relative rounded-[2rem] overflow-hidden shadow-2xl bg-yarsi-green flex items-center justify-center p-8 border-[6px] border-white ring-1 ring-gray-100 transform rotate-1 hover:rotate-0 transition-transform duration-500">
-                                
-                                <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-yarsi-accent to-transparent"></div>
-                                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url('/images/pattern-dot.png')", backgroundSize: '20px' }}></div>
-                                
-                                <div className="relative z-10 text-center transform hover:scale-105 transition-transform duration-300">
-                                    <div className="inline-flex items-center justify-center w-24 h-24 bg-white/10 rounded-2xl backdrop-blur-md mb-6 border border-white/20 shadow-lg relative">
-                                        <div className="absolute -top-3 -right-3 bg-yarsi-accent text-white p-1.5 rounded-lg shadow-sm">
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
-                                        </div>
-                                        <Icons.TeamIcon />
-                                    </div>
-                                    <h3 className="text-2xl font-bold text-white mb-2 font-kaisei tracking-wide">CDC YARSI</h3>
-                                    <div className="h-1 w-12 bg-yarsi-accent mx-auto rounded-full mb-2"></div>
-                                    <p className="text-emerald-100 text-sm font-medium tracking-wider">Informatics & Career</p>
-                                </div>
+                        {/* --- (VISUAL CARD - DIGANTI DENGAN GAMBAR) --- */}
+<div className="lg:w-1/2 relative w-full" ref={heroImage.ref} style={heroImage.style}>
+    {/* Card Background */}
+    <div
+        className="aspect-[4/3] relative rounded-[2rem] overflow-hidden shadow-2xl flex items-center justify-center border-[6px] border-white ring-1 ring-gray-100 transform rotate-1 hover:rotate-0 transition-transform duration-500 bg-cover bg-center"
+        style={{
+            backgroundImage: "url('/images/pict-profil-konselor.png')", // Contoh path: public/images/counselor-consultation.jpg
+        }}
+    >
+        {/* Overlay gradient untuk memastikan teks tetap terbaca jika ada teks di atasnya nanti, atau agar gambar tidak terlalu terang */}
+        <div className="absolute inset-0 bg-gradient-to-t from-yarsi-green/60 to-transparent mix-blend-multiply"></div>
 
-                                <div className="absolute bottom-8 left-8 flex items-center gap-3 p-3 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-white">
-                                    <div className="bg-green-100 p-1.5 rounded-full text-yarsi-green">
-                                        <Icons.CheckBadge />
-                                    </div>
-                                    <div>
-                                        <div className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Status</div>
-                                        <div className="text-xs font-bold text-gray-900">Professional</div>
-                                    </div>
-                                </div>
-                            </div>
-                            {/* Elemen Dekoratif di belakang Card */}
-                            <div className="absolute -z-10 top-10 -right-10 w-full h-full border-2 border-yarsi-green/20 rounded-[2rem] transform rotate-6"></div>
-                        </div>
+        {/* Badge Status di Pojok Kiri Bawah (Opsional - Hapus jika tidak ingin ditampilkan di atas gambar) */}
+        <div className="absolute bottom-8 left-8 flex items-center gap-3 p-3 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-white">
+            <div className="bg-green-100 p-1.5 rounded-full text-yarsi-green">
+                <Icons.CheckBadge />
+            </div>
+            <div>
+                <div className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Status</div>
+                <div className="text-xs font-bold text-gray-900">Professional</div>
+            </div>
+        </div>
+    </div>
+
+    {/* Elemen Dekoratif di belakang Card (Tetap Dipertahankan) */}
+    <div className="absolute -z-10 top-10 -right-10 w-full h-full border-2 border-yarsi-green/20 rounded-[2rem] transform rotate-6"></div>
+</div>
 
                     </div>
                 </div>
@@ -279,32 +375,176 @@ export default function ProfilKonselor({ counselors }) {
             {/* --- LIST KONSELOR SECTION --- */}
             <section className="py-20 lg:py-28 bg-white relative">
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-50/0 via-yarsi-green/5 to-gray-50/0"></div>
-                
+
                 <div className="container mx-auto px-4 lg:px-6 relative z-10">
+
                     {/* Section Header */}
-                    <div className="text-center mb-16 max-w-6xl mx-auto">
+                    <div className="text-center mb-12 max-w-6xl mx-auto">
                         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-kaisei text-gray-900 mb-3">
                             Berkenalan dengan Konselor Kami!
                         </h2>
-                        <div className="w-20 h-1.5 bg-gradient-to-r from-yarsi-green to-yarsi-accent mx-auto rounded-full mb-6"></div>
+                        <div className="w-48 h-1.5 bg-gradient-to-r from-yarsi-green to-yarsi-accent mx-auto rounded-full mb-6"></div>
                     </div>
 
-                    {/* Grid Konselor */}
+                    {/* SEARCH + FILTER BAR */}
                     {counselors && counselors.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
-                            {counselors.map((counselor) => (
-                                <CounselorCard
-                                    key={counselor.id}
-                                    name={counselor.name}
-                                    title={counselor.title}
-                                    faculty={counselor.faculty}
-                                    expertise={counselor.expertise}
-                                    photoUrl={counselor.photo_url}
-                                />
-                            ))}
+                        <div className="max-w-9xl mx-auto mb-12">
+                            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+
+                                {/* STATE */}
+                                {(() => {
+                                    // FE state (tanpa backend)
+                                    const [searchTerm, setSearchTerm] = React.useState("");
+                                    const [perPage, setPerPage] = React.useState("all");
+                                    const [page, setPage] = React.useState(1);
+
+                                    // Filter by search
+                                    const filtered = counselors.filter((c) => {
+                                        const text = (
+                                            c.name +
+                                            c.faculty +
+                                            c.expertise +
+                                            c.title
+                                        ).toLowerCase();
+
+                                        return text.includes(searchTerm.toLowerCase());
+                                    });
+
+                                    // Pagination (FE version)
+                                    const totalItems = filtered.length;
+                                    const perPageNumber = perPage === "all" ? totalItems : Number(perPage);
+                                    const totalPages = perPage === "all" ? 1 : Math.ceil(totalItems / perPageNumber);
+
+                                    const paginated = filtered.slice(
+                                        (page - 1) * perPageNumber,
+                                        page * perPageNumber
+                                    );
+
+                                    const goToPage = (num) => setPage(num);
+                                    return (
+                                        <>
+                                            {/* GRID SEARCH + FILTER */}
+                                            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+
+                                                {/* Search */}
+                                                <div className="md:col-span-8">
+                                                    <form
+                                                        onSubmit={(e) => e.preventDefault()}
+                                                        className="flex gap-2"
+                                                    >
+                                                        <div className="relative flex-1">
+                                                            <input
+                                                                type="text"
+                                                                value={searchTerm}
+                                                                onChange={(e) => {
+                                                                    setPage(1);
+                                                                    setSearchTerm(e.target.value);
+                                                                }}
+                                                                placeholder="Cari nama, fakultas, atau keahlian..."
+                                                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                                            />
+                                                            <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"
+                                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                                            </svg>
+                                                        </div>
+
+                                                        <button
+                                                            type="submit"
+                                                            className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition-colors flex items-center gap-2"
+                                                        >
+                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                                            </svg>
+                                                            Cari
+                                                        </button>
+                                                    </form>
+                                                </div>
+
+                                                {/* Filter per page */}
+                                                <div className="md:col-span-4">
+                                                    <div className="flex items-center gap-2">
+                                                        <select
+                                                            value={perPage}
+                                                            onChange={(e) => {
+                                                                setPerPage(e.target.value);
+                                                                setPage(1);
+                                                            }}
+                                                            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                                        >
+                                                            <option value="6">Tampilkan 6</option>
+                                                            <option value="12">Tampilkan 12</option>
+                                                            <option value="24">Tampilkan 24</option>
+                                                            <option value="all">Tampilkan Semua</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            {/* ACTIVE FILTER BADGE */}
+                                            {searchTerm !== "" && (
+                                                <div className="mt-4 flex items-center gap-2">
+                                                    <span className="text-sm text-gray-600">
+                                                        Hasil pencarian untuk:
+                                                    </span>
+                                                    <span className="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm font-medium">
+                                                        "{searchTerm}"
+                                                    </span>
+
+                                                    <button
+                                                        onClick={() => {
+                                                            setSearchTerm("");
+                                                            setPage(1);
+                                                        }}
+                                                        className="text-sm text-gray-500 hover:text-gray-700 underline"
+                                                    >
+                                                        Hapus
+                                                    </button>
+                                                </div>
+                                            )}
+
+                                            {/* CARD LIST */}
+                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-6">
+                                                {paginated.map((counselor) => (
+                                                    <CounselorCard
+                                                        key={counselor.id}
+                                                        name={counselor.name}
+                                                        title={counselor.title}
+                                                        faculty={counselor.faculty}
+                                                        expertise={counselor.expertise}
+                                                        photoUrl={counselor.photo_url}
+                                                    />
+                                                ))}
+                                            </div>
+
+
+                                            {/* PAGINATION */}
+                                            {totalPages > 1 && (
+                                                <div className="flex items-center justify-center gap-2 mt-8">
+                                                    {[...Array(totalPages)].map((_, i) => (
+                                                        <button
+                                                            key={i}
+                                                            onClick={() => goToPage(i + 1)}
+                                                            className={`px-4 py-2 rounded-lg border transition ${page === i + 1
+                                                                    ? "bg-emerald-600 text-white border-emerald-700"
+                                                                    : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
+                                                                }`}
+                                                        >
+                                                            {i + 1}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </>
+                                    );
+                                })()}
+                            </div>
                         </div>
                     ) : (
-                        // Empty State
+                        /* EMPTY STATE */
                         <div className="max-w-md mx-auto">
                             <div className="bg-gray-50 rounded-3xl p-12 text-center border-2 border-dashed border-gray-200">
                                 <div className="text-gray-400 mb-6 mx-auto w-fit">
@@ -350,7 +590,7 @@ export default function ProfilKonselor({ counselors }) {
                     </div>
                 </div>
             </section>
-            
+
             <Footer />
         </MainLayout>
     );

@@ -210,7 +210,7 @@ const Konsultasi = ({ counselors = [] }) => {
                         <div className="lg:w-1/2 relative">
                             <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
                                 <img 
-                                    src="https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" 
+                                    src="/images/pict-profil-konselor.png" 
                                     alt="Diskusi Mahasiswa" 
                                     className="w-full object-cover h-[400px] lg:h-[500px]"
                                 />

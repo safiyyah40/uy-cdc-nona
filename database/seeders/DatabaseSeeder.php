@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\BerandaSlide;
+use App\Models\Counselor;
+use App\Models\CounselorSlot;
 use App\Models\PuskakaGallery;
 use App\Models\CampusHiring;
 use App\Models\User;
@@ -17,21 +19,45 @@ class DatabaseSeeder extends Seeder
         // User
         User::factory()->create([
             'name' => 'Admin Puskaka',
-            'email' => 'admin@puskaka.com',
+            'email' => 'adminpuskaka@yarsi.ac.id',
         ]);
 
         // Beranda Slide
         $slides = [
             [
-                'image_path' => 'images/slideshow beranda/slideshow 1.jpeg',
+                'image_path' => 'beranda-slides/slideshow-1.jpeg',
                 'alt_text' => 'Slideshow 1',
                 'sort_order' => 1,
                 'is_active' => true,
             ],
             [
-                'image_path' => 'images/slideshow beranda/slideshow 2.jpeg',
+                'image_path' => 'beranda-slides/slideshow-2.jpeg',
                 'alt_text' => 'Slideshow 2',
                 'sort_order' => 2,
+                'is_active' => true,
+            ],
+            [
+                'image_path' => 'beranda-slides/slideshow-3.jpg',
+                'alt_text' => 'Slideshow 3',
+                'sort_order' => 3,
+                'is_active' => true,
+            ],
+            [
+                'image_path' => 'beranda-slides/slideshow-4.jpg',
+                'alt_text' => 'Slideshow 4',
+                'sort_order' => 4,
+                'is_active' => true,
+            ],
+            [
+                'image_path' => 'beranda-slides/slideshow-5.jpeg',
+                'alt_text' => 'Slideshow 5',
+                'sort_order' => 5,
+                'is_active' => true,
+            ],
+            [
+                'image_path' => 'beranda-slides/slideshow-6.jpg',
+                'alt_text' => 'Slideshow 6',
+                'sort_order' => 6,
                 'is_active' => true,
             ],
         ];
@@ -46,6 +72,121 @@ class DatabaseSeeder extends Seeder
             'image_path' => 'images/PuskakaGallery/puskaka.jpg',
             'is_active' => true,
         ]);
+        $counselors = [
+            // --- FAKULTAS KEDOKTERAN ---
+            [
+                'name' => 'dr. Miranti Pusparini, M.Pd(Ked).',
+                'title' => 'Wakil Dekan I Fakultas Kedokteran',
+                'photo_path' => 'counselors/FK_WadekI_Miranti_Pusparini.png',
+                'order_column' => 1,
+            ],
+            [
+                'name' => 'dr. Tuty Herawati, Sp.A(K).',
+                'title' => 'Kepala Prodi Sarjana Kedokteran',
+                'photo_path' => 'counselors/FK_Kaprodi_Tuty_Herawati.png',
+                'order_column' => 2,
+            ],
+
+            // --- FAKULTAS KEDOKTERAN GIGI ---
+            [
+                'name' => 'drg. Agus Ardinansyah, M.Pd.Ked.',
+                'title' => 'Wakil Dekan II Fakultas Kedokteran Gigi',
+                'photo_path' => 'counselors/FKG_WadekII_Agus-Ardinansyah-drg.-M.Pd_Ked.png',
+                'order_column' => 3,
+            ],
+            [
+                'name' => 'Dr. drg. Chaerita Maulani, Sp.Perio.',
+                'title' => 'Kepala Prodi Kedokteran Gigi',
+                'photo_path' => 'counselors/FKG_Kaprodi_Chaerita-Maulani-drg.-Sp.Perio.png',
+                'order_column' => 4,
+            ],
+
+            // --- FAKULTAS EKONOMI DAN BISNIS ---
+            [
+                'name' => 'Rini Hidayati, S.E., M.M.',
+                'title' => 'Wakil Dekan I Fakultas Ekonomi dan Bisnis',
+                'photo_path' => 'counselors/FEB_WadekI_Rini-Hidayati-SE.-MM.png',
+                'order_column' => 5,
+            ],
+            [
+                'name' => 'Imelda Sari, SE., M.Si., AK.',
+                'title' => 'Kepala Prodi Akuntansi',
+                'photo_path' => 'counselors/Akuntansi_Kaprodi_Imelda-Sari-SE.-MSi.-AK.png',
+                'order_column' => 6,
+            ],
+            [
+                'name' => 'Alyta Shabrina Zusryn, SP., M.Sc., CRP.',
+                'title' => 'Kepala Prodi Manajemen',
+                'photo_path' => 'counselors/Manajemen_Kaprodi_Alyta-Shabrina-Zusryn-S.P.-M.Sc.,-CRP.png',
+                'order_column' => 7,
+            ],
+
+            // --- FAKULTAS TEKNOLOGI INFORMASI ---
+            [
+                'name' => 'Herika Hayurani, S.Kom., M.Kom.',
+                'title' => 'Wakil Dekan I Fakultas Teknologi Informasi',
+                'photo_path' => 'counselors/FTI_WadekI_Herika-Hayurani-S.Kom.,-M.Kom.png',
+                'order_column' => 8,
+            ],
+            [
+                'name' => 'Elan Suherlan, S.Si., M.Si.',
+                'title' => 'Kepala Prodi Teknik Informatika',
+                'photo_path' => 'counselors/TI_Kaprodi_Elan-Suherlan-S.Si.,-M.Si.png',
+                'order_column' => 9,
+            ],
+            [
+                'name' => 'Danang Dwijo Kangko, S.Hum., M.P.',
+                'title' => 'Kepala Prodi Perpustakaan & Sains Informasi',
+                'photo_path' => 'counselors/PDSI_Kaprodi_Danang-Dwijo-Kangko-S.Hum.,-M.P.png',
+                'order_column' => 10,
+            ],
+
+            // --- FAKULTAS HUKUM ---
+            [
+                'name' => 'Dr. H. Mohammad Ryan Bakry, S.H., M.H.',
+                'title' => 'Dekan Fakultas Hukum',
+                'photo_path' => 'counselors/FH_Dekan_Dr.-H.-Mohammad-Ryan-Bakry,-S.H.,-M.png',
+                'order_column' => 11,
+            ],
+            [
+                'name' => 'Dr. Liza Evita, S.H., M.Hum.',
+                'title' => 'Wakil Dekan I Fakultas Hukum',
+                'photo_path' => 'counselors/FH_WadekI_Liza-Evita-Dr.-S.H.-M.Hum.png',
+                'order_column' => 12,
+            ],
+
+            // --- FAKULTAS PSIKOLOGI ---
+            [
+                'name' => 'Dr. Melok Kinanthi, M.Psi., Psikolog.',
+                'title' => 'Wakil Dekan I Fakultas Psikologi',
+                'photo_path' => 'counselors/Psikologi_Kaprodi_Dr.-Melok-Roro-Kinanthi-Psikolog.png',
+                'order_column' => 13,
+            ],
+        ];
+
+        foreach ($counselors as $data) {
+            $data['is_active'] = true;
+            
+            // Create Konselor
+            $counselor = Counselor::create($data);
+
+            // Buat Jadwal Dummy (Agar tidak kosong)
+            CounselorSlot::create([
+                'counselor_id' => $counselor->id,
+                'date' => now()->next('Monday')->format('Y-m-d'),
+                'start_time' => '09:00',
+                'end_time' => '12:00',
+                'is_available' => true,
+            ]);
+
+            CounselorSlot::create([
+                'counselor_id' => $counselor->id,
+                'date' => now()->next('Thursday')->format('Y-m-d'),
+                'start_time' => '13:00',
+                'end_time' => '15:00',
+                'is_available' => true,
+            ]);
+        }
 
         $title1 = "Visa Officer - Embassy of Switzerland to Indonesia";
         CampusHiring::create([

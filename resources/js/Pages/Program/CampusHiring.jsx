@@ -66,7 +66,7 @@ const ProgramCard = ({ program, primaryDark, accentGreen, isGuest }) => {
                     {/* CTA Button */}
                     <div className="mt-auto">
                         <span className={`inline-flex items-center px-8 py-3 ${accentGreen} text-white border border-transparent rounded-full font-bold text-sm uppercase tracking-wider shadow-md hover:bg-emerald-700 focus:outline-none transition ease-in-out duration-150`}>
-                            {isGuest ? 'Login untuk Lihat Detail' : 'Lihat Detail Program'}
+                            {isGuest ? 'Masuk untuk Melihat Detail' : 'Lihat Detail Program'}
                             <svg className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                             </svg>
@@ -170,7 +170,7 @@ export default function CampusHiring({ auth, programs, pagination, filters, isGu
                                     <LogIn className="w-6 h-6 text-yellow-600 mr-3 flex-shrink-0 mt-0.5" />
                                     <div>
                                         <h3 className="text-lg font-semibold text-yellow-800 mb-2">
-                                            Login untuk Akses Lengkap
+                                            Masuk untuk Akses Lengkap
                                         </h3>
                                         <p className="text-yellow-700 mb-3">
                                             Anda hanya dapat melihat 4 program terbaru. Total ada <strong>{total} program</strong> tersedia.
@@ -180,7 +180,7 @@ export default function CampusHiring({ auth, programs, pagination, filters, isGu
                                             className="inline-flex items-center px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold rounded-lg transition-colors"
                                         >
                                             <LogIn className="w-4 h-4 mr-2" />
-                                            Login Sekarang
+                                            Masuk Sekarang
                                         </Link>
                                     </div>
                                 </div>
