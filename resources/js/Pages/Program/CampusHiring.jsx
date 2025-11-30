@@ -4,57 +4,126 @@ import Footer from '@/Components/Footer';
 import { Head, Link, router } from '@inertiajs/react';
 import { Search, Filter, LogIn } from 'lucide-react';
 
-export default function CampusHiring({ auth, programs = [], pagination = null, filters = {}, isGuest = false, total = 0 }) {
+// --- PROGRAM CARD COMPONENT ---
+const ProgramCard = ({ program, primaryDark, accentGreen, isGuest }) => {
+    const detailUrl = isGuest 
+        ? route('login') 
+        : route('program.campus.hiring.show', { id: program.id, slug: program.slug });
+
+    const formattedDate = program.date 
+        ? new Date(program.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+        : null;
+
+    return (
+        <Link
+            href={detailUrl}
+            className="block transition-transform duration-300 hover:scale-[1.01] hover:shadow-2xl rounded-2xl group mb-8"
+        >
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 md:flex">
+                
+                {/* Image Section (KIRI) */}
+                <div className="md:w-5/12 aspect-w-16 aspect-h-9 md:aspect-none relative overflow-hidden bg-gray-200">
+                    <img
+                        className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-90 absolute inset-0"
+                        src={program.imageSrc}
+                        alt={program.title}
+                        onError={(e) => { e.target.src = '/images/campushiring.jpg'; }} 
+                    />
+                </div>
+
+                {/* Content Section (KANAN) */}
+                <div className="p-8 md:w-7/12 flex flex-col justify-center">
+                    
+                    {/* Badge/Title */}
+                    <div className={`uppercase tracking-widest text-xs font-bold ${primaryDark}`}>
+                        {program.title}
+                    </div>
+
+                    {/* Subtitle (Nama Perusahaan) */}
+                    <p className="mt-1 text-3xl font-extrabold text-gray-900 leading-snug">
+                        {program.subtitle || program.company || "Perusahaan"}
+                    </p>
+
+                    {/* Deskripsi */}
+                    <p className="mt-4 text-gray-500 text-base leading-relaxed line-clamp-3">
+                        {program.description}
+                    </p>
+
+                    {/* Meta Info (Hanya user login) */}
+                    {!isGuest && formattedDate && (
+                        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 font-medium mb-6">
+                            <span className="flex items-center bg-gray-50 px-3 py-1 rounded-md border border-gray-100">
+                                📅 {formattedDate}
+                            </span>
+                            {program.location && (
+                                <span className="flex items-center bg-gray-50 px-3 py-1 rounded-md border border-gray-100">
+                                    📍 {program.location}
+                                </span>
+                            )}
+                        </div>
+                    )}
+
+                    {/* CTA Button */}
+                    <div className="mt-auto">
+                        <span className={`inline-flex items-center px-8 py-3 ${accentGreen} text-white border border-transparent rounded-full font-bold text-sm uppercase tracking-wider shadow-md hover:bg-emerald-700 focus:outline-none transition ease-in-out duration-150`}>
+                            {isGuest ? 'Login untuk Lihat Detail' : 'Lihat Detail Program'}
+                            <svg className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </Link>
+    );
+};
+
+// --- MAIN PAGE COMPONENT ---
+export default function CampusHiring({ auth, programs, pagination, filters, isGuest, total }) {
     const [searchTerm, setSearchTerm] = useState(filters?.search || '');
     const [perPage, setPerPage] = useState(filters?.per_page || 8);
 
     const primaryDark = "text-emerald-800";
     const accentGreen = "bg-emerald-600";
     const lightestGreen = "bg-emerald-50";
-    const programList = Array.isArray(programs) ? programs : [];
 
-    // Search
+    // Normalisasi data programs
+    const programList = programs.data ? programs.data : (Array.isArray(programs) ? programs : []);
+
+    // Handle Search
     const handleSearch = (e) => {
         e.preventDefault();
         router.get(route('program.campus.hiring'), {
             search: searchTerm,
             per_page: perPage,
-        }, {
-            preserveState: true,
-            preserveScroll: true,
-        });
+        }, { preserveState: true, preserveScroll: true });
     };
 
-    // Filter Change
+    // Handle Filter Change
     const handlePerPageChange = (value) => {
         setPerPage(value);
         router.get(route('program.campus.hiring'), {
             search: searchTerm,
             per_page: value,
-        }, {
-            preserveState: true,
-            preserveScroll: true,
-        });
+        }, { preserveState: true, preserveScroll: true });
     };
 
-    // Pagination
+    // Handle Pagination
     const handlePageChange = (page) => {
         router.get(route('program.campus.hiring'), {
             search: searchTerm,
             per_page: perPage,
             page: page,
-        }, {
-            preserveState: true,
-            preserveScroll: true,
-        });
+        }, { preserveState: true, preserveScroll: true });
     };
 
     return (
         <>
             <Head title="Campus Hiring" />
 
-            <MainLayout user={auth.user}>
-                {/* HERO SECTION */}
+            <MainLayout user={auth?.user}>
+                
+               {/* HERO SECTION */}
                 <div className={`relative w-full py-24 md:py-36 bg-gradient-to-br from-white to-emerald-50 overflow-hidden`}>
                     <div className="absolute inset-0 opacity-10">
                         <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
@@ -65,7 +134,7 @@ export default function CampusHiring({ auth, programs = [], pagination = null, f
 
                     <div className="container mx-auto px-6 lg:px-8 z-10 relative">
                         <span className="inline-block text-lg font-semibold mb-4 text-emerald-700 border-b-2 border-emerald-300 pb-1">
-                            Pusat Karir Puskaka UY
+                            Career Development Center
                         </span>
 
                         <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 mb-8 tracking-tight leading-tight drop-shadow-sm">
@@ -185,16 +254,9 @@ export default function CampusHiring({ auth, programs = [], pagination = null, f
                             </div>
                         )}
 
-                        {/* Programs Grid */}
-                        <div className="space-y-12">
-                            {programList.length === 0 ? (
-                                <div className="text-center py-16 bg-white rounded-xl shadow-lg">
-                                    <p className="text-xl text-gray-500">Tidak ada program yang ditemukan.</p>
-                                    {isGuest && (
-                                        <p className="mt-2 text-gray-400">Silakan login untuk melihat semua program.</p>
-                                    )}
-                                </div>
-                            ) : (
+                        {/* LIST PROGRAMS (SATU KOLOM - HORIZONTAL CARD) */}
+                        <div className="space-y-8">
+                            {programList.length > 0 ? (
                                 programList.map((program) => (
                                     <ProgramCard
                                         key={program.id}
@@ -204,120 +266,84 @@ export default function CampusHiring({ auth, programs = [], pagination = null, f
                                         isGuest={isGuest}
                                     />
                                 ))
+                            ) : (
+                                <div className="col-span-full py-24 text-center bg-white rounded-2xl shadow-sm border border-gray-100">
+                                    <div className="inline-block p-5 rounded-full bg-gray-50 mb-4">
+                                        <Search className="w-10 h-10 text-gray-300" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-gray-900">Tidak ada program ditemukan</h3>
+                                    <p className="text-gray-500 mt-2">Coba kata kunci lain atau reset filter pencarian Anda.</p>
+                                    {!isGuest && searchTerm && (
+                                        <button 
+                                            onClick={() => { setSearchTerm(''); router.get(route('program.campus.hiring')); }}
+                                            className="mt-6 px-6 py-2 bg-emerald-50 text-emerald-700 rounded-full font-bold hover:bg-emerald-100 transition-colors"
+                                        >
+                                            Reset Pencarian
+                                        </button>
+                                    )}
+                                </div>
                             )}
                         </div>
 
-                        {/* Pagination - Hanya tampil untuk user login */}
+                        {/* PAGINATION */}
                         {!isGuest && pagination && pagination.last_page > 1 && (
-                            <div className="mt-12 flex justify-center items-center gap-2">
-                                <button
-                                    onClick={() => handlePageChange(pagination.current_page - 1)}
-                                    disabled={pagination.current_page === 1}
-                                    className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-                                >
-                                    Previous
-                                </button>
+                            <div className="mt-16 flex justify-center">
+                                <div className="flex flex-wrap justify-center gap-2 bg-emerald-50/80 backdrop-blur-sm p-2.5 rounded-2xl shadow-lg border border-emerald-100">
+                                    
+                                    {/* Previous Button */}
+                                    <button
+                                        onClick={() => handlePageChange(pagination.current_page - 1)}
+                                        disabled={pagination.current_page === 1}
+                                        className="px-4 py-2.5 rounded-xl text-sm font-bold text-emerald-700 hover:bg-white hover:text-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-sm flex items-center"
+                                    >
+                                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+                                        Prev
+                                    </button>
 
-                                {[...Array(pagination.last_page)].map((_, index) => {
-                                    const page = index + 1;
-                                    return (
-                                        <button
-                                            key={page}
-                                            onClick={() => handlePageChange(page)}
-                                            className={`px-4 py-2 rounded-lg ${
-                                                page === pagination.current_page
-                                                    ? `${accentGreen} text-white`
-                                                    : 'border border-gray-300 hover:bg-gray-50'
-                                            }`}
-                                        >
-                                            {page}
-                                        </button>
-                                    );
-                                })}
+                                    {/* Page Numbers */}
+                                    <div className="hidden sm:flex items-center gap-1 px-2 border-x border-emerald-200/60">
+                                        {[...Array(pagination.last_page)].map((_, index) => {
+                                            const page = index + 1;
+                                            // Logika sederhana untuk ellipsis jika halaman banyak (opsional, bisa ditambah nanti)
+                                            return (
+                                                <button
+                                                    key={page}
+                                                    onClick={() => handlePageChange(page)}
+                                                    className={`
+                                                        w-10 h-10 rounded-xl text-sm font-bold transition-all duration-200 flex items-center justify-center
+                                                        ${page === pagination.current_page
+                                                            ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200 scale-105'
+                                                            : 'text-emerald-700 hover:bg-white hover:shadow-sm'
+                                                        }
+                                                    `}
+                                                >
+                                                    {page}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                    
+                                    {/* Mobile Page Indicator (Show only on small screens) */}
+                                    <span className="sm:hidden flex items-center px-4 text-sm font-bold text-emerald-800 bg-white rounded-xl shadow-sm">
+                                        {pagination.current_page} / {pagination.last_page}
+                                    </span>
 
-                                <button
-                                    onClick={() => handlePageChange(pagination.current_page + 1)}
-                                    disabled={pagination.current_page === pagination.last_page}
-                                    className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-                                >
-                                    Next
-                                </button>
-                            </div>
-                        )}
-
-                        {/* Results Info */}
-                        {!isGuest && pagination && (
-                            <div className="mt-6 text-center text-gray-600">
-                                Menampilkan {pagination.from} - {pagination.to} dari {pagination.total} program
+                                    {/* Next Button */}
+                                    <button
+                                        onClick={() => handlePageChange(pagination.current_page + 1)}
+                                        disabled={pagination.current_page === pagination.last_page}
+                                        className="px-4 py-2.5 rounded-xl text-sm font-bold text-emerald-700 hover:bg-white hover:text-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-sm flex items-center"
+                                    >
+                                        Next
+                                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                                    </button>
+                                </div>
                             </div>
                         )}
                     </div>
                 </div>
-
                 <Footer />
             </MainLayout>
         </>
     );
 }
-
-// PROGRAM CARD COMPONENT
-const ProgramCard = ({ program, primaryDark, accentGreen, isGuest }) => {
-    const detailUrl = isGuest 
-        ? route('login') 
-        : route('program.campus.hiring.show', { id: program.id, slug: program.slug });
-
-    return (
-        <Link
-            href={detailUrl}
-            className="block transition-transform duration-300 hover:scale-[1.01] hover:shadow-2xl rounded-2xl group"
-        >
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 md:flex">
-                {/* Image Section */}
-                <div className="md:w-5/12 aspect-w-16 aspect-h-9 md:aspect-none">
-                    <img
-                        className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-90"
-                        src={program.imageSrc}
-                        alt={program.title}
-                    />
-                </div>
-
-                {/* Content Section */}
-                <div className="p-8 md:w-7/12 flex flex-col justify-center">
-                    {/* Badge/Title */}
-                    <p className="mt-1 text-3xl font-extrabold text-gray-900 leading-snug">
-                        {program.title}
-                    </p>
-
-
-                    {/* Subtitle */}
-                    <p className="mt-1 text-3xl font-extrabold text-gray-900 leading-snug">
-                        {program.subtitle}
-                    </p>
-
-                    {/* Description */}
-                    <p className="mt-4 text-gray-500 text-base leading-relaxed line-clamp-3">
-                        {program.description}
-                    </p>
-
-                    {/* Additional Info - Only for logged in users */}
-                    {!isGuest && program.date && (
-                        <div className="mt-4 flex items-center gap-4 text-sm text-gray-600">
-                            <span>📅 {new Date(program.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-                            <span>📍 {program.location}</span>
-                        </div>
-                    )}
-
-                    {/* CTA Button */}
-                    <div className="mt-6">
-                        <span className={`inline-flex items-center px-6 py-2 ${accentGreen} border border-transparent rounded-full font-semibold text-sm text-white uppercase tracking-wider shadow-md hover:bg-green-700 active:bg-green-900 focus:outline-none transition ease-in-out duration-150`}>
-                            {isGuest ? 'Login untuk Lihat Detail' : 'Lihat Detail Program'}
-                            <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </Link>
-    );
-};
