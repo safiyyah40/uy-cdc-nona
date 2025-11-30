@@ -86,7 +86,7 @@ export default function DetailCampusHiring({ auth, campusHiring }) {
                                     />
                                     <InfoItem
                                         Icon={Calendar}
-                                        label="Tanggal"
+                                        label="Hari dan Tanggal"
                                         value={formattedDate}
                                         mainGreen={mainGreen}
                                     />

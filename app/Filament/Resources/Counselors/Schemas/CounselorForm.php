@@ -44,6 +44,7 @@ class CounselorForm
                             ->directory('counselors')
                             ->image()
                             ->imageEditor()
+                            ->required()
                             ->columnSpanFull(),
 
                         Grid::make(2)
