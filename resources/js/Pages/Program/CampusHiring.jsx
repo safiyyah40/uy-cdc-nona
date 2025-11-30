@@ -64,11 +64,14 @@ export default function CampusHiring({ auth, programs = [], pagination = null, f
                     </div>
 
                     <div className="container mx-auto px-6 lg:px-8 z-10 relative">
-                        <span className="inline-block text-lg font-semibold mb-4 text-emerald-700 border-b-2 border-emerald-300 pb-1">
-                            Pusat Karir Puskaka UY
-                        </span>
+                        <span className={`inline-flex items-center text-sm font-semibold mb-3 text-emerald-600 uppercase tracking-widest`}>
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                        JELAJAHI PELUANG KERJA
+                    </span>
 
-                        <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 mb-8 tracking-tight leading-tight drop-shadow-sm">
+                        <h1 className="text-7xl md:text-7xl font-extrabold text-gray-900 mb-8 tracking-tight leading-tight drop-shadow-sm">
                             Temukan <span className="text-emerald-600">Karir Impian</span> <br /> di <span className="font-serif italic">Campus Hiring</span>
                         </h1>
 
@@ -82,17 +85,17 @@ export default function CampusHiring({ auth, programs = [], pagination = null, f
                 {/* PROGRAM LIST SECTION */}
                 <div className={`py-16 md:py-24 ${lightestGreen}`}>
                     <div className="container mx-auto px-6 lg:px-8">
-                        
+
                         {/* Header & Description */}
                         <div className="max-w-4xl mb-12">
-                            <h2 className={`${primaryDark} text-3xl md:text-4xl font-bold mb-4`}>
-                                Program Terbaru
+                            <h2 className={`text-gray-900 text-3xl font-bold mb-4 border-b-2 border-emerald-200 pb-2`}>
+                            Program Terbaru
                             </h2>
-                            <p className="text-gray-600 text-lg">
-                                Universitas YARSI berkomitmen mendukung pengembangan karier mahasiswa dan alumni
-                                melalui penyelenggaraan Career Day dan kemitraan strategis dengan dunia industri.
-                            </p>
-                        </div>
+                        <p className="text-gray-600 text-lg">
+                        Universitas YARSI berkomitmen mendukung pengembangan karier mahasiswa dan alumni
+                        melalui penyelenggaraan Career Day dan kemitraan strategis dengan dunia industri.
+                    </p>
+                </div>
 
                         {/* Guest Warning - Hanya tampil untuk tamu */}
                         {isGuest && (
@@ -262,8 +265,8 @@ export default function CampusHiring({ auth, programs = [], pagination = null, f
 
 // PROGRAM CARD COMPONENT
 const ProgramCard = ({ program, primaryDark, accentGreen, isGuest }) => {
-    const detailUrl = isGuest 
-        ? route('login') 
+    const detailUrl = isGuest
+        ? route('login')
         : route('program.campus.hiring.show', { id: program.id, slug: program.slug });
 
     return (

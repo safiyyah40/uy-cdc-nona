@@ -8,7 +8,7 @@ import { Head } from '@inertiajs/react';
 // ===================================
 export default function OrientasiDuniaKerja(props) {
 
-    const pageTitle = "ORIENTASI DUNIA KERJA";
+    const pageTitle = "Orientasi Dunia Kerja";
 
     // Data materi untuk ditampilkan
     const materiList = [
@@ -62,17 +62,20 @@ export default function OrientasiDuniaKerja(props) {
                     {/* Hero Content */}
                     <div className="relative z-10 container mx-auto px-6 lg:px-8">
                         <div className="max-w-4xl pt-16">
-                            <span className={`inline-block py-1 px-3 rounded-full bg-emerald-500/10 border border-emerald-500 text-emerald-800 text-sm font-semibold mb-4 tracking-wider`}>
-                                PROGRAM PUSKAKA UNIVERSITAS YARSI
+                            <span className={`inline-flex items-center text-sm font-semibold mb-4 text-emerald-600 tracking-wider`}>
+                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7a2 2 0 012 2v9a2 2 0 01-2 2H4a2 2 0 01-2-2V9a2 2 0 012-2h16zM8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M6 13h12M9 13v4m6-4v4"></path>
+                                </svg>
+                                PEMBEKALAN KARIR & ALUMNI
                             </span>
-                            <h1 className={`text-4xl md:text-6xl font-serif font-extrabold text-gray-900 mb-6 leading-snug drop-shadow-sm`}>
+                            <h1 className={`text-7xl md:text-7xl font-serif italic font-semibold text-gray-900 mb-6 leading-snug drop-shadow-sm`}>
                                 {pageTitle}
                             </h1>
                             <p className="text-xl md:text-2xl text-gray-700 leading-relaxed max-w-3xl font-light">
                                 Jembatan strategis bagi calon wisudawan untuk bertransformasi dari akademisi menjadi profesional yang siap bersaing.
                             </p>
 
-                            <a href="#" className={`mt-10 inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-bold rounded-full shadow-xl text-white bg-emerald-500 hover:bg-emerald-600 transition-all duration-300 transform hover:scale-[1.02] active:scale-100`}>
+                            <a href="#" className={`mt-10 inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-bold rounded-full shadow-xl text-white bg-emerald-600 hover:bg-emerald-600 transition-all duration-300 transform hover:scale-[1.02] active:scale-100`}>
                                 Mulai Pembekalan Karir
                                 <svg className="ml-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </a>
@@ -98,7 +101,7 @@ export default function OrientasiDuniaKerja(props) {
 
                             {/* Text Content */}
                             <div className="order-2 lg:order-1">
-                                <h2 className={`text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-6 border-l-4 border-emerald-500 pl-4`}>
+                                <h2 className={`text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-6 border-l-4 border-emerald-600 pl-4`}>
                                     Siap Hadapi Transisi Dunia Kerja?
                                 </h2>
                                 <p className={`text-gray-900 text-lg leading-relaxed mb-6 text-justify`}>
@@ -112,11 +115,11 @@ export default function OrientasiDuniaKerja(props) {
                                 </p>
 
                                 {/* Quote */}
-                                <div className={`mt-8 p-6 bg-emerald-50 border-l-4 border-emerald-500 rounded-lg shadow-md`}>
+                                <div className={`mt-8 p-6 bg-emerald-50 border-l-4 border-emerald-600 rounded-lg shadow-md`}>
                                     <p className={`text-gray-700 italic font-medium text-lg`}>
-                                        <span className="text-2xl font-serif font-bold mr-2 text-emerald-800">"</span>
+                                        <span className="text-2xl font-serif font-bold mr-2 text-emerald-600">"</span>
                                         Success occurs when opportunity meets preparation.
-                                        <span className="text-2xl font-serif font-bold ml-2 text-emerald-800">"</span>
+                                        <span className="text-2xl font-serif font-bold ml-2 text-emerald-600">"</span>
                                     </p>
                                     <span className="block text-sm text-gray-500 mt-2 text-right">- Seneca</span>
                                 </div>
@@ -163,7 +166,7 @@ export default function OrientasiDuniaKerja(props) {
                         <p className={`text-emerald-200 text-xl max-w-3xl mx-auto mb-10 font-light`}>
                             Dapatkan bekal terbaik dan jaringan eksklusif yang akan membawa Anda selangkah lebih maju.
                         </p>
-                        <a href="#" className={`inline-flex items-center justify-center bg-emerald-500 text-white font-bold py-4 px-10 rounded-full hover:bg-emerald-600 transition-all transform hover:-translate-y-1 shadow-2xl shadow-emerald-500/50 text-lg`}>
+                        <a href="#" className={`inline-flex items-center justify-center bg-emerald-600 text-white font-bold py-4 px-10 rounded-full hover:bg-emerald-600 transition-all transform hover:-translate-y-1 shadow-2xl shadow-emerald-500/50 text-lg`}>
                             Daftar & Hubungi Kami
                             <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-2-3a2 2 0 00-2-2H5a2 2 0 00-2 2v2a2 2 0 002 2h14a2 2 0 002-2V5z"></path></svg>
                         </a>

@@ -1,14 +1,14 @@
 import React from 'react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer'; 
+import Footer from '@/Components/Footer';
 import { Head, Link } from '@inertiajs/react';
-import { Lightbulb, ArrowRight, Clock } from 'lucide-react'; 
+import { Lightbulb, ArrowRight, Clock } from 'lucide-react';
 
 export default function TipsDanTrik(props) {
-    
+
     const mainGreen = "text-emerald-700";
     const lightestGreenBg = "bg-emerald-50";
-    
+
     const tipsData = [
         {
             id: 1,
@@ -42,20 +42,20 @@ export default function TipsDanTrik(props) {
     return (
         <>
             <Head title="Tips & Trik" />
-            
+
             <MainLayout user={props.auth.user}>
 
                 <div
                     className={`pt-24 pb-24 relative overflow-hidden bg-gradient-to-br from-white to-emerald-100 border-b border-emerald-300`}
                 >
                     <div className="container mx-auto px-6 lg:px-8 z-10 pt-16 md:pt-24">
-                        
+
                         <span className={`inline-flex items-center text-sm font-semibold mb-3 text-emerald-600 uppercase tracking-widest`}>
                             <Lightbulb className="w-4 h-4 mr-2" />
                             Panduan dan Kiat Praktis
                         </span>
 
-                        <h1 className={`text-6xl md:text-8xl font-serif italic ${mainGreen} mb-6 tracking-tight leading-none drop-shadow-sm`}>
+                        <h1 className={`text-6xl md:text-8xl font-semibold font-serif italic text-gray-900 mb-6 tracking-tight leading-none drop-shadow-sm`}>
                             Tips & Trik
                         </h1>
 
@@ -70,7 +70,7 @@ export default function TipsDanTrik(props) {
                 >
                     <div className="container mx-auto px-6 lg:px-8">
                         <div className="mb-14 max-w-2xl">
-                            <h2 className={`text-3xl font-bold ${mainGreen} border-b-2 border-emerald-200 pb-2`}>Kiat Terbaru</h2>
+                            <h2 className={`text-3xl font-bold text-gray-900 border-b-2 border-emerald-200 pb-2`}>Kiat Terbaru</h2>
                             <p className="text-gray-600 mt-2">Daftar artikel dan panduan terbaru dari Career Development Center (CDC).</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -84,7 +84,7 @@ export default function TipsDanTrik(props) {
                         </div>
                     </div>
                 </div>
-                
+
                 <Footer />
             </MainLayout>
         </>
@@ -92,7 +92,7 @@ export default function TipsDanTrik(props) {
 }
 
 const TipCard = ({ tip, mainGreen }) => {
-    const detailUrl = `/program/tips-dan-trik/${tip.id}/${tip.slug}`; 
+    const detailUrl = `/program/tips-dan-trik/${tip.id}/${tip.slug}`;
 
     return (
         <Link
@@ -126,12 +126,12 @@ const TipCard = ({ tip, mainGreen }) => {
                             {tip.summary}
                         </p>
                     </div>
-                    
+
                     <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
                         <span className="flex items-center text-sm text-gray-500 font-medium">
                             <Clock className="w-4 h-4 mr-1.5" /> {tip.readTime}
                         </span>
-                        
+
                         <span className={`inline-flex items-center text-sm font-bold transition-colors text-gray-600 group-hover:${mainGreen}`}>
                             Baca Selengkapnya
                             <ArrowRight className="w-4 h-4 ml-2 mt-0.5 group-hover:translate-x-1 transition-transform" />
