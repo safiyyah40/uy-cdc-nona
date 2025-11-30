@@ -133,11 +133,20 @@ export default function CampusHiring({ auth, programs, pagination, filters, isGu
                     </div>
 
                     <div className="container mx-auto px-6 lg:px-8 z-10 relative">
+<<<<<<< HEAD
+                        <span className={`inline-flex items-center text-sm font-semibold mb-3 text-emerald-600 uppercase tracking-widest`}>
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                        JELAJAHI PELUANG KERJA
+                    </span>
+=======
                         <span className="inline-block text-lg font-semibold mb-4 text-emerald-700 border-b-2 border-emerald-300 pb-1">
                             Career Development Center
                         </span>
+>>>>>>> 5b215d5e14cce3c4296c11bdc11dd3a577f256c8
 
-                        <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 mb-8 tracking-tight leading-tight drop-shadow-sm">
+                        <h1 className="text-7xl md:text-7xl font-extrabold text-gray-900 mb-8 tracking-tight leading-tight drop-shadow-sm">
                             Temukan <span className="text-emerald-600">Karir Impian</span> <br /> di <span className="font-serif italic">Campus Hiring</span>
                         </h1>
 
@@ -151,17 +160,17 @@ export default function CampusHiring({ auth, programs, pagination, filters, isGu
                 {/* PROGRAM LIST SECTION */}
                 <div className={`py-16 md:py-24 ${lightestGreen}`}>
                     <div className="container mx-auto px-6 lg:px-8">
-                        
+
                         {/* Header & Description */}
                         <div className="max-w-4xl mb-12">
-                            <h2 className={`${primaryDark} text-3xl md:text-4xl font-bold mb-4`}>
-                                Program Terbaru
+                            <h2 className={`text-gray-900 text-3xl font-bold mb-4 border-b-2 border-emerald-200 pb-2`}>
+                            Program Terbaru
                             </h2>
-                            <p className="text-gray-600 text-lg">
-                                Universitas YARSI berkomitmen mendukung pengembangan karier mahasiswa dan alumni
-                                melalui penyelenggaraan Career Day dan kemitraan strategis dengan dunia industri.
-                            </p>
-                        </div>
+                        <p className="text-gray-600 text-lg">
+                        Universitas YARSI berkomitmen mendukung pengembangan karier mahasiswa dan alumni
+                        melalui penyelenggaraan Career Day dan kemitraan strategis dengan dunia industri.
+                    </p>
+                </div>
 
                         {/* Guest Warning - Hanya tampil untuk tamu */}
                         {isGuest && (
@@ -346,4 +355,70 @@ export default function CampusHiring({ auth, programs, pagination, filters, isGu
             </MainLayout>
         </>
     );
+<<<<<<< HEAD
 }
+
+// PROGRAM CARD COMPONENT
+const ProgramCard = ({ program, primaryDark, accentGreen, isGuest }) => {
+    const detailUrl = isGuest
+        ? route('login')
+        : route('program.campus.hiring.show', { id: program.id, slug: program.slug });
+
+    return (
+        <Link
+            href={detailUrl}
+            className="block transition-transform duration-300 hover:scale-[1.01] hover:shadow-2xl rounded-2xl group"
+        >
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 md:flex">
+                {/* Image Section */}
+                <div className="md:w-5/12 aspect-w-16 aspect-h-9 md:aspect-none">
+                    <img
+                        className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-90"
+                        src={program.imageSrc}
+                        alt={program.title}
+                    />
+                </div>
+
+                {/* Content Section */}
+                <div className="p-8 md:w-7/12 flex flex-col justify-center">
+                    {/* Badge/Title */}
+                    <p className="mt-1 text-3xl font-extrabold text-gray-900 leading-snug">
+                        {program.title}
+                    </p>
+
+
+                    {/* Subtitle */}
+                    <p className="mt-1 text-3xl font-extrabold text-gray-900 leading-snug">
+                        {program.subtitle}
+                    </p>
+
+                    {/* Description */}
+                    <p className="mt-4 text-gray-500 text-base leading-relaxed line-clamp-3">
+                        {program.description}
+                    </p>
+
+                    {/* Additional Info - Only for logged in users */}
+                    {!isGuest && program.date && (
+                        <div className="mt-4 flex items-center gap-4 text-sm text-gray-600">
+                            <span>📅 {new Date(program.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                            <span>📍 {program.location}</span>
+                        </div>
+                    )}
+
+                    {/* CTA Button */}
+                    <div className="mt-6">
+                        <span className={`inline-flex items-center px-6 py-2 ${accentGreen} border border-transparent rounded-full font-semibold text-sm text-white uppercase tracking-wider shadow-md hover:bg-green-700 active:bg-green-900 focus:outline-none transition ease-in-out duration-150`}>
+                            {isGuest ? 'Login untuk Lihat Detail' : 'Lihat Detail Program'}
+                            <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </Link>
+    );
+};
+=======
+}
+>>>>>>> 5b215d5e14cce3c4296c11bdc11dd3a577f256c8

@@ -1,8 +1,8 @@
 import React from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import Footer from '@/Components/Footer';
-import { Head, Link } from '@inertiajs/react'; 
-import { ArrowRight, BookOpen, Clock } from 'lucide-react'; 
+import { Head, Link } from '@inertiajs/react';
+import { ArrowRight, BookOpen, Clock } from 'lucide-react';
 
 export default function Seminar(props) {
 
@@ -10,7 +10,7 @@ export default function Seminar(props) {
     const mainGreen = "text-emerald-800";
     const lightestGreenBg = "bg-emerald-50";
     const accentGreen = "bg-emerald-600";
-    
+
     const seminarTopics = [
         {
             id: 1,
@@ -57,13 +57,13 @@ export default function Seminar(props) {
                     className={`pt-24 pb-24 relative overflow-hidden bg-gradient-to-br from-white to-emerald-100 border-b border-emerald-300`}
                 >
                     <div className="container mx-auto px-6 lg:px-8 z-10 pt-16 md:pt-24">
-                        
+
                         <span className={`inline-flex items-center text-sm font-semibold mb-3 text-emerald-600 uppercase tracking-widest`}>
                             <BookOpen className="w-4 h-4 mr-2" />
                             Pengembangan Karakter dan Keilmuan
                         </span>
 
-                        <h1 className={`text-6xl md:text-8xl font-serif italic ${mainGreen} mb-6 tracking-tight leading-none drop-shadow-sm`}>
+                        <h1 className={`text-6xl md:text-8xl font-semibold font-serif italic text-gray-900 mb-6 tracking-tight leading-none drop-shadow-sm`}>
                             Seminar
                         </h1>
 
@@ -82,7 +82,7 @@ export default function Seminar(props) {
                 >
                     <div className="container mx-auto px-6 lg:px-8">
                         <div className="mb-14 max-w-2xl">
-                            <h2 className={`text-3xl font-bold ${mainGreen} border-b-2 border-emerald-200 pb-2`}>Topik Terbaru</h2>
+                            <h2 className={`text-3xl font-bold text-gray-900 border-b-2 border-emerald-200 pb-2`}>Topik Terbaru</h2>
                             <p className="text-gray-600 mt-2">Daftar seminar dan sesi *sharing* yang akan datang.</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -123,9 +123,9 @@ const SeminarCard = ({ id, slug, title, imageSrc, mainGreen, accentGreen, date, 
     // Mencari bagian judul yang diapit tanda kutip
     const quoteIndexStart = title.indexOf("\"");
     const quoteIndexEnd = title.lastIndexOf("\"");
-    const quotedTitle = (quoteIndexStart !== -1 && quoteIndexEnd !== -1) 
+    const quotedTitle = (quoteIndexStart !== -1 && quoteIndexEnd !== -1)
                         ? title.substring(quoteIndexStart, quoteIndexEnd + 1)
-                        : title; 
+                        : title;
 
     return (
         <Link
@@ -155,13 +155,13 @@ const SeminarCard = ({ id, slug, title, imageSrc, mainGreen, accentGreen, date, 
                         <div className="flex items-center text-sm font-medium text-emerald-600 mb-2">
                             <Clock className="w-4 h-4 mr-2" /> {time}
                         </div>
-                        
+
                         {/* Judul Utama */}
                         <p className={`mt-1 font-serif ${mainGreen} font-extrabold text-xl leading-snug`}>
                             {quotedTitle}
                         </p>
                     </div>
-                    
+
                     <div className="mt-4 pt-4 border-t border-gray-100">
                         <span className={`inline-flex items-center text-sm font-bold transition-colors text-gray-600 group-hover:${mainGreen}`}>
                             Detail & Registrasi
