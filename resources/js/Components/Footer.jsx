@@ -18,27 +18,31 @@ const Footer = () => {
     return (
         <footer className="bg-white font-inter">
 
+            {/* Bagian Utama Footer (Alamat & Kontak) */}
             <div className="bg-[#E5F3E5] py-16">
-                <div className="container mx-auto px-4 md:px-8 max-w-6xl">
-                    <div className="flex flex-col md:flex-row justify-between items-start">
+                <div className="mx-auto w-full">
+                    <div className="flex flex-col md:flex-row justify-between items-start w-full max-w-screen-2xl mx-auto">
 
-                        <div className="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-12 mb-8 md:mb-0 w-full md:w-auto">
+                        {/* Logo dan Informasi Alamat */}
+                        <div className="flex flex-col md:flex-row space-y-8 md:space-y-0 mb-10 md:mb-0 w-full md:w-auto justify-start pl-6 md:pl-8">
 
-                            <div className="flex-shrink-0 pt-2">
+                            {/* Logo CDC */}
+                            <div className="flex-shrink-0 mr-12">
                                 <img src={LOGO_CDC_URL} alt="Logo CDC Universitas YARSI" className="h-40 w-auto" />
                             </div>
 
-                            <div className="flex flex-col justify-start space-y-4 text-gray-700">
+                            {/* Detail Alamat */}
+                            <div className="flex flex-col justify-start space-y-4 text-gray-700 pt-4 md:pt-0">
                                 <div>
-                                    <p className="font-bold text-base mb-1 text-black">Universitas Yarsi</p>
-                                    <p className="text-sm max-w-sm">
+                                    <p className="font-bold text-xl mb-1 text-black">Universitas Yarsi</p>
+                                    <p className="text-lg max-w-lg">
                                         Menara YARSI, Jl. Let. Jend. Suprapto Kav. 13.
                                         Cempaka Putih, Jakarta Pusat, DKI Jakarta 10510. Indonesia.
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="font-bold text-base mb-1 text-black">CDC</p>
-                                    <p className="text-sm max-w-sm">
+                                    <p className="font-bold text-xl mb-1 text-black">CDC</p>
+                                    <p className="text-lg max-w-lg">
                                         Pusat Kemahasiswaan Karir dan Alumni,
                                         Universitas Yarsi, Lantai.1, Rektorat
                                     </p>
@@ -46,18 +50,18 @@ const Footer = () => {
                             </div>
                         </div>
 
-                        {/* RIGHT SECTION: Contact Info (Email & Instagram) */}
-                        <div className="space-y-4 text-gray-800 pt-8 md:pt-4">
+                        {/* Info Kontak (Email & Instagram) */}
+                        <div className="space-y-4 text-gray-800 pt-8 md:pt-4 pr-6 md:pr-8">
                             <div className="flex items-center space-x-3">
-                                <MailIcon className="w-6 h-6 text-green-700" />
-                                <a href="mailto:bidang1@yarsi.ac.id" className="text-base text-black hover:text-green-700 transition-colors">
+                                <MailIcon className="w-7 h-7 text-green-700" />
+                                <a href="mailto:bidang1@yarsi.ac.id" className="text-xl text-black hover:text-green-700 transition-colors">
                                     bidang1@yarsi.ac.id
                                 </a>
                             </div>
 
                             <div className="flex items-center space-x-3">
-                                <InstagramIcon className="w-6 h-6 text-green-700" />
-                                <a href="https://instagram.com/kariralumni.yarsi" target="_blank" rel="noopener noreferrer" className="text-base text-black hover:text-green-700 transition-colors">
+                                <InstagramIcon className="w-7 h-7 text-green-700" />
+                                <a href="https://instagram.com/kariralumni.yarsi" target="_blank" rel="noopener noreferrer" className="text-xl text-black hover:text-green-700 transition-colors">
                                     kariralumni.yarsi
                                 </a>
                             </div>
@@ -67,11 +71,12 @@ const Footer = () => {
                 </div>
             </div>
 
+            {/* Bagian Hak Cipta */}
             <div className="bg-white py-4 border-t border-gray-200">
-                <div className="container mx-auto px-4 md:px-8 max-w-6xl text-center text-gray-800 text-sm">
-                    <p className="flex items-center justify-center space-x-1 font-bold">
-                        <CopyrightIcon className="w-4 h-4 inline" />
-                         <span>2025 Universitas YARSI All Rights Reserved.</span>
+                <div className="mx-auto w-full text-center text-gray-800">
+                    <p className="flex items-center justify-center space-x-1 font-bold text-lg w-full max-w-screen-2xl mx-auto px-6 md:px-8">
+                        <CopyrightIcon className="w-5 h-5 inline" />
+                        <span>2025 Universitas YARSI All Rights Reserved.</span>
                     </p>
                 </div>
             </div>
