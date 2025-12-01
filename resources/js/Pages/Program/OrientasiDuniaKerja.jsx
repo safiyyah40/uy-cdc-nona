@@ -2,15 +2,12 @@ import React from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import Footer from '@/Components/Footer';
 import { Head } from '@inertiajs/react';
+import { BookOpen } from 'lucide-react';
 
-// ===================================
 // KOMPONEN ORIENTASI DUNIA KERJA (ODK)
-// ===================================
 export default function OrientasiDuniaKerja(props) {
 
     const pageTitle = "Orientasi Dunia Kerja";
-
-    // Data materi untuk ditampilkan
     const materiList = [
         {
             title: "Strategi Karir",
@@ -44,41 +41,44 @@ export default function OrientasiDuniaKerja(props) {
         }
     ];
 
-    // --- PALET WARNA (Emerald/Teal) ---
+    // --- PALET WARNA Emerald/Teal ---
     const lightestBg = "emerald-50";
-
     return (
         <>
             <Head title={pageTitle} />
-
             <MainLayout user={props.auth.user}>
-
                 {/* --- HERO SECTION --- */}
                 <div className={`relative w-full h-[65vh] md:h-[550px] flex flex-col justify-center bg-gradient-to-br from-white to-emerald-50 overflow-hidden`}>
-
                     {/* Overlay pattern/dots */}
                     <div className="absolute inset-0 bg-[url('/images/dots.svg')] opacity-20"></div>
-
                     {/* Hero Content */}
-                    <div className="relative z-10 container mx-auto px-6 lg:px-8">
-                        <div className="max-w-4xl pt-16">
-                            <span className={`inline-flex items-center text-sm font-semibold mb-4 text-emerald-600 tracking-wider`}>
-                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7a2 2 0 012 2v9a2 2 0 01-2 2H4a2 2 0 01-2-2V9a2 2 0 012-2h16zM8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M6 13h12M9 13v4m6-4v4"></path>
-                                </svg>
+                    <div className={`pt-24 pb-24 relative overflow-hidden bg-gradient-to-br from-white to-emerald-100 border-b border-emerald-300`}>
+                        <div className="container mx-auto px-6 lg:px-8 z-10 pt-16 md:pt-24">
+                            {/* Badge */}
+                            <span className={`inline-flex items-center text-sm font-semibold mb-3 text-emerald-600 uppercase tracking-widest`}>
+                                <BookOpen className="w-4 h-4 mr-2" />
                                 PEMBEKALAN KARIR & ALUMNI
                             </span>
-                            <h1 className={`text-7xl md:text-7xl font-serif italic font-semibold text-gray-900 mb-6 leading-snug drop-shadow-sm`}>
-                                {pageTitle}
+                            {/* Heading */}
+                            <h1 className={`text-6xl md:text-8xl font-semibold font-serif italic text-gray-900 mb-6 tracking-tight leading-none drop-shadow-sm`}>
+                                Orientasi <span className="text-emerald-600">Dunia</span> Kerja
                             </h1>
-                            <p className="text-xl md:text-2xl text-gray-700 leading-relaxed max-w-3xl font-light">
+                            {/* Description */}
+                            <p className="text-xl md:text-2xl leading-relaxed text-gray-700 font-sans max-w-5xl font-light">
                                 Jembatan strategis bagi calon wisudawan untuk bertransformasi dari akademisi menjadi profesional yang siap bersaing.
                             </p>
-
-                            <a href="#" className={`mt-10 inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-bold rounded-full shadow-xl text-white bg-emerald-600 hover:bg-emerald-600 transition-all duration-300 transform hover:scale-[1.02] active:scale-100`}>
-                                Mulai Pembekalan Karir
-                                <svg className="ml-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                            </a>
+                            {/* Button Action */}
+                            <div className="mt-10">
+                                <a
+                                    href="#"
+                                    className="inline-flex items-center justify-center px-8 py-3.5 border border-transparent text-base font-bold rounded-xl shadow-lg text-white bg-emerald-600 hover:bg-emerald-700 transition-all duration-300 transform hover:-translate-y-1"
+                                >
+                                    Mulai Pembekalan Karir
+                                    <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                    </svg>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@ export default function OrientasiDuniaKerja(props) {
                     </div>
                 </section>
 
-                {/* --- KEY TOPICS (CARDS) SECTION --- */}
+                {/* --- KEY TOPICS --- */}
                 <section className={`py-20 bg-gradient-to-br from-white to-emerald-50`}>
                     <div className="container mx-auto px-6 lg:px-8">
                         <div className="text-center max-w-2xl mx-auto mb-16">
@@ -153,7 +153,7 @@ export default function OrientasiDuniaKerja(props) {
                     </div>
                 </section>
 
-                {/* --- CTA / CLOSING SECTION --- */}
+                {/* --- CTA SECTION --- */}
                 <section className={`py-20 bg-emerald-800 relative overflow-hidden`}>
 
                     {/* Pattern Overlay */}
@@ -172,9 +172,7 @@ export default function OrientasiDuniaKerja(props) {
                         </a>
                     </div>
                 </section>
-
                 <Footer />
-
             </MainLayout>
         </>
     );

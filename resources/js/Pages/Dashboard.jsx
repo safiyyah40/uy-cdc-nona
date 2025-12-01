@@ -9,7 +9,7 @@ import InfoMagang from '../Components/InfoMagang';
 import TesMinatBakat from '../Components/TesMinatBakat';
 import Footer from '../Components/Footer';
 
-export default function Dashboard({ auth, slides})  {
+export default function Dashboard({ auth, slides, latestNews})  {
     const { props } = usePage();
     const success = props.flash?.success;
     return (
@@ -34,10 +34,13 @@ export default function Dashboard({ auth, slides})  {
             <VisiMisi slides={slides} />
             <KalenderSection />
             <StatistikLayanan />
-            <BeritaSection />
+            <BeritaSection latestNews={latestNews} />
             <LowonganPekerjaan />
             <InfoMagang />
-            <TesMinatBakat />
+            <div id="layanan-tes">
+                <TesMinatBakat />
+            </div>
+
             <Footer />
         </MainLayout>
     );

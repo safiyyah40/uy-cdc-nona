@@ -13,34 +13,47 @@ class BeritaController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+        Carbon::setLocale('id');
 
+        // Base Query
         $query = Berita::active()->latest();
 
-        if ($user) {
+        $isGuest = !$user;
+        // Hitung total seluruh berita untuk info ke tamu
+        $totalAll = Berita::active()->count();
+
+        if (!$isGuest) {
             // --- JIKA USER LOGIN (Full Akses) ---
-            $perPage = $request->input('per_page', 12);
+            // Default 8 
+            $perPage = $request->input('per_page', 8); 
             $search = $request->input('search', '');
 
-            // Search & Pagination
-            $berita = $query->when($search, function ($q, $search) {
+            // Search & Pagination Logic
+            $beritaRaw = $query->when($search, function ($q, $search) {
                     $q->where(function($sub) use ($search) {
                         $sub->where('title', 'like', "%{$search}%")
                             ->orWhere('description', 'like', "%{$search}%");
                     });
                 })
-                ->paginate($perPage)
-                ->through(fn ($item) => $this->formatBerita($item));
+                ->paginate($perPage === 'all' ? 1000 : $perPage)
+                ->withQueryString();
+
+            // Transformasi Data
+            $beritaData = $beritaRaw->through(fn ($item) => $this->formatBerita($item));
+            
+            $berita = $beritaData; 
+
         } else {
             // --- JIKA TAMU (Hanya 4 Teratas) ---
             $items = $query->take(4)->get();
 
+            // Struktur data manual agar tidak error di frontend
             $berita = [
                 'data' => $items->map(fn ($item) => $this->formatBerita($item)),
-                'links' => [],
+                'links' => [], // links kosong karena tamu tidak ada pagination
                 'total' => 4,
                 'from' => 1,
                 'to' => 4,
-                'is_guest_limit' => true 
             ];
             
             $search = '';
@@ -53,7 +66,8 @@ class BeritaController extends Controller
                 'search' => $search,
                 'per_page' => $perPage,
             ],
-            'isLoggedIn' => !!$user 
+            'isGuest' => $isGuest,
+            'total' => $totalAll,
         ]);
     }
 

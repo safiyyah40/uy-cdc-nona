@@ -226,7 +226,7 @@ export default function MainLayout({ children }) {
                                 <DropdownLink href={route('program.orientasi.kerja')}>ORIENTASI DUNIA KERJA</DropdownLink>
                                 <DropdownLink href={route('program.campus.hiring')}>CAMPUS HIRING</DropdownLink>
                                 <DropdownLink href={route('program.seminar')}>SEMINAR</DropdownLink>
-                                <DropdownLink href={route('program.tips.trik')}>TIPS DAN TRIK</DropdownLink>
+                                <DropdownLink href={route('program.tips-dan-trik')}>TIPS DAN TRIK</DropdownLink>
                                 <DropdownLink href={route('program.berita')}>BERITA</DropdownLink>
                             </NavDropdown>
 
@@ -357,7 +357,7 @@ export default function MainLayout({ children }) {
                                 <DropdownLink href={route('program.orientasi.kerja')}>ORIENTASI DUNIA KERJA</DropdownLink>
                                 <DropdownLink href={route('program.campus.hiring')}>CAMPUS HIRING</DropdownLink>
                                 <DropdownLink href={route('program.seminar')}>SEMINAR</DropdownLink>
-                                <DropdownLink href={route('program.tips.trik')}>TIPS DAN TRIK</DropdownLink>
+                                <DropdownLink href={route('program.tips-dan-trik')}>TIPS DAN TRIK</DropdownLink>
                                 <DropdownLink href={route('program.berita')}>BERITA</DropdownLink>
                             </MobileDropdown>
 
@@ -397,7 +397,7 @@ export default function MainLayout({ children }) {
             </header>
 
             {/* Konten Halaman */}
-            <main className="pt-[140px] overflow-visible">{children}</main>
+            <main className="pt-[120px] md:pt-[130px] overflow-visible">{children}</main>
         </div>
     );
 }

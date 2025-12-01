@@ -21,11 +21,10 @@ export default function DetailCampusHiring({ auth, campusHiring }) {
     return (
         <>
             <Head title={`Detail Campus Hiring: ${data.title}`} />
-
             <MainLayout user={auth.user}>
                 {/* HEADER SECTION */}
-                <div className={`pt-24 pb-20 relative overflow-hidden bg-gradient-to-r from-emerald-50 to-white text-gray-900 border-b border-emerald-100`}>
-                    <div className="container mx-auto px-6 lg:px-8 z-10 relative pt-8 md:pt-16">
+                <div className="pt-24 pb-12 relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-emerald-50 border-b border-emerald-100/50">
+                    <div className="container mx-auto px-6 max-w-[90rem] relative z-10">
                         <Link
                             href={route('program.campus.hiring')}
                             className={`inline-flex items-center text-gray-600 hover:${mainGreen} transition-colors mb-6 font-medium text-sm uppercase tracking-widest`}
@@ -34,7 +33,7 @@ export default function DetailCampusHiring({ auth, campusHiring }) {
                             Kembali ke Daftar Campus Hiring
                         </Link>
 
-                        <h1 className={`text-4xl md:text-6xl font-bold mb-4 tracking-normal ${mainGreen}`}>
+                        <h1 className="text-4xl md:text-6xl font-serif font-bold text-gray-900 leading-tight mb-6">
                             {data.title}
                         </h1>
 
@@ -47,7 +46,6 @@ export default function DetailCampusHiring({ auth, campusHiring }) {
                 {/* CONTENT SECTION */}
                 <div className="py-16 md:py-20 bg-white">
                     <div className="container mx-auto px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-12">
-                        {/* Kiri: Gambar & Konten Detail */}
                         <div className="lg:col-span-2 space-y-10">
                             {/* Featured Image */}
                             <div className="rounded-xl overflow-hidden shadow-2xl border border-gray-100">
@@ -59,18 +57,15 @@ export default function DetailCampusHiring({ auth, campusHiring }) {
                             </div>
 
                             {/* Detailed Content */}
-                            <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-                                <h2 className={`text-3xl font-semibold ${mainGreen} mb-6 border-b border-emerald-200 pb-3`}>
-                                    Deskripsi Program
-                                </h2>
+                            <div className="font-sans text-gray-900 space-y-8">
                                 <div
-                                    className="prose max-w-none text-gray-700 leading-relaxed prose-headings:text-emerald-800 prose-h3:text-2xl prose-h3:font-bold prose-h3:mt-8 prose-h3:mb-4 prose-h3:border-b prose-h3:border-emerald-200 prose-h3:pb-2 prose-ul:list-disc prose-ul:ml-6 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-6 prose-ol:space-y-2 prose-li:text-gray-700 prose-p:mb-4 prose-strong:text-gray-900 prose-strong:font-semibold"
-                                    dangerouslySetInnerHTML={{ __html: data.content }}
+                                    className="content-body"
+                                    dangerouslySetInnerHTML={{ __html: campusHiring.content }}
                                 />
                             </div>
                         </div>
 
-                        {/* Kanan: Sidebar (Info Card & CTA) */}
+                        {/* Info Card & CTA */}
                         <div className="lg:col-span-1 space-y-8">
                             {/* Info Card */}
                             <div className="bg-white text-gray-800 p-8 rounded-2xl shadow-xl border-t-4 border-emerald-600 sticky top-8">
@@ -130,7 +125,6 @@ export default function DetailCampusHiring({ auth, campusHiring }) {
                         </div>
                     </div>
                 </div>
-
                 <Footer />
             </MainLayout>
         </>

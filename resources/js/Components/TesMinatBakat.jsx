@@ -6,7 +6,7 @@ const LAYANAN_TES = [
     {
         id: 1,
         judul: "Konseling Persiapan Karir",
-        deskripsi: "Bimbingan personal untuk merencanakan langkah karir dan mencapai tujuan profesional Anda.",
+        deskripsi: "Bimbingan personal untuk merencanakan langkah karira dan mencapai tujuan profesional Anda.",
         imageUrl: TESMB_IMAGE_URL,
     },
     {
@@ -25,7 +25,7 @@ const LAYANAN_TES = [
 
 const TesMinatBakat = () => {
     return (
-        <section className="py-20 bg-green-700">
+        <section id="layanan-tes" className="py-20 bg-green-700">
             <div className="container mx-auto px-4 md:px-8 max-w-6xl text-white">
 
                 <h2 className="text-3xl md:text-4xl font-sans font-bold text-center mb-16">

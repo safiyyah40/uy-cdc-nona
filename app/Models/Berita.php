@@ -11,7 +11,6 @@ class Berita extends Model
     use HasFactory;
     protected $table = 'news';
 
-
     protected $fillable = [
         'title',
         'slug',
