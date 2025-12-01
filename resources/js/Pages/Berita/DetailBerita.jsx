@@ -1,167 +1,195 @@
 import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import { Head, Link } from '@inertiajs/react';
+import Footer from '@/Components/Footer';
+import {ArrowLeft, Calendar, User, Eye, Share2, CheckCircle, Copy, Facebook, Twitter, MessageCircle} from 'lucide-react';
 
 export default function DetailBerita({ berita, auth }) {
+    // --- STATE & LOGIC ---
     if (!berita) {
         return (
-            <MainLayout user={auth.user}>
-                <div className="min-h-screen flex items-center justify-center">
-                    <p className="text-xl text-gray-500">Berita tidak ditemukan.</p>
+            <MainLayout user={auth?.user}>
+                <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold text-gray-700 mb-2">Berita Tidak Ditemukan</h2>
+                        <Link href={route('program.berita')} className="text-emerald-600 hover:underline">
+                            Kembali ke daftar berita
+                        </Link>
+                    </div>
                 </div>
             </MainLayout>
         );
     }
-    const images = berita.images && berita.images.length > 0 
-        ? berita.images 
+
+    // Handle Images Array vs Single Image
+    const images = berita.images && Array.isArray(berita.images) && berita.images.length > 0
+        ? berita.images
         : (berita.image_url ? [berita.image_url] : []);
 
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [copied, setCopied] = useState(false);
 
-    const nextSlide = () => {
-        setCurrentSlide((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    // Share Logic
+    const handleShare = (platform) => {
+        const url = window.location.href;
+        const text = `Baca berita menarik ini: "${berita.title}"`;
+        let shareUrl = "";
+
+        switch (platform) {
+            case 'facebook':
+                shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+                break;
+            case 'twitter':
+                shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+                break;
+            case 'whatsapp':
+                shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}%20${encodeURIComponent(url)}`;
+                break;
+            case 'copy':
+                navigator.clipboard.writeText(url).then(() => {
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                });
+                return;
+            default: return;
+        }
+        if (platform !== 'copy') window.open(shareUrl, '_blank', 'width=600,height=400');
     };
-
-    const prevSlide = () => {
-        setCurrentSlide((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-    };
-
-    const formattedDate = new Date(berita.published_date).toLocaleDateString('id-ID', {
-        day: 'numeric', month: 'long', year: 'numeric'
-    });
 
     return (
-        <MainLayout user={auth.user}>
+        <MainLayout user={auth?.user}>
             <Head title={berita.title} />
+            {/* --- HEADER SECTION (JUDUL & META) --- */}
+            <div className="pt-24 pb-12 relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-emerald-50 border-b border-emerald-100/50">
+                {/* Container Header: max-w-7xl */}
+                <div className="container mx-auto px-6 max-w-[90rem] relative z-10">
 
-            {/* --- HEADER SECTION --- */}
-            <div
-                className="relative w-full min-h-[85vh] flex items-center justify-center py-20"
-                style={{
-                    backgroundImage: "url('/images/bg-dreamina.jpg')",
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundAttachment: 'fixed',
-                }}
-            >
-                {/* Overlay Gelap supaya teks kontras jika background terlalu terang/ramai */}
-                <div className="absolute inset-0 bg-black/20" />
-
-                <div className="relative z-10 container mx-auto px-4 max-w-5xl">
-                    {/* Tombol Kembali */}
-                    <div className="mb-6">
+                    {/* Breadcrumb */}
+                    <div className="mb-8">
                         <Link
                             href={route('program.berita')}
-                            className="inline-flex items-center gap-2 bg-white/90 hover:bg-white text-yarsi-green px-4 py-2 rounded-full shadow-lg transition-all transform hover:-translate-x-1 font-medium text-sm backdrop-blur-sm"
+                            className="inline-flex items-center gap-2 text-gray-500 hover:text-emerald-700 transition-colors font-medium text-sm group"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                            Kembali ke Daftar Berita
+                            <div className="p-1.5 rounded-full bg-white border border-gray-200 group-hover:border-emerald-500 transition-colors shadow-sm">
+                                <ArrowLeft className="w-4 h-4" />
+                            </div>
+                            <span>KEMBALI KE BERITA</span>
                         </Link>
                     </div>
 
-                    {/* Card Header (Glassmorphism) */}
-                    <div className="bg-white/90 backdrop-blur-md rounded-2xl p-6 md:p-10 shadow-2xl border border-white/20">
-                        <span className="inline-block px-3 py-1 bg-green-100 text-yarsi-green text-xs font-bold uppercase tracking-wide rounded-full mb-4">
-                            Berita & Kegiatan
-                        </span>
-                        
-                        <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4">
-                            {berita.title}
-                        </h1>
+                    {/* Kategori Badge */}
+                    <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider rounded-md mb-4">
+                        Berita Kampus
+                    </span>
 
-                        <div className="flex items-center text-gray-600 text-sm md:text-base font-medium space-x-4 mb-8">
-                            <span className="flex items-center gap-1">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                {formattedDate}
-                            </span>
-                            <span>•</span>
-                            <span className="flex items-center gap-1">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                Admin Pusat Karir
-                            </span>
+                    {/* Judul Utama */}
+                    <h1 className="text-4xl md:text-6xl font-serif font-bold text-gray-900 leading-tight mb-6">
+                        {berita.title}
+                    </h1>
+
+                    {/* Meta Information (Tanggal, Admin, Views) */}
+                    <div className="flex flex-wrap items-center gap-6 text-gray-600 text-base md:text-lg border-t border-b border-gray-200 py-4 font-sans">
+                        <div className="flex items-center gap-2">
+                            <Calendar className="w-5 h-5 text-emerald-600" />
+                            <span>{berita.formatted_date}</span>
                         </div>
-
-                        {/* --- SLIDESHOW COMPONENT --- */}
-                        {images.length > 0 && (
-                            <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-inner bg-gray-100 group">
-                                {/* Gambar */}
-                                <img 
-                                    src={images[currentSlide]}
-        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-        alt={berita.title}
-                                />
-
-                                {/* Tombol Navigasi (Hanya muncul jika gambar > 1) */}
-                                {images.length > 1 && (
-                                    <>
-                                        <button 
-                                            onClick={prevSlide}
-                                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                                        >
-                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                                        </button>
-                                        <button 
-                                            onClick={nextSlide}
-                                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                                        >
-                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                        </button>
-                                        
-                                        {/* Dots Indicator */}
-                                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-                                            {images.map((_, idx) => (
-                                                <div 
-                                                    key={idx} 
-                                                    className={`w-2.5 h-2.5 rounded-full transition-colors ${idx === currentSlide ? 'bg-white' : 'bg-white/50'}`}
-                                                />
-                                            ))}
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                        )}
-                        
-                        {/* Caption kecil di bawah slide */}
-                        {images.length > 1 && (
-                            <p className="text-center text-xs text-gray-500 mt-2">
-                                Geser untuk melihat foto lainnya ({currentSlide + 1} dari {images.length})
-                            </p>
-                        )}
+                        <div className="hidden md:block w-px h-4 bg-gray-300"></div>
+                        <div className="flex items-center gap-2">
+                            <User className="w-5 h-5 text-emerald-600" />
+                            <span>Admin Pusat Karir</span>
+                        </div>
+                        <div className="hidden md:block w-px h-4 bg-gray-300"></div>
+                        <div className="flex items-center gap-2">
+                            <Eye className="w-5 h-5 text-emerald-600" />
+                            <span>{berita.views}x Dilihat</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* --- CONTENT SECTION --- */}
-            <div className="bg-white py-16">
-                <div className="container mx-auto max-w-4xl px-6 md:px-8">
-                    {/* Deskripsi Singkat / Lead Paragraph */}
-                    <div className="border-l-4 border-yarsi-green pl-6 mb-10">
-                        <p className="text-xl md:text-2xl italic text-gray-700 font-serif leading-relaxed">
-                            "{berita.description}"
-                        </p>
+            <div className="bg-white py-12 min-h-screen">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+
+                    {/* GAMBAR */}
+                    {images.length > 0 && (
+                        <div className="mb-12 relative rounded-2xl overflow-hidden shadow-xl bg-gray-100 border border-gray-100 aspect-video md:aspect-[21/9]">
+                            <img
+                                src={images[currentSlide]}
+                                alt={berita.title}
+                                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                                onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/1200x600/e2e8f0/1e293b?text=No+Image"; }}
+                            />
+                        </div>
+                    )}
+
+                    {/* RINGKASAN */}
+                    {berita.description && (
+                        <div className="mb-12 p-8 md:p-10 bg-emerald-50 rounded-2xl border-l-8 border-emerald-600">
+                            <h3 className="font-bold text-emerald-900 text-xl mb-3">Ringkasan:</h3>
+                            <p className="text-xl md:text-2xl text-emerald-800 leading-relaxed font-serif italic">
+                                "{berita.description}"
+                            </p>
+                        </div>
+                    )}
+
+                    {/* ISI BERITA (Content Body) */}
+                    <div className="font-sans text-gray-900 space-y-8">
+                        <div
+                            className="content-body"
+                            dangerouslySetInnerHTML={{ __html: berita.content }}
+                        />
                     </div>
 
-                    {/* Konten Utama (Rich Text) */}
-                    <article 
-                        className="prose prose-lg prose-green max-w-none text-gray-800 leading-loose"
-                        dangerouslySetInnerHTML={{ __html: berita.content }}
-                    />
-                    
-                    <hr className="my-12 border-gray-200" />
-                    
-                    <div className="text-center">
-                        <p className="text-gray-500 mb-4">Bagikan berita ini:</p>
-                        <div className="flex justify-center gap-4">
-                            {/* Tombol Share Dummy */}
-                            <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">Facebook</button>
-                            <button className="px-4 py-2 bg-sky-500 text-white rounded hover:bg-sky-600 text-sm">Twitter</button>
-                            <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm">WhatsApp</button>
+                    {/* --- FOOTER SHARE SECTION --- */}
+                    <div className="mt-20 pt-10 border-t border-gray-200">
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-gray-50 p-8 rounded-2xl border border-gray-100">
+                            <div className="text-center md:text-left">
+                                <h4 className="font-bold text-gray-900 text-lg flex items-center justify-center md:justify-start gap-2">
+                                    <Share2 className="w-6 h-6 text-emerald-600" />
+                                    Bagikan Informasi Ini
+                                </h4>
+                                <p className="text-base text-gray-500 mt-1">Bantu sebarkan kabar baik ini ke rekan Anda.</p>
+                            </div>
+
+                            <div className="flex flex-wrap justify-center gap-3">
+                                {/* WhatsApp */}
+                                <button
+                                    onClick={() => handleShare('whatsapp')}
+                                    className="flex items-center gap-2 px-5 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-lg font-medium transition-transform hover:-translate-y-1 shadow-sm text-base"
+                                >
+                                    <MessageCircle className="w-5 h-5" /> WhatsApp
+                                </button>
+
+                                {/* Facebook */}
+                                <button
+                                    onClick={() => handleShare('facebook')}
+                                    className="flex items-center gap-2 px-5 py-3 bg-[#1877F2] hover:bg-[#166fe5] text-white rounded-lg font-medium transition-transform hover:-translate-y-1 shadow-sm text-base"
+                                >
+                                    <Facebook className="w-5 h-5" /> Facebook
+                                </button>
+
+                                {/* Twitter */}
+                                <button
+                                    onClick={() => handleShare('twitter')}
+                                    className="flex items-center gap-2 px-5 py-3 bg-black hover:bg-gray-800 text-white rounded-lg font-medium transition-transform hover:-translate-y-1 shadow-sm text-base"
+                                >
+                                    <Twitter className="w-5 h-5" /> X
+                                </button>
+
+                                {/* Copy Link */}
+                                <button
+                                    onClick={() => handleShare('copy')}
+                                    className="flex items-center gap-2 px-5 py-3 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-medium transition-all shadow-sm text-base"
+                                >
+                                    {copied ? <CheckCircle className="w-5 h-5 text-green-600" /> : <Copy className="w-5 h-5" />}
+                                    {copied ? 'Tersalin' : 'Salin Link'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <Footer />
         </MainLayout>
     );

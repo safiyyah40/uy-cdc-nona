@@ -4,3 +4,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.aesthetic-pagination .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background-color: #d1fae5; /* Warna hijau muda (emerald-100) saat tidak aktif */
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.aesthetic-pagination .swiper-pagination-bullet-active {
+    width: 24px; /* Bullet aktif lebih lebar */
+    border-radius: 8px;
+    background-color: #059669;
+    opacity: 1;
+}
+
+.aesthetic-pagination .swiper-button-next,
+.aesthetic-pagination .swiper-button-prev {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+.aesthetic-pagination .swiper-button-next:after,
+.aesthetic-pagination .swiper-button-prev:after {
+    font-size: 18px;
+}
+.aesthetic-pagination .swiper-button-disabled {
+    opacity: 0;
+}

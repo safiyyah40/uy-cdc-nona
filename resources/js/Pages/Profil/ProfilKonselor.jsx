@@ -41,41 +41,6 @@ const Icons = {
         <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
-    ),
-    TeamIcon: () => (
-        <svg className="w-24 h-24 text-white opacity-20" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
-        </svg>
-    ),
-    Search: () => (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-    ),
-    Filter: () => (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-        </svg>
-    ),
-    X: () => (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-    ),
-    ChevronDown: () => (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-        </svg>
-    ),
-    ChevronLeft: () => (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-        </svg>
-    ),
-    ChevronRight: () => (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-        </svg>
     )
 };
 
@@ -114,8 +79,7 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
                 <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 z-10">
                     <div className="relative">
                         {/* Shadow Layer untuk depth */}
-                        <div className="absolute inset-0 bg-yarsi-green/20 rounded-3xl blur-2xl scale-105 opacity-0 
-                                        group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div className="absolute inset-0 bg-yarsi-green/20 rounded-3xl blur-2xl scale-105 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                         {/* Frame Foto */}
                         <div className="relative w-40 h-40 rounded-3xl bg-gradient-to-br from-white to-gray-50 p-2 
@@ -126,36 +90,30 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
                                 {/* Background Gradient Layer */}
                                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50 z-0"></div>
 
-                                {/* Image Container dengan aspect ratio terjaga */}
+                                {/* Image Container */}
                                 <div className="absolute inset-0 z-10">
                                     <img
                                         src={!imageError && photoUrl ? photoUrl : '/images/placeholder-avatar.png'}
                                         alt={name}
-                                        className="w-full h-full object-cover object-center mix-blend-multiply
-                                                 group-hover:scale-110 transition-transform duration-700 ease-out"
+                                        className="w-full h-full object-cover object-center mix-blend-multiply group-hover:scale-110 transition-transform duration-700 ease-out"
                                         onError={() => setImageError(true)}
                                         loading="lazy"
                                     />
                                 </div>
 
                                 {/* Overlay gradient saat hover */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-yarsi-green/10 to-transparent 
-                                              opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20"></div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-yarsi-green/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20"></div>
                             </div>
                         </div>
 
                         {/* Status Online */}
-                        <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-yarsi-accent rounded-full 
-                                      border-4 border-white shadow-lg group-hover:scale-110 transition-transform 
-                                      flex items-center justify-center">
+                        <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-yarsi-accent rounded-full border-4 border-white shadow-lg group-hover:scale-110 transition-transform flex items-center justify-center">
                             <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
                         </div>
 
                         {/* Decorative Corner Elements */}
-                        <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-yarsi-accent/40 
-                                      rounded-tl-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-yarsi-accent/40 
-                                      rounded-tr-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-yarsi-accent/40 rounded-tl-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-yarsi-accent/40 rounded-tr-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                 </div>
             </div>
@@ -214,10 +172,7 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
                 <div className="mt-auto pt-6 border-t border-gray-100">
                     <Link
                         href="/layanan/konsultasi"
-                        className="flex items-center justify-center gap-2 w-full bg-yarsi-gradient-button
-                                 hover:brightness-110 active:scale-98 text-white font-semibold py-3.5 px-4 
-                                 rounded-xl transition-all duration-300 shadow-md hover:shadow-xl group/btn
-                                 relative overflow-hidden"
+                        className="flex items-center justify-center gap-2 w-full bg-yarsi-gradient-button hover:brightness-110 active:scale-98 text-white font-semibold py-3.5 px-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-xl group/btn relative overflow-hidden"
                     >
                         {/* effect hover */}
                         <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full 
@@ -269,9 +224,7 @@ export default function ProfilKonselor({ counselors }) {
     }) || [];
 
     // Pagination logic
-    const totalPages = perPage === 'all' ? 1 : Math.ceil(filteredCounselors.length / perPage);
     const startIndex = perPage === 'all' ? 0 : (currentPage - 1) * perPage;
-    const endIndex = perPage === 'all' ? filteredCounselors.length : startIndex + parseInt(perPage);
 
     // Reset ke halaman 1 ketika search atau filter berubah
     React.useEffect(() => {
@@ -282,7 +235,7 @@ export default function ProfilKonselor({ counselors }) {
         <MainLayout>
             <Head title="Profil Konselor - CDC Universitas YARSI" />
             {/* --- HERO SECTION --- */}
-            <section className="relative w-full py-24 md:py-36 bg-gradient-to-br from-white to-emerald-50 overflow-hidden">
+            <section className="relative w-full py-14 md:py-20 bg-gradient-to-br from-white to-emerald-50 overflow-hidden">
                 {/* Dekorasi Latar Belakang */}
                 <div className="absolute inset-0 opacity-[0.05]"
                     style={{ backgroundImage: 'radial-gradient(circle, #044732 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
@@ -340,34 +293,33 @@ export default function ProfilKonselor({ counselors }) {
                             </div>
                         </div>
 
-                        {/* --- (VISUAL CARD - DIGANTI DENGAN GAMBAR) --- */}
-<div className="lg:w-1/2 relative w-full" ref={heroImage.ref} style={heroImage.style}>
-    {/* Card Background */}
-    <div
-        className="aspect-[4/3] relative rounded-[2rem] overflow-hidden shadow-2xl flex items-center justify-center border-[6px] border-white ring-1 ring-gray-100 transform rotate-1 hover:rotate-0 transition-transform duration-500 bg-cover bg-center"
-        style={{
-            backgroundImage: "url('/images/pict-profil-konselor.png')", // Contoh path: public/images/counselor-consultation.jpg
-        }}
-    >
-        {/* Overlay gradient untuk memastikan teks tetap terbaca jika ada teks di atasnya nanti, atau agar gambar tidak terlalu terang */}
-        <div className="absolute inset-0 bg-gradient-to-t from-yarsi-green/60 to-transparent mix-blend-multiply"></div>
+                        {/* --- VISUAL CARD --- */}
+                        <div className="lg:w-1/2 relative w-full" ref={heroImage.ref} style={heroImage.style}>
+                            {/* Card Background */}
+                            <div
+                                className="aspect-[4/3] relative rounded-[2rem] overflow-hidden shadow-2xl flex items-center justify-center border-[6px] border-white ring-1 ring-gray-100 transform rotate-1 hover:rotate-0 transition-transform duration-500 bg-cover bg-center"
+                                style={{
+                                    backgroundImage: "url('/images/pict-profil-konselor.png')",
+                                }}
+                            >
+                                {/* Overlay gradient untuk memastikan teks tetap terbaca jika ada teks di atasnya nanti, atau agar gambar tidak terlalu terang */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-yarsi-green/60 to-transparent mix-blend-multiply"></div>
 
-        {/* Badge Status di Pojok Kiri Bawah (Opsional - Hapus jika tidak ingin ditampilkan di atas gambar) */}
-        <div className="absolute bottom-8 left-8 flex items-center gap-3 p-3 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-white">
-            <div className="bg-green-100 p-1.5 rounded-full text-yarsi-green">
-                <Icons.CheckBadge />
-            </div>
-            <div>
-                <div className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Status</div>
-                <div className="text-xs font-bold text-gray-900">Professional</div>
-            </div>
-        </div>
-    </div>
+                                {/* Badge Status di Pojok Kiri Bawah */}
+                                <div className="absolute bottom-8 left-8 flex items-center gap-3 p-3 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-white">
+                                    <div className="bg-green-100 p-1.5 rounded-full text-yarsi-green">
+                                        <Icons.CheckBadge />
+                                    </div>
+                                    <div>
+                                        <div className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Status</div>
+                                        <div className="text-xs font-bold text-gray-900">Professional</div>
+                                    </div>
+                                </div>
+                            </div>
 
-    {/* Elemen Dekoratif di belakang Card (Tetap Dipertahankan) */}
-    <div className="absolute -z-10 top-10 -right-10 w-full h-full border-2 border-yarsi-green/20 rounded-[2rem] transform rotate-6"></div>
-</div>
-
+                            {/* Elemen Dekoratif di belakang Card */}
+                            <div className="absolute -z-10 top-10 -right-10 w-full h-full border-2 border-yarsi-green/20 rounded-[2rem] transform rotate-6"></div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -393,7 +345,7 @@ export default function ProfilKonselor({ counselors }) {
 
                                 {/* STATE */}
                                 {(() => {
-                                    // FE state (tanpa backend)
+                                    // FE state
                                     const [searchTerm, setSearchTerm] = React.useState("");
                                     const [perPage, setPerPage] = React.useState("all");
                                     const [page, setPage] = React.useState(1);
@@ -410,7 +362,7 @@ export default function ProfilKonselor({ counselors }) {
                                         return text.includes(searchTerm.toLowerCase());
                                     });
 
-                                    // Pagination (FE version)
+                                    // Pagination
                                     const totalItems = filtered.length;
                                     const perPageNumber = perPage === "all" ? totalItems : Number(perPage);
                                     const totalPages = perPage === "all" ? 1 : Math.ceil(totalItems / perPageNumber);
@@ -481,7 +433,6 @@ export default function ProfilKonselor({ counselors }) {
                                                         </select>
                                                     </div>
                                                 </div>
-
                                             </div>
 
                                             {/* ACTIVE FILTER BADGE */}
@@ -520,7 +471,6 @@ export default function ProfilKonselor({ counselors }) {
                                                 ))}
                                             </div>
 
-
                                             {/* PAGINATION */}
                                             {totalPages > 1 && (
                                                 <div className="flex items-center justify-center gap-2 mt-8">
@@ -529,8 +479,8 @@ export default function ProfilKonselor({ counselors }) {
                                                             key={i}
                                                             onClick={() => goToPage(i + 1)}
                                                             className={`px-4 py-2 rounded-lg border transition ${page === i + 1
-                                                                    ? "bg-emerald-600 text-white border-emerald-700"
-                                                                    : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
+                                                                ? "bg-emerald-600 text-white border-emerald-700"
+                                                                : "bg-white text-gray-600 border-gray-300 hover:bg-gray-100"
                                                                 }`}
                                                         >
                                                             {i + 1}
@@ -560,26 +510,24 @@ export default function ProfilKonselor({ counselors }) {
                 </div>
             </section>
 
-            {/* --- CTA SECTION (Gradient YARSI) --- */}
-            <section className="py-20 bg-gradient-to-br from-yarsi-green via-yarsi-green-light to-cdc-green-dark relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-full opacity-10">
-                    <div className="absolute top-10 left-10 w-64 h-64 bg-white rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-                </div>
+            <section className="py-24 bg-gradient-to-br from-[#006241] to-[#004d33] relative overflow-hidden">
+                {/* Ornamen Lingkaran Abstrak */}
+                <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full border-[20px] border-white/5 blur-sm"></div>
+                <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full border-[30px] border-white/5 blur-sm"></div>
 
+                {/* Noise Texture Overlay (Opsional untuk tekstur) */}
+                <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
                 <div className="container mx-auto px-4 lg:px-6 relative z-10">
                     <div className="max-w-3xl mx-auto text-center">
-                        <h2 className="text-3xl sm:text-4xl font-bold font-kaisei text-white mb-4">
+                        <h2 className="text-4xl sm:text-5xl font-bold font-kaisei text-white mb-6 leading-tight">
                             Siap Konsultasi dengan Ahli?
                         </h2>
-                        <p className="text-emerald-50 text-lg mb-8 font-light">
+                        <p className="text-emerald-100 text-lg mb-10 font-light leading-relaxed">
                             Booking sesi konsultasi Anda sekarang dan dapatkan bimbingan profesional.
                         </p>
                         <Link
                             href="/layanan/konsultasi"
-                            className="inline-flex items-center gap-3 bg-white text-yarsi-green font-bold py-4 px-8 
-                                     rounded-xl hover:bg-emerald-50 transition-all duration-300 shadow-xl hover:shadow-2xl 
-                                     transform hover:-translate-y-1 group"
+                            className="inline-flex items-center gap-3 bg-white text-yarsi-green font-bold py-4 px-8 rounded-xl hover:bg-emerald-50 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 group"
                         >
                             <Icons.Calendar />
                             <span>Lihat Jadwal Konsultasi</span>
@@ -590,7 +538,6 @@ export default function ProfilKonselor({ counselors }) {
                     </div>
                 </div>
             </section>
-
             <Footer />
         </MainLayout>
     );

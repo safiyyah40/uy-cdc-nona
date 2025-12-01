@@ -11,9 +11,14 @@ use App\Http\Controllers\ProfileCompletionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\CampusHiringController;
+use App\Http\Controllers\TipsDanTrikController;
+use App\Http\Controllers\SeminarController;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Berita;
 use App\Models\BerandaSlide;
 
 Route::get('/', function () {
+    // 1. Ambil Slideshow
     $slides = BerandaSlide::where('is_active', true)
         ->orderBy('sort_order')
         ->get()
@@ -25,15 +30,32 @@ Route::get('/', function () {
             ];
         });
 
+    // 2. Ambil 4 Berita Terbaru (SAMA SEPERTI DASHBOARD)
+    $latestNews = Berita::where('is_active', true)
+        ->orderBy('published_date', 'desc')
+        ->take(4)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'title' => $item->title,
+                'slug' => $item->slug,
+                'description' => $item->description,
+                'image_url' => $item->image ? Storage::url($item->image) : null,
+                'formatted_date' => $item->published_date ? $item->published_date->format('d M Y') : $item->created_at->format('d M Y'),
+                'views' => $item->views,
+            ];
+        });
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
         'slides' => $slides,
+        'latestNews' => $latestNews, // Tambahkan ini agar tidak error di Welcome.jsx
     ]);
-});
-
+})->name('welcome');
 // --- GROUP AUTH ---
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -63,50 +85,25 @@ Route::get('/profil/developer', function () {
 Route::get('/program/orientasi-dunia-kerja', function () {
     return Inertia::render('Program/OrientasiDuniaKerja');
 })->name('program.orientasi.kerja');
+// --- PROGRAM ROUTES ---
+Route::prefix('program')->name('program.')->group(function () {
+    
+    // 1. Seminar
+    Route::get('/seminar', [SeminarController::class, 'index'])->name('seminar');
+    Route::get('/seminar/{id}/{slug}', [SeminarController::class, 'show'])->name('seminar.show');
 
-// Route Campus Hiring
-Route::get('/program/campus-hiring', [CampusHiringController::class, 'index'])
-    ->name('program.campus.hiring');
+    // 2. Campus Hiring
+    Route::get('/campus-hiring', [CampusHiringController::class, 'index'])->name('campus.hiring');
+    Route::get('/campus-hiring/{id}/{slug}', [CampusHiringController::class, 'show'])->name('campus.hiring.show');
 
-// Route Detail Campus Hiring 
-Route::get('/program/campus-hiring/{id}/{slug}', [CampusHiringController::class, 'show'])
-    ->middleware(['auth'])
-    ->name('program.campus.hiring.show');
+    // 3. Tips & Trik
+    Route::get('/tips-dan-trik', [TipsDanTrikController::class, 'index'])->name('tips-dan-trik');
+    Route::get('/tips-dan-trik/{id}/{slug}', [TipsDanTrikController::class, 'show'])->name('tips-dan-trik.show');
 
-
-Route::get('/program/seminar', function () {
-    return Inertia::render('Program/Seminar');
-})->name('program.seminar');
-
-// Route Detail Seminar
-Route::get('/program/seminar/{id}/{slug}', function ($id) {
-    $dummySeminarData = [
-        'id' => (int) $id,
-        'title' => 'Pokok-Pokok Pikiran Tentang Universitas Islam Ideal dan Aplikasinya di Indonesia',
-        'speaker' => 'Dr. Budi Santoso',
-        'published_date' => '2025-11-20',
-        'description' => 'Ringkasan singkat tentang pentingnya visi Islam integral dalam dunia pendidikan tinggi.',
-        'content' => '<p>Konten lengkap seminar dalam format HTML. Ini adalah detail mendalam tentang visi dan misi keislaman Universitas YARSI.</p><p>Seminar ini bertujuan untuk memberikan wawasan komprehensif kepada para mahasiswa dan alumni.</p>',
-        'images' => ['/images/seminar.jfif', '/images/seminar.jfif'],
-        'registration_link' => 'https://bit.ly/daftar-seminar',
-    ];
-
-    $user = auth()->guard('web')->user();
-    return Inertia::render('Program/DetailSeminar', [
-        'seminar' => $dummySeminarData,
-        'auth' => [
-            'user' => $user,
-        ],
-    ]);
-})->name('program.seminar.show');
-
-Route::get('/program/tips-dan-trik', function () {
-    return Inertia::render('Program/TipsDanTrik');
-})->name('program.tips.trik');
-
-// Berita
-Route::get('/program/berita', [BeritaController::class, 'index'])->name('program.berita');
-Route::get('/berita/{id}/{slug}', [BeritaController::class, 'show'])->name('berita.show');
+    // 4. Berita
+    Route::get('/berita', [BeritaController::class, 'index'])->name('berita');
+    Route::get('/berita/{id}/{slug}', [BeritaController::class, 'show'])->name('berita.show');
+});
 
 // Route Layanan
 Route::prefix('layanan')->group(function () {
