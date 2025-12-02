@@ -16,6 +16,7 @@ use App\Http\Controllers\SeminarController;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Berita;
 use App\Models\BerandaSlide;
+use App\Http\Controllers\KonsultasiController;
 
 Route::get('/', function () {
     // 1. Ambil Slideshow
@@ -87,7 +88,7 @@ Route::get('/program/orientasi-dunia-kerja', function () {
 })->name('program.orientasi.kerja');
 // --- PROGRAM ROUTES ---
 Route::prefix('program')->name('program.')->group(function () {
-    
+
     // 1. Seminar
     Route::get('/seminar', [SeminarController::class, 'index'])->name('seminar');
     Route::get('/seminar/{id}/{slug}', [SeminarController::class, 'show'])->name('seminar.show');
@@ -106,9 +107,13 @@ Route::prefix('program')->name('program.')->group(function () {
 });
 
 // Route Layanan
-Route::prefix('layanan')->group(function () {
+    Route::prefix('layanan')->group(function () {
     Route::get('/konsultasi', [ProfilKonselorController::class, 'layanan'])
         ->name('layanan.konsultasi');
+
+   Route::get('/konsultasi/booking', [KonsultasiController::class, 'showBookingForm'])
+    ->name('konsultasi.booking')
+    ->middleware(['auth', 'verified']);
 
     Route::get('/cv-review', function () {
         return Inertia::render('Layanan/CvReview');
