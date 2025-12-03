@@ -13,13 +13,13 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\CampusHiringController;
 use App\Http\Controllers\TipsDanTrikController;
 use App\Http\Controllers\SeminarController;
+use App\Http\Controllers\KonsultasiController;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Berita;
 use App\Models\BerandaSlide;
-use App\Http\Controllers\KonsultasiController;
 
 Route::get('/', function () {
-    // 1. Ambil Slideshow
+    // Beranda: Mengambil data slideshow dan 4 berita terbaru
     $slides = BerandaSlide::where('is_active', true)
         ->orderBy('sort_order')
         ->get()
@@ -31,7 +31,6 @@ Route::get('/', function () {
             ];
         });
 
-    // 2. Ambil 4 Berita Terbaru (SAMA SEPERTI DASHBOARD)
     $latestNews = Berita::where('is_active', true)
         ->orderBy('published_date', 'desc')
         ->take(4)
@@ -54,7 +53,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
         'slides' => $slides,
-        'latestNews' => $latestNews, // Tambahkan ini agar tidak error di Welcome.jsx
+        'latestNews' => $latestNews,
     ]);
 })->name('welcome');
 // --- GROUP AUTH ---
@@ -68,6 +67,38 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/akun/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/akun/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+    // ROUTE KHUSUS KONSELOR
+    Route::middleware(['auth'])->prefix('konselor')->name('konselor.')->group(function () {
+
+        // Menampilkan tabel daftar konsultasi
+        Route::get('/table-konsultasi-konselor', function () {
+
+            $consultations = [];
+
+            return Inertia::render('Konselor/TableKonsultasiKonselor', [
+                'consultations' => $consultations,
+                'currentRoute' => 'table_konsultasi'
+            ]);
+
+        })->name('table_konsultasi');
+
+        // Route Detail Formulir Mahasiswa (diakses oleh tombol 'Lihat')
+        Route::get('/konsultasi/{id}', function ($id) {
+            return Inertia::render('Konselor/FormulirDetailMahasiswa');
+        })->name('konsultasi.show');
+
+        // Route Aksi Setujui (Dummy)
+        Route::post('/konsultasi/{id}/setujui', function ($id) {
+            return redirect()->back()->with('success', 'Dummy Setujui berhasil!');
+        })->name('approve');
+
+        // Route Aksi Tolak (Dummy)
+        Route::post('/konsultasi/{id}/tolak', function ($id) {
+            return redirect()->back()->with('error', 'Dummy Tolak berhasil!');
+        })->name('reject');
+
+    });
 });
 
 // --- GROUP PUBLIC ---
@@ -111,7 +142,7 @@ Route::prefix('program')->name('program.')->group(function () {
     Route::get('/konsultasi', [ProfilKonselorController::class, 'layanan'])
         ->name('layanan.konsultasi');
 
-   Route::get('/konsultasi/booking', [KonsultasiController::class, 'showBookingForm'])
+    Route::get('/konsultasi/booking', [KonsultasiController::class, 'showBookingForm'])
     ->name('konsultasi.booking')
     ->middleware(['auth', 'verified']);
 
@@ -131,7 +162,7 @@ Route::prefix('program')->name('program.')->group(function () {
 // Route Detail Berita
 Route::get('/berita/{id}/{slug}', function ($id) {
     $user = auth()->guard('web')->user();
- return Inertia::render('Program/DetailBerita', [
+    return Inertia::render('Program/DetailBerita', [
         'newsId' => (int) $id,
         'auth' => [
             'user' => $user,
