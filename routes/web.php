@@ -165,6 +165,14 @@ Route::prefix('program')->name('program.')->group(function () {
     })->name('layanan.tes.minat.bakat');
 });
 
+Route::get('/konsultasi/daftar-saya', function () {
+    // Memanggil komponen UserCounselingList dari direktori Pages/Konsultasi
+    return Inertia::render('Konsultasi/UserCounselingList', [
+        // Kirim data auth, dll.
+        'auth' => auth()->user() ? ['user' => auth()->user()] : null,
+    ]);
+})->middleware(['auth'])->name('konsultasi.list');
+
 // Route Detail Berita
 Route::get('/berita/{id}/{slug}', function ($id) {
     $user = auth()->guard('web')->user();

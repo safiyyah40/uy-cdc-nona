@@ -34,10 +34,12 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
         "Lainnya"
     ];
 
+
     const handleSubmit = (e) => {
         e.preventDefault();
         post("/api/konsultasi/submit");
     };
+
 
     // Helper Component untuk Input
     const InputField = ({ label, id, type = 'text', icon: Icon, value, onChange, error, disabled = false }) => (
@@ -246,6 +248,7 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
                     </form>
                 </div>
             </div>
+
             <Footer />
         </MainLayout>
     );
