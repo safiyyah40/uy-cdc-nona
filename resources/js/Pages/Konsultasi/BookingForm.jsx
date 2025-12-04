@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import MainLayout from "@/Layouts/MainLayout";
 import Footer from "@/Components/Footer";
 import { Head, useForm, Link } from "@inertiajs/react";
-import { ChevronLeft, Send, User, Phone, Mail, BookOpen, Calendar, Clock, Info, CheckCircle } from "lucide-react";
+import { ChevronLeft, Send, User, Phone, Mail, BookOpen, Calendar, Clock, Info, CheckCircle, AlertTriangle, X } from "lucide-react";
 
+// ---------------------------------------------------
+// 1. SUCCESS MODAL (Dipanggil setelah SUBMIT berhasil)
+// ---------------------------------------------------
 const SuccessModal = ({ isOpen, onNavigate }) => {
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
-            <div className="bg-white rounded-xl shadow-3xl p-6 md:p-8 max-w-sm mx-auto transform transition-all duration-300 scale-100">
+            <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 max-w-sm mx-auto transform transition-all duration-300 scale-100 border border-gray-100">
                 <div className="text-center">
                     <CheckCircle className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
                     <h3 className="text-xl font-bold text-gray-900 mb-2">Booking Berhasil Disimpan!</h3>
@@ -30,17 +33,85 @@ const SuccessModal = ({ isOpen, onNavigate }) => {
     );
 };
 
+// ----------------------------------------------------
+// 2. ERROR/WARNING MODAL (Pop-up jika ada isian kosong)
+// ----------------------------------------------------
+const WarningModal = ({ isOpen, onClose, missingFields }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                <div className="fixed inset-0 bg-gray-900 bg-opacity-70 transition-opacity" aria-hidden="true" onClick={onClose}></div>
+
+                <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                <div className="relative inline-block align-middle bg-white rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-sm sm:w-full border border-gray-100">
+
+                    <button
+                        onClick={onClose}
+                        className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 p-1 transition-colors rounded-full focus:outline-none focus:ring-2 focus:ring-amber-500"
+                        title="Tutup"
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
+
+                    <div className="p-6">
+                        {/* Icon Area */}
+                        <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-amber-50">
+                            <AlertTriangle className="h-6 w-6 text-amber-600" aria-hidden="true" />
+                        </div>
+
+                        {/* Text Content */}
+                        <div className="mt-4 text-center">
+                            <h3 className="text-xl font-bold text-gray-900" id="modal-title">
+                                Data Belum Lengkap
+                            </h3>
+                            <div className="mt-2 text-sm">
+                                <p className="text-gray-500 mb-2">
+                                    Harap periksa kembali. Anda harus melengkapi kolom berikut sebelum mengirimkan permintaan booking:
+                                </p>
+                                <ul className="list-disc list-inside text-left mx-auto max-w-xs text-amber-700 font-semibold space-y-1">
+                                    {missingFields.map(field => (
+                                        <li key={field}>{field}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Footer/Action Buttons */}
+                    <div className="p-4 bg-gray-50 border-t border-gray-100">
+                        <button
+                            type="button"
+                            className="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-amber-600 text-sm font-medium text-white hover:bg-amber-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
+                            onClick={onClose}
+                        >
+                            Oke, Saya Perbaiki
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
 // KOMPONEN FORMULIR KONSULTASI
 const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time, slot_id }) => {
 
     const user = auth.user;
 
-    // State untuk mengontrol Modal
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    // State untuk mengontrol Modal Sukses
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+    // State untuk mengontrol Modal Peringatan
+    const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
+    const [missingFields, setMissingFields] = useState([]);
+
 
     const initialData = {
         name: user?.name || '',
-         npm: user?.id_number || "",
+        npm: user?.id_number || "",
         phone: user?.phone || '',
         email: user?.email || '',
         topic: '',
@@ -64,22 +135,56 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
         "Hasil Tinjauan CV",
         "Lainnya"
     ];
-    const { data, setData, processing, errors } = useForm(initialData);
+    // Pastikan useForm diimpor dari "@inertiajs/react"
+    const { data, setData, processing, errors, post } = useForm(initialData);
 
     const handleNavigation = () => {
+        // Navigasi ke halaman daftar booking setelah sukses
         window.location.href = '/konsultasi/daftar-saya';
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // LOGIKA DUMMY FRONTEND
-        if (!data.name || !data.topic || !data.notes) {
-            alert("Harap lengkapi Nama, Topik, dan Keterangan Singkat.");
+        // --- VALIDASI FRONTEND ---
+        const requiredFields = {
+            name: "Nama Lengkap",
+            topic: "Topik Konseling",
+            notes: "Keterangan Singkat",
+        };
+
+        const currentMissingFields = [];
+        for (const key in requiredFields) {
+            if (!data[key]) {
+                currentMissingFields.push(requiredFields[key]);
+            }
+        }
+
+        // Cek juga apakah slot sudah dipilih
+        if (!data.counselor_id || !data.slot_id) {
+            currentMissingFields.push("Jadwal Konseling (Tanggal & Waktu)");
+        }
+
+        if (currentMissingFields.length > 0) {
+            setMissingFields(currentMissingFields);
+            setIsWarningModalOpen(true);
             return;
         }
 
-        setIsModalOpen(true);
+        // Jika validasi sukses: Kirim data menggunakan Inertia.js (post)
+        // post(route('booking.store'), {
+        //     onSuccess: () => setIsSuccessModalOpen(true),
+        //     onError: (errors) => {
+        //         // Tangani error dari backend (misalnya konflik jadwal)
+        //         console.error(errors);
+        //         alert("Terjadi kesalahan saat menyimpan booking.");
+        //     }
+        // });
+
+        // --- SIMULASI SUCCESS ---
+        // Jika Anda masih menggunakan simulasi, gunakan ini:
+        console.log("Data siap dikirim:", data);
+        setIsSuccessModalOpen(true);
     };
 
     // Helper Component untuk Input
@@ -140,8 +245,14 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
 
             {/* Tampilkan Modal di luar struktur utama */}
             <SuccessModal
-                isOpen={isModalOpen}
+                isOpen={isSuccessModalOpen}
                 onNavigate={handleNavigation}
+            />
+            {/* Modal Peringatan Baru */}
+            <WarningModal
+                isOpen={isWarningModalOpen}
+                onClose={() => setIsWarningModalOpen(false)}
+                missingFields={missingFields}
             />
 
             {/* CONTAINER UTAMA (HEADER) */}
@@ -182,7 +293,9 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
                             </div>
 
                             {(!data.counselor_id || !data.slot_id) && (
-                                <p className="text-sm text-red-500 mt-3 font-medium">⚠️ Harap kembali dan pilih jadwal spesifik dari konselor.</p>
+                                <p className="text-sm text-red-500 mt-3 font-medium flex items-center">
+                                    <AlertTriangle className="w-4 h-4 mr-1"/> Harap kembali dan pilih jadwal spesifik dari konselor.
+                                </p>
                             )}
                         </div>
 

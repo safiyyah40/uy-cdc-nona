@@ -198,7 +198,7 @@ export default function MainLayout({ children }) {
         <div className="min-h-screen bg-transparent overflow-x-hidden relative">
             {/* Header */}
             <header className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-xl shadow-[0_8px_25px_rgba(0,0,0,0.12)] rounded-b-[60px] transition-all duration-300">
-            <nav className="w-full flex items-center px-6 lg:px-20 py-4 md:py-5"> 
+            <nav className="w-full flex items-center px-6 lg:px-20 py-4 md:py-5">
                     {/* Logo dan Menu Desktop */}
                     <div className="flex items-center space-x-8">
                         <Link href="/" className="flex-shrink-0">
@@ -239,6 +239,7 @@ export default function MainLayout({ children }) {
                             <NavDropdown title="PELUANG KARIR" basePath="/peluang-karir">
                             <DropdownLink href={route('magang.index')}>MAGANG</DropdownLink>
                                 <DropdownLink href="#">LOWONGAN KERJA</DropdownLink>
+                                <DropdownLink href={route('sertifikasi.index')}>SERTIFIKASI</DropdownLink>
                             </NavDropdown>
                         </div>
                     </div>
@@ -332,12 +333,12 @@ export default function MainLayout({ children }) {
                 {/* Menu Mobile */}
                 {isMobileMenuOpen && (
                     <div className="
-                        md:hidden 
-                        bg-white 
+                        md:hidden
+                        bg-white
                         shadow-[0_8px_25px_rgba(0,0,0,0.15)]
-                        p-4 
-                        rounded-b-3xl 
-                        max-h-[75vh] 
+                        p-4
+                        rounded-b-3xl
+                        max-h-[75vh]
                         overflow-y-auto
                         border-t border-gray-200
                     ">
