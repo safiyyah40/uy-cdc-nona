@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\BerandaSlides;
 
 use App\Filament\Resources\BerandaSlides\Pages\CreateBerandaSlide;
 use App\Filament\Resources\BerandaSlides\Pages\EditBerandaSlide;

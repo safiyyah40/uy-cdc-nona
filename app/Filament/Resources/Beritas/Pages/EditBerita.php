@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Beritas\Pages;
 
-use App\Filament\Resources\BeritaResource;
+use App\Filament\Resources\Beritas\BeritaResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Counselors\Pages;
 
-use App\Filament\Resources\CounselorResource;
+use App\Filament\Resources\Counselors\CounselorResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

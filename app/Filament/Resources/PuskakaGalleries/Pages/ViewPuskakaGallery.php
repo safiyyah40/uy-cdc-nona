@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\PuskakaGalleries\Pages;
 
-use App\Filament\Resources\PuskakaGalleryResource;
+use App\Filament\Resources\PuskakaGalleries\PuskakaGalleryResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 

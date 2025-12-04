@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\Beritas\Pages;
+namespace App\Filament\Resources\Magangs\Pages;
 
-use App\Filament\Resources\Beritas\BeritaResource;
+use App\Filament\Resources\Magangs\MagangResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
-class ListBeritas extends ListRecords
+class ListMagangs extends ListRecords
 {
-    protected static string $resource = BeritaResource::class;
+    protected static string $resource = MagangResource::class;
 
     protected function getHeaderActions(): array
     {

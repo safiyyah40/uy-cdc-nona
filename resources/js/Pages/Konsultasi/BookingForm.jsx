@@ -8,35 +8,35 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
 
     const user = auth.user;
 
-    const initialData = {
-        name: user?.name || '',
-        npm: user?.npm || '',
-        phone: user?.phone || '',
-        email: user?.email || '',
-        topic: '',
-        notes: '',
-        // Data dari Controller
-        counselor_name: counselor_name || '',
-        slot_date: slot_date || '',
-        slot_time: slot_time || '',
-        counselor_id: counselor_id || '',
-        slot_id: slot_id || '',
-    };
+    const { data, setData, post, processing, errors } = useForm({
+        name: user?.name || "",
+        npm: user?.id_number || "",
+        phone: user?.phone || "",
+        email: user?.email || "",
+        topic: "",
+        notes: "",
+        counselor_name,
+        slot_date,
+        slot_time,
+        counselor_id,
+        slot_id,
+    });
 
-    // Data Topik Konseling
     const topics = [
-        "Masalah Akademik (Studi, Tugas Akhir, IPK)",
-        "Pengembangan Karir (Job Seeking, Skill Building)",
-        "Isu Kesehatan Mental (Kecemasan, Stres, Motivasi)",
-        "Hubungan Interpersonal (Dosen, Teman, Keluarga)",
+        "Perencanaan Karier",
+        "Konsultasi Minat & Bakat",
+        "Simulasi Wawancara (Mock Interview)",
+        "Persiapan Psikotes & FGD (Focus Group Discussion)",
+        "Konsultasi Studi Lanjut (S2/S3)",
+        "Bimbingan Program Magang",
+        "Bimbingan Sertifikasi Profesional",
+        "Hasil Tinjauan CV",
         "Lainnya"
     ];
 
-    const { data, setData, post, processing, errors } = useForm(initialData);
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        post('/api/konsultasi/submit');
+        post("/api/konsultasi/submit");
     };
 
     // Helper Component untuk Input
@@ -85,7 +85,7 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
                     ))}
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                 </div>
             </div>
         </div>
@@ -174,7 +174,6 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
                                 value={data.email}
                                 onChange={e => setData('email', e.target.value)}
                                 error={errors.email}
-                                disabled={!!user}
                             />
                         </div>
 
@@ -206,6 +205,25 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
                                 className={`block w-full p-3 border rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm ${errors.notes ? 'border-red-500' : 'border-gray-300'}`}
                             ></textarea>
                         </div>
+                        {/* Peringatan Penting */}
+                        <div className="mb-8 p-4 bg-amber-50 border border-amber-300 rounded-lg text-sm text-amber-800">
+                            <p className="font-semibold mb-2">Perhatian:</p>
+                            <ul className="list-disc pl-5 space-y-1">
+                                <li>
+                                    Pastikan <span className="font-semibold">email</span> dan
+                                    <span className="font-semibold"> nomor telepon (WhatsApp)</span> Anda aktif,
+                                    karena informasi terkait sesi konsultasi akan dikirim melalui kontak tersebut.
+                                </li>
+                                <li>
+                                    Jika terdapat perubahan email atau nomor telepon,
+                                    harap <span className="font-semibold">perbarui terlebih dahulu pada halaman Profil</span>.
+                                </li>
+                                <li>
+                                    <span className="font-semibold">Konselor yang dipilih bersifat indikatif </span>
+                                    dan dapat berubah menyesuaikan ketersediaan.
+                                </li>
+                            </ul>
+                        </div>
 
                         {/* TOMBOL SUBMIT */}
                         <div className="mt-8">
@@ -228,7 +246,6 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
                     </form>
                 </div>
             </div>
-
             <Footer />
         </MainLayout>
     );

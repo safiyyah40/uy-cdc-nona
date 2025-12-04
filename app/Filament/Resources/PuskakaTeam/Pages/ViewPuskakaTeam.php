@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\PuskakaTeamResource\Pages;
+namespace App\Filament\Resources\PuskakaTeam\Pages;
 
-use App\Filament\Resources\PuskakaTeamResource\PuskakaTeamResource;
+use App\Filament\Resources\PuskakaTeamResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 

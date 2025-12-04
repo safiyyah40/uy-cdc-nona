@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\PuskakaTeamResource\Schemas;
+namespace App\Filament\Resources\PuskakaTeam\Schemas;
 
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\ImageEntry;

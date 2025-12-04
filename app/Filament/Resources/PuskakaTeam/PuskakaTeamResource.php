@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PuskakaTeamResource\Pages\CreatePuskakaTeam;
-use App\Filament\Resources\PuskakaTeamResource\Pages\EditPuskakaTeam;
-use App\Filament\Resources\PuskakaTeamResource\Pages\ListPuskakaTeams;
-use App\Filament\Resources\PuskakaTeamResource\Schemas\PuskakaTeamForm;
-use App\Filament\Resources\PuskakaTeamResource\Schemas\PuskakaTeamInfolist;
-use App\Filament\Resources\PuskakaTeamResource\Tables\PuskakaTeamsTable;
+use App\Filament\Resources\PuskakaTeam\Pages\CreatePuskakaTeam;
+use App\Filament\Resources\PuskakaTeam\Pages\EditPuskakaTeam;
+use App\Filament\Resources\PuskakaTeam\Pages\ListPuskakaTeams;
+use App\Filament\Resources\PuskakaTeam\Schemas\PuskakaTeamForm;
+use App\Filament\Resources\PuskakaTeam\Schemas\PuskakaTeamInfolist;
+use App\Filament\Resources\PuskakaTeam\Tables\PuskakaTeamsTable;
 use App\Models\PuskakaTeam;
 use BackedEnum;
 use Filament\Resources\Resource;

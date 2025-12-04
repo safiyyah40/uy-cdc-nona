@@ -237,7 +237,7 @@ export default function MainLayout({ children }) {
                             </NavDropdown>
 
                             <NavDropdown title="PELUANG KARIR" basePath="/peluang-karir">
-                                <DropdownLink href="#">MAGANG</DropdownLink>
+                            <DropdownLink href={route('magang.index')}>MAGANG</DropdownLink>
                                 <DropdownLink href="#">LOWONGAN KERJA</DropdownLink>
                             </NavDropdown>
                         </div>
@@ -368,7 +368,7 @@ export default function MainLayout({ children }) {
                             </MobileDropdown>
 
                             <MobileDropdown title="PELUANG KARIR">
-                                <DropdownLink href="#">MAGANG</DropdownLink>
+                                <DropdownLink href={route('magang.index')}>MAGANG</DropdownLink>
                                 <DropdownLink href="#">LOWONGAN KERJA</DropdownLink>
                             </MobileDropdown>
 

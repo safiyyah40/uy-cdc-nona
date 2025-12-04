@@ -40,7 +40,7 @@ function PuskakaTeamCard({ name, title, photoUrl }) {
 
             {/* --- CONTAINER TEXT --- */}
             <div className="p-6 text-center relative bg-white transition-colors duration-500 group-hover:bg-emerald-50/30">
-                <h3 className="text-xl font-bold font-kaisei text-gray-900 group-hover:text-yarsi-green-dark transition-colors duration-300 line-clamp-1">
+                <h3 className="text-lg md:text-xl font-bold font-kaisei text-gray-900 group-hover:text-yarsi-green-dark transition-colors duration-300 leading-tight mb-2">
                     {name}
                 </h3>
                 <div className="mt-4 flex justify-center">

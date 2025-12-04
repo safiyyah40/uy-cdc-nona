@@ -266,7 +266,7 @@ export default function CampusHiring({ auth, programs, pagination, filters, isGu
                             <div className="flex justify-center">
                                 <div className="text-center bg-emerald-50 p-8 rounded-2xl shadow-xl border border-emerald-100 max-w-2xl w-full">
                                     <h3 className="text-xl font-bold text-gray-800 mb-2">
-                                        Ingin melihat lebih banyak lowongan?
+                                        Ingin melihat lebih banyak program?
                                     </h3>
                                     <p className="text-gray-600 mb-6">
                                         Saat ini tersedia total <strong>{total} program</strong>. Silakan masuk menggunakan akun Anda untuk mengakses seluruh lowongan, melakukan pencarian, dan melamar pekerjaan.

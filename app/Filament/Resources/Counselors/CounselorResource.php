@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Counselors;
 
 use App\Filament\Resources\Counselors\Pages\CreateCounselor;
 use App\Filament\Resources\Counselors\Pages\EditCounselor;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\Beritas;
 
 use App\Filament\Resources\Beritas\Pages\CreateBerita;
 use App\Filament\Resources\Beritas\Pages\EditBerita;

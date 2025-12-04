@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\BerandaSlides\Pages;
+namespace App\Filament\Resources\Magangs\Pages;
 
-use App\Filament\Resources\BerandaSlides\BerandaSlideResource;
+use App\Filament\Resources\Magangs\MagangResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
 
-class EditBerandaSlide extends EditRecord
+class EditMagang extends EditRecord
 {
-    protected static string $resource = BerandaSlideResource::class;
+    protected static string $resource = MagangResource::class;
 
     protected function getHeaderActions(): array
     {

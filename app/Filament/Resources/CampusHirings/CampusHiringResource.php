@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\CampusHirings;
 
 use App\Filament\Resources\CampusHirings\Pages\CreateCampusHiring;
 use App\Filament\Resources\CampusHirings\Pages\EditCampusHiring;

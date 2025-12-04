@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Berita;
 use App\Models\BerandaSlide;
 use App\Http\Controllers\KonsultasiController;
+use App\Http\Controllers\MagangController;
 
 Route::get('/', function () {
     // 1. Ambil Slideshow
@@ -112,8 +113,13 @@ Route::prefix('program')->name('program.')->group(function () {
         ->name('layanan.konsultasi');
 
    Route::get('/konsultasi/booking', [KonsultasiController::class, 'showBookingForm'])
-    ->name('konsultasi.booking')
-    ->middleware(['auth', 'verified']);
+        ->name('konsultasi.booking')
+        ->middleware(['auth', 'verified']);
+
+    // Aksi Submit Form (POST)
+    Route::post('/konsultasi/submit', [KonsultasiController::class, 'store'])
+        ->name('konsultasi.submit')
+        ->middleware(['auth', 'verified']);
 
     Route::get('/cv-review', function () {
         return Inertia::render('Layanan/CvReview');
@@ -143,6 +149,14 @@ Route::get('/berita/{id}/{slug}', function ($id) {
 Route::middleware(['auth'])->group(function () {
     Route::get('/berita/{id}/{slug}', [BeritaController::class, 'show'])
         ->name('berita.show');
+});
+
+// Route Peluang Karir - Index Magang
+Route::get('/peluang-karir/magang', [MagangController::class, 'index'])->name('magang.index');
+
+// Route Peluang Karir - Detail Magang
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/peluang-karir/magang/{slug}', [MagangController::class, 'show'])->name('magang.show');
 });
 
 // Route akun profile

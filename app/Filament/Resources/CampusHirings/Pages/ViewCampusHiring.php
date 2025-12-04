@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\CampusHirings\Pages;
 
-use App\Filament\Resources\CampusHiringResource;
+use App\Filament\Resources\CampusHirings\CampusHiringResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 

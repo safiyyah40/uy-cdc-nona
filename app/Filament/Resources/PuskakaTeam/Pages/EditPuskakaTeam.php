@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Filament\Resources\PuskakaTeamResource\Pages;
+namespace App\Filament\Resources\PuskakaTeam\Pages;
 
 use App\Filament\Resources\PuskakaTeamResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use Filament\Resources\Pages\EditRecord;
 
-class ListPuskakaTeams extends ListRecords
+class EditPuskakaTeam extends EditRecord
 {
     protected static string $resource = PuskakaTeamResource::class;
-    
+
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\DeleteAction::make(),
         ];
     }
 }

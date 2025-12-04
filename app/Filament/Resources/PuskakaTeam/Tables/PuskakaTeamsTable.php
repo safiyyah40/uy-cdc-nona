@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\PuskakaTeamResource\Tables;
+namespace App\Filament\Resources\PuskakaTeam\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;

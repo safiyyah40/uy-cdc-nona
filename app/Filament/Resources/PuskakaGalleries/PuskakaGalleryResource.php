@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\PuskakaGalleries;
 
 use App\Filament\Resources\PuskakaGalleries\Pages\CreatePuskakaGallery;
 use App\Filament\Resources\PuskakaGalleries\Pages\EditPuskakaGallery;

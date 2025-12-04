@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
@@ -16,9 +13,30 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            
+            // Field untuk LDAP integration
+            $table->string('username')->unique()->nullable();
+            $table->string('id_number')->nullable(); // NIP/NPM
+            $table->string('phone')->nullable();
+            $table->boolean('is_profile_complete')->default(false);
+            
+            // Password nullable karena LDAP
+            $table->string('password')->nullable();
+            
+            // Role system
+            $table->enum('role', ['mahasiswa', 'konselor', 'admin', 'super_admin'])
+                  ->default('mahasiswa');
+            
+            // Photo profile
+            $table->string('photo_url')->nullable();
+            
             $table->rememberToken();
             $table->timestamps();
+            
+            // Indexes untuk performa
+            $table->index('username');
+            $table->index('id_number');
+            $table->index('role');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -37,9 +55,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');
