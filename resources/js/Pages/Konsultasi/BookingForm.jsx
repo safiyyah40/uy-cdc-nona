@@ -1,12 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import MainLayout from "@/Layouts/MainLayout";
 import Footer from "@/Components/Footer";
-import { Head, usePage, useForm, Link } from "@inertiajs/react";
-import { ChevronLeft, Send, User, Phone, Mail, BookOpen, Calendar, Clock } from "lucide-react";
+import { Head, useForm, Link } from "@inertiajs/react";
+import { ChevronLeft, Send, User, Phone, Mail, BookOpen, Calendar, Clock, Info, CheckCircle } from "lucide-react";
 
+const SuccessModal = ({ isOpen, onNavigate }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
+            <div className="bg-white rounded-xl shadow-3xl p-6 md:p-8 max-w-sm mx-auto transform transition-all duration-300 scale-100">
+                <div className="text-center">
+                    <CheckCircle className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Booking Berhasil Disimpan!</h3>
+                    <p className="text-sm text-gray-600">
+                        Terima kasih, data booking konsultasi Anda telah berhasil kami simpan. Mohon menunggu maksimal 2x24 jam untuk proses verifikasi. Kami akan segera mengirimkan konfirmasi akhir melalui WhatsApp.
+                    </p>
+                </div>
+                <div className="mt-6">
+                    <button
+                        onClick={onNavigate}
+                        className="w-full py-2 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition"
+                    >
+                        Lihat Daftar Booking Saya
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// KOMPONEN FORMULIR KONSULTASI
 const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time, slot_id }) => {
 
     const user = auth.user;
+
+    // State untuk mengontrol Modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const initialData = {
         name: user?.name || '',
@@ -23,7 +53,6 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
         slot_id: slot_id || '',
     };
 
-    // Data Topik Konseling
     const topics = [
         "Masalah Akademik (Studi, Tugas Akhir, IPK)",
         "Pengembangan Karir (Job Seeking, Skill Building)",
@@ -32,11 +61,22 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
         "Lainnya"
     ];
 
-    const { data, setData, post, processing, errors } = useForm(initialData);
+    const { data, setData, processing, errors } = useForm(initialData);
+
+    const handleNavigation = () => {
+        window.location.href = '/konsultasi/daftar-saya';
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post('/api/konsultasi/submit');
+
+        // LOGIKA DUMMY FRONTEND
+        if (!data.name || !data.topic || !data.notes) {
+            alert("Harap lengkapi Nama, Topik, dan Keterangan Singkat.");
+            return;
+        }
+
+        setIsModalOpen(true);
     };
 
     // Helper Component untuk Input
@@ -76,8 +116,8 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
                     id={id}
                     name={id}
                     value={value}
-                    onChange={e => onChange(e)}
-                    className={`block appearance-none w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm ${error ? 'border-red-500' : 'border-gray-300'} bg-white`}
+                    onChange={e => setData(id, e.target.value)}
+                    className={`block appearance-none w-full pl-10 pr-10 py-2 border rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm ${error ? 'border-red-500' : 'border-gray-300'} bg-white`}
                 >
                     <option value="" disabled>Pilih {label}</option>
                     {options.map(option => (
@@ -95,20 +135,34 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
         <MainLayout user={user}>
             <Head title="Formulir Konsultasi" />
 
-            {/* HEADER / BREADCRUMB */}
-            <div className="bg-gray-50 pt-16 pb-6 border-b border-gray-200">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-                    <Link href="/layanan/konsultasi" className="inline-flex items-center text-sm text-gray-500 hover:text-[#004d40] transition mb-4">
-                        <ChevronLeft className="w-4 h-4 mr-1" /> Kembali ke Daftar Konselor
-                    </Link>
-                    <h1 className="text-3xl font-bold text-gray-900 font-serif">Formulir Booking Konsultasi</h1>
-                    <p className="text-gray-600 mt-1">Lengkapi data diri dan detail sesi Anda.</p>
+            {/* Tampilkan Modal di luar struktur utama */}
+            <SuccessModal
+                isOpen={isModalOpen}
+                onNavigate={handleNavigation}
+            />
+
+            {/* CONTAINER UTAMA (HEADER) */}
+            <div className="bg-white pt-16 pb-8">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+
+                    {/* Tombol Kembali (LEFT ALIGNED) */}
+                    <div className="mb-4">
+                        <Link href="/layanan/konsultasi" className="inline-flex items-center text-sm text-gray-500 hover:text-[#004d40] transition">
+                            <ChevronLeft className="w-4 h-4 mr-1" /> Kembali ke Daftar Konselor
+                        </Link>
+                    </div>
+
+                    {/* Judul dan Deskripsi (CENTER ALIGNED) */}
+                    <div className="text-center mb-8">
+                        <h1 className="text-3xl font-bold text-gray-900 font-serif">Formulir Booking Konsultasi</h1>
+                        <p className="text-gray-600 mt-1">Lengkapi data diri dan detail sesi Anda.</p>
+                    </div>
                 </div>
             </div>
 
             {/* FORM SECTION */}
-            <div className="py-12 bg-white">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+            <div className="pb-12 bg-white">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
                     <form onSubmit={handleSubmit} className="bg-white p-6 md:p-10 rounded-xl shadow-2xl border border-gray-100">
 
                         {/* Detail Sesi yang Sudah Dipilih */}
@@ -131,13 +185,20 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
                                     <span className="ml-2 font-medium">{data.slot_time ? `${data.slot_time} WIB` : '—'}</span>
                                 </div>
                             </div>
+
+                            {/* KETERANGAN TAMBAHAN: Konselor Indikatif */}
+                            <p className="text-xs text-emerald-700 mt-3 flex items-start">
+                                <Info className="w-4 h-4 mr-1.5 mt-0.5 text-emerald-600 flex-shrink-0" />
+                                <span className="text-gray-600">*Konselor yang dipilih bersifat indikatif dan dapat berubah menyesuaikan ketersediaan, namun tanggal dan waktu akan dipertahankan.</span>
+                            </p>
+
                             {(!data.counselor_id || !data.slot_id) && (
                                 <p className="text-sm text-red-500 mt-3 font-medium">⚠️ Harap kembali dan pilih jadwal spesifik dari konselor.</p>
                             )}
                         </div>
 
                         {/* DATA DIRI MAHASISWA */}
-                        <h2 className="text-xl font-bold text-gray-800 mt-8 mb-4 border-b pb-2">Data Diri</h2>
+                        <h2 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Data Diri</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <InputField
                                 label="Nama Lengkap"
@@ -149,7 +210,7 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
                                 disabled={!!user}
                             />
                             <InputField
-                                label="NPM"
+                                label="NPM/Nomor Induk"
                                 id="npm"
                                 icon={BookOpen}
                                 value={data.npm}
@@ -218,7 +279,7 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
                                     'Memproses...'
                                 ) : (
                                     <>
-                                        Kirim Permintaan Booking
+                                        Simpan
                                         <Send className="w-4 h-4" />
                                     </>
                                 )}
