@@ -14,6 +14,7 @@ use App\Http\Controllers\CampusHiringController;
 use App\Http\Controllers\TipsDanTrikController;
 use App\Http\Controllers\SeminarController;
 use App\Http\Controllers\KonsultasiController;
+use App\Http\Controllers\SertifikasiController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Berita;
@@ -216,20 +217,15 @@ Route::get('/berita/{id}/{slug}', function ($id) {
     ]);
 })->name('berita.show');
 
-// Route Sertifikasi
-Route::get('/peluang-karir/sertifikasi', function () {
-    return Inertia::render('PeluangKarir/Sertifikasi/IndexSertifikasi', [
-        'sertifikasies' => [],
-    ]);
-})->name('sertifikasi.index');
+//  Route Peluang Karir - Index Sertifikasi
+Route::get('/peluang-karir/sertifikasi', [SertifikasiController::class, 'index'])
+    ->name('sertifikasi.index');
 
-// Route BARU untuk Detail Sertifikasi
-Route::get('/peluang-karir/sertifikasi/{id}', function ($id) {
-    // Di sini Anda akan mengambil data sertifikasi berdasarkan $id
-    return Inertia::render('PeluangKarir/Sertifikasi/ShowSertifikasi', [
-        'sertifikasiId' => $id,
-    ]);
-})->name('sertifikasi.show');
+// Route Peluang Karir - Detail Sertifikasi
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/peluang-karir/sertifikasi/{id}', [SertifikasiController::class, 'show'])
+        ->name('sertifikasi.show');
+});
 
 // Route Detail Berita (Jika ingin wajib login, taruh di dalam middleware auth)
 Route::middleware(['auth'])->group(function () {
