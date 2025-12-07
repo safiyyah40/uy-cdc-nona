@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfilKonselorController;
 use Illuminate\Foundation\Application;
@@ -8,16 +9,19 @@ use Inertia\Inertia;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilPuskakaController;
 use App\Http\Controllers\ProfileCompletionController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\CampusHiringController;
 use App\Http\Controllers\TipsDanTrikController;
 use App\Http\Controllers\SeminarController;
 use App\Http\Controllers\KonsultasiController;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Berita;
+use App\Models\Magang;
+use App\Models\Loker;
 use App\Models\BerandaSlide;
 use App\Http\Controllers\MagangController;
+use App\Http\Controllers\LokerController;
 
 Route::get('/', function () {
     // Beranda: Mengambil data slideshow dan 4 berita terbaru
@@ -48,6 +52,45 @@ Route::get('/', function () {
             ];
         });
 
+    $latestMagang = Magang::where('is_active', true)
+        ->where('deadline', '>=', now())
+        ->orderBy('posted_date', 'desc')
+        ->take(4)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'title' => $item->title,
+                'slug' => $item->slug,
+                'company' => $item->company,
+                'location' => $item->location,
+                'type' => $item->type,
+                'logo' => $item->logo,
+                'salary_min' => $item->salary_min,
+                'salary_max' => $item->salary_max,
+                'deadline' => $item->deadline ? $item->deadline->format('Y-m-d') : null,
+            ];
+        });
+
+    $latestLoker = Loker::where('is_active', true)
+        ->where('deadline', '>=', now())
+        ->latest('posted_date')
+        ->take(6)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'title' => $item->title,
+                'slug' => $item->slug,
+                'company' => $item->company,
+                'location' => $item->location,
+                'type' => $item->type,
+                'work_model' => $item->work_model,
+                'experience_level' => $item->experience_level,
+                'logo' => $item->logo,
+            ];
+        });
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -55,9 +98,12 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
         'slides' => $slides,
         'latestNews' => $latestNews,
+        'latestMagang' => $latestMagang,
+        'latestLoker' => $latestLoker,
     ]);
 })->name('welcome');
-// --- GROUP AUTH ---
+
+// GROUP AUTH
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -102,7 +148,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-// --- GROUP PUBLIC ---
+// GROUP PUBLIC
 
 // Profil
 Route::get('/profil/puskaka', [ProfilPuskakaController::class, 'index'])->name('profil.puskaka');
@@ -169,7 +215,7 @@ Route::get('/konsultasi/daftar-saya', function () {
     // Memanggil komponen UserCounselingList dari direktori Pages/Konsultasi
     return Inertia::render('Konsultasi/UserCounselingList', [
         // Kirim data auth, dll.
-        'auth' => auth()->user() ? ['user' => auth()->user()] : null,
+        'auth' => Auth::check() ? ['user' => Auth::user()] : null,
     ]);
 })->middleware(['auth'])->name('konsultasi.list');
 
@@ -196,6 +242,13 @@ Route::get('/peluang-karir/magang', [MagangController::class, 'index'])->name('m
 // Route Peluang Karir - Detail Magang
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/peluang-karir/magang/{slug}', [MagangController::class, 'show'])->name('magang.show');
+});
+
+Route::get('/peluang-karir/lowongan-kerja', [LokerController::class, 'index'])->name('loker.index');
+
+// Auth
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/peluang-karir/lowongan-kerja/{slug}', [LokerController::class, 'show'])->name('loker.show');
 });
 
 // Route akun profile

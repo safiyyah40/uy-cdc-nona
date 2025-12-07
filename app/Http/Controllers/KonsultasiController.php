@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Inertia\Inertia; // Jangan lupa import Inertia
+use Inertia\Inertia;
 
 class KonsultasiController extends Controller
 {

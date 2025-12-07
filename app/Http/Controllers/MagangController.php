@@ -17,7 +17,7 @@ class MagangController extends Controller
         $query = Magang::where('is_active', true)
             ->where('deadline', '>=', now());
 
-        // AMBIL SEMUA KATEGORI UNIK UNTUK FILTER 
+        // AMBIL SEMUA KATEGORI UNIK UNTUK FILTER
         $categoriesList = Magang::where('is_active', true)
             ->where('deadline', '>=', now())
             ->get()
@@ -28,7 +28,7 @@ class MagangController extends Controller
             ->values()
             ->all();
 
-        // AMBIL SEMUA LOKASI UNIK  UNTUK FILTER 
+        // AMBIL SEMUA LOKASI UNIK  UNTUK FILTER
         $locationsList = Magang::where('is_active', true)
             ->where('deadline', '>=', now())
             ->pluck('location')
@@ -60,14 +60,11 @@ class MagangController extends Controller
             ->where('deadline', '>=', now())
             ->count();
 
-        // Logic Guest dan User
         if ($isGuest) {
-            // Guest: Ambil 6 data terbaru saja
             $magangsData = $query->latest('posted_date')->limit(6)->get();
             $pagination = null;
             $filters = null;
         } else {
-            // Authenticated: Full features + Pagination
             $perPage = $request->get('per_page', 12);
 
             if ($perPage === '1000' || $perPage === 'all') {
@@ -96,7 +93,7 @@ class MagangController extends Controller
             ];
         }
 
-        // Mapping Data (Agar sesuai dengan props Frontend)
+        // Mapping Data untuk konsistensi frontend
         $magangs = collect($magangsData)->map(function ($item) {
             return [
                 'id' => $item->id,
@@ -109,10 +106,11 @@ class MagangController extends Controller
                 'deadline' => $item->deadline ? $item->deadline->format('Y-m-d') : null,
                 'posted_date' => $item->posted_date,
                 'logo' => $item->logo,
+                'image' => $item->image,
                 'salary_min' => $item->salary_min,
                 'salary_max' => $item->salary_max,
             ];
-        })->toArray(); // Ubah jadi array biasa
+        })->toArray();
 
         return Inertia::render('PeluangKarir/Magang/IndexMagang', [
             'magangs' => $magangs,
@@ -131,7 +129,6 @@ class MagangController extends Controller
             ->where('is_active', true)
             ->firstOrFail();
 
-        // Transform data detail jika perlu (opsional, tapi rapi)
         $magangData = [
             'id' => $magang->id,
             'title' => $magang->title,
@@ -142,6 +139,7 @@ class MagangController extends Controller
             'deadline' => $magang->deadline ? $magang->deadline->format('Y-m-d') : null,
             'posted_date' => $magang->posted_date,
             'logo' => $magang->logo,
+            'image' => $magang->image,
             'description' => $magang->description,
             'requirements' => $magang->requirements,
             'benefits' => $magang->benefits,

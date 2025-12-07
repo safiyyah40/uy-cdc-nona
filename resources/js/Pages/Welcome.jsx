@@ -9,7 +9,7 @@ import InfoMagang from '../Components/InfoMagang';
 import TesMinatBakat from '../Components/TesMinatBakat';
 import Footer from '../Components/Footer';
 
-export default function Welcome({ auth, slides, latestNews })  {
+export default function Welcome({ auth, slides, latestNews, latestMagang, latestLoker })  {
     return (
         <MainLayout>
             <Head title="Selamat Datang di CDC YARSI" />
@@ -33,15 +33,13 @@ export default function Welcome({ auth, slides, latestNews })  {
                         </div>
                     </div>
                 </div>
-
             </section>
-
             <VisiMisi slides={slides} />
             <KalenderSection />
             <StatistikLayanan />
             <BeritaSection latestNews={latestNews} />
-            <LowonganPekerjaan />
-            <InfoMagang />
+            <LowonganPekerjaan jobs={latestLoker} />
+            <InfoMagang latestMagang={latestMagang} />
             <div id="layanan-tes">
                 <TesMinatBakat />
             </div>

@@ -20,6 +20,7 @@ class Magang extends Model
         'deadline',
         'posted_date',
         'logo',
+        'image',
         'description',
         'requirements',
         'benefits',

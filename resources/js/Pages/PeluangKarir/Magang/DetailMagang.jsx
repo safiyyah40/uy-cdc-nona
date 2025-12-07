@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
 import Footer from '@/Components/Footer';
-import { Calendar, MapPin, Briefcase, Clock, ArrowLeft, ExternalLink, Share2, Building2, Wallet, Timer, CheckCircle, Copy, CornerDownRight } from 'lucide-react';
+import { Calendar, MapPin, Briefcase, Clock, ArrowLeft, ExternalLink, Share2, Building2, Wallet, Timer, CheckCircle, Copy, CornerDownRight, Image as ImageIcon } from 'lucide-react';
 
 export default function DetailMagang({ auth, magang }) {
     // LOGIKA SHARE 
@@ -64,6 +64,7 @@ export default function DetailMagang({ auth, magang }) {
                 {/* Background Pattern */}
                 <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-yarsi-green-light/5 rounded-full blur-3xl" />
                 <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-yarsi-accent/5 rounded-full blur-3xl" />
+
                 <div className="container mx-auto px-6 max-w-[90rem] relative z-10">
                     {/* Breadcrumb */}
                     <div className="mb-8 pt-4">
@@ -173,7 +174,7 @@ export default function DetailMagang({ auth, magang }) {
                 </div>
             </div>
 
-            {/* --- MAIN CONTENT --- */}
+            {/* MAIN CONTENT */}
             <div className="bg-white py-12 md:py-16">
                 <div className="container mx-auto px-6 max-w-[90rem] grid grid-cols-1 lg:grid-cols-12 gap-12">
                     <div className="lg:col-span-8 space-y-12">
@@ -183,10 +184,30 @@ export default function DetailMagang({ auth, magang }) {
                             <div className="p-8 bg-gradient-to-r from-emerald-50 to-white rounded-3xl border border-emerald-100/50 shadow-sm relative overflow-hidden">
                                 <div className="absolute top-0 left-0 w-1.5 h-full bg-yarsi-green" />
                                 <h3 className="font-kaisei font-bold text-2xl text-yarsi-green-dark mb-4">Deskripsi Program</h3>
-                                <div 
+                                <div
                                     className="content-body"
                                     dangerouslySetInnerHTML={{ __html: magang.description }}
                                 />
+                            </div>
+                        )}
+
+                        {/* FLYER / FOTO KEGIATAN */}
+                        {magang.image && (
+                            <div className="bg-white rounded-3xl p-2 border border-gray-100 shadow-sm overflow-hidden">
+                                <div className="flex items-center gap-3 mb-4 px-6 pt-4">
+                                    <div className="p-2 bg-indigo-100 text-indigo-700 rounded-lg">
+                                        <ImageIcon className="w-6 h-6" />
+                                    </div>
+                                    <h3 className="font-kaisei font-bold text-2xl text-gray-900">Flyer / Dokumentasi</h3>
+                                </div>
+                                <div className="rounded-2xl overflow-hidden bg-gray-100">
+                                    <img
+                                        src={`/storage/${magang.image}`}
+                                        alt={`Flyer ${magang.title}`}
+                                        className="w-full h-auto object-cover hover:scale-[1.02] transition-transform duration-500 cursor-zoom-in"
+                                        onClick={() => window.open(`/storage/${magang.image}`, '_blank')}
+                                    />
+                                </div>
                             </div>
                         )}
 
@@ -226,6 +247,7 @@ export default function DetailMagang({ auth, magang }) {
                     {/* Sticky Sidebar */}
                     <div className="lg:col-span-4 space-y-8">
                         <div className="sticky top-28 space-y-8">
+
                             {/* CTA Card */}
                             <div className="bg-white p-1 rounded-3xl shadow-xl border border-gray-100 relative group">
                                 <div className="absolute inset-0 bg-yarsi-gradient-button rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
@@ -237,6 +259,7 @@ export default function DetailMagang({ auth, magang }) {
                                         <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-yarsi-green to-yarsi-accent rounded-2xl flex items-center justify-center shadow-lg">
                                             <Building2 className="w-8 h-8 text-white" />
                                         </div>
+
                                         <h3 className="font-kaisei font-bold text-2xl text-yarsi-green-dark mb-2">Tertarik Melamar?</h3>
                                         <p className="text-gray-500 text-sm mb-6 font-sans">Segera kirimkan lamaranmu dan raih kesempatan emas ini!</p>
 
@@ -245,10 +268,10 @@ export default function DetailMagang({ auth, magang }) {
                                                 href={magang.application_url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 bg-yarsi-accent text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl hover:bg-green-600 transition-all duration-300 transform hover:-translate-y-1"
+                                                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
                                             >
-                                                <span>Lamar di situs perusahaan</span>
-                                                <CornerDownRight className="w-5 h-5" />
+                                                Lamar Sekarang di Situs Perusahaan
+                                                <ExternalLink className="w-4 h-4" />
                                             </a>
                                         ) : (
                                             <div className="w-full py-4 bg-gray-100 text-gray-400 font-bold rounded-xl border border-gray-200 cursor-not-allowed">
@@ -266,52 +289,6 @@ export default function DetailMagang({ auth, magang }) {
                                             </div>
                                         )}
                                     </div>
-                                </div>
-                            </div>
-
-                            {/* Quick Info Card */}
-                            <div className="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-6 shadow-lg border border-gray-200">
-                                <h4 className="font-bold text-gray-900 font-kaisei text-lg mb-4">Informasi Cepat</h4>
-                                <div className="space-y-4">
-                                    <div className="flex items-start gap-3">
-                                        <Calendar className="w-5 h-5 text-yarsi-accent flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="text-xs text-gray-500 font-medium mb-0.5">Deadline Lamaran</p>
-                                            <p className="text-sm font-bold text-gray-900">
-                                                {new Date(magang.deadline).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="h-px bg-gray-200" />
-                                    <div className="flex items-start gap-3">
-                                        <MapPin className="w-5 h-5 text-yarsi-accent flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="text-xs text-gray-500 font-medium mb-0.5">Lokasi Kerja</p>
-                                            <p className="text-sm font-bold text-gray-900">{magang.location}</p>
-                                        </div>
-                                    </div>
-                                    <div className="h-px bg-gray-200" />
-                                    <div className="flex items-start gap-3">
-                                        <Briefcase className="w-5 h-5 text-yarsi-accent flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="text-xs text-gray-500 font-medium mb-0.5">Jenis Magang</p>
-                                            <p className="text-sm font-bold text-gray-900">{magang.type}</p>
-                                        </div>
-                                    </div>
-                                    {magang.salary_min && magang.salary_max && (
-                                        <>
-                                            <div className="h-px bg-gray-200" />
-                                            <div className="flex items-start gap-3">
-                                                <Wallet className="w-5 h-5 text-yarsi-accent flex-shrink-0 mt-0.5" />
-                                                <div>
-                                                    <p className="text-xs text-gray-500 font-medium mb-0.5">Estimasi Gaji</p>
-                                                    <p className="text-sm font-bold text-gray-900">
-                                                        {formatCurrency(magang.salary_min)} - {formatCurrency(magang.salary_max)}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </>
-                                    )}
                                 </div>
                             </div>
 
@@ -345,6 +322,7 @@ export default function DetailMagang({ auth, magang }) {
                                             X / Twitter
                                         </button>
                                     </div>
+
                                     <button
                                         onClick={() => handleShare('copy')}
                                         className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-50 text-gray-600 hover:bg-gray-200 rounded-xl transition-all font-medium text-sm border border-gray-200"
@@ -375,7 +353,7 @@ export default function DetailMagang({ auth, magang }) {
                             href={route('magang.index')}
                             className="inline-flex items-center gap-2 bg-yarsi-green hover:bg-yarsi-green-light text-white px-8 py-4 rounded-xl font-bold transition-all hover:shadow-xl hover:-translate-y-1"
                         >
-                            Lihat Semua Lowongan
+                            Lihat Semua Lowongan Magang
                             <ArrowLeft className="w-5 h-5 rotate-180" />
                         </Link>
                     </div>
@@ -394,7 +372,6 @@ export default function DetailMagang({ auth, magang }) {
                     <ExternalLink className="w-5 h-5" />
                 </a>
             </div>
-
             <Footer />
         </MainLayout>
     );

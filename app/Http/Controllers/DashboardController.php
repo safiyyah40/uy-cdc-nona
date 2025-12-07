@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\BerandaSlide;
 use App\Models\Berita;
+use App\Models\Magang;
+use App\Models\Loker;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -41,13 +43,53 @@ class DashboardController extends Controller
             ];
         });
 
+        $latestMagang = Magang::where('is_active', true)
+            ->where('deadline', '>=', now())
+            ->orderBy('posted_date', 'desc')
+            ->take(4)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'slug' => $item->slug,
+                    'company' => $item->company,
+                    'location' => $item->location,
+                    'type' => $item->type,
+                    'logo' => $item->logo,
+                    'salary_min' => $item->salary_min,
+                    'salary_max' => $item->salary_max,
+                    'deadline' => $item->deadline ? $item->deadline->format('Y-m-d') : null,
+                ];
+            });
+
+            $latestLoker = Loker::where('is_active', true)
+            ->where('deadline', '>=', now())
+            ->latest('posted_date')
+            ->take(6)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'slug' => $item->slug,
+                    'company' => $item->company,
+                    'location' => $item->location,
+                    'type' => $item->type,
+                    'work_model' => $item->work_model,
+                    'experience_level' => $item->experience_level,
+                    'logo' => $item->logo,
+                ];
+            });
+
     return Inertia::render('Dashboard', [
         'auth' => [
             'user' => $user,
         ],
         'slides' => $slides,
         'latestNews' => $latestNews,
+        'latestMagang' => $latestMagang,
+        'latestLoker' => $latestLoker,
     ]);
 }
-
 }

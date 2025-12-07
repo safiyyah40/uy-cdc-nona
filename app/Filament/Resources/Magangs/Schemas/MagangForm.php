@@ -26,26 +26,19 @@ class MagangForm
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
-                        
+                            ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state))),
+
                         TextInput::make('slug')
                             ->label('Slug (URL)')
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true)
                             ->helperText('Akan otomatis terisi dari judul'),
-                        
+
                         TextInput::make('company')
                             ->label('Nama Perusahaan')
                             ->required()
                             ->maxLength(255),
-                        
-                        FileUpload::make('logo')
-                            ->label('Logo Perusahaan')
-                            ->image()
-                            ->directory('magang-logos')
-                            ->maxSize(2048)
-                            ->helperText('Maksimal 2MB, format: JPG, PNG'),
                     ])
                     ->columns(2),
 
@@ -56,7 +49,7 @@ class MagangForm
                             ->required()
                             ->maxLength(255)
                             ->placeholder('Jakarta, Bandung, Remote, dll'),
-                        
+
                         Select::make('type')
                             ->label('Tipe Magang')
                             ->options([
@@ -67,13 +60,13 @@ class MagangForm
                             ])
                             ->required()
                             ->default('Full Time'),
-                        
+
                         DatePicker::make('posted_date')
                             ->label('Tanggal Posting')
                             ->required()
                             ->default(now())
                             ->native(false),
-                        
+
                         DatePicker::make('deadline')
                             ->label('Deadline Lamaran')
                             ->required()
@@ -101,14 +94,14 @@ class MagangForm
                                 'Product Management',
                             ])
                             ->required(),
-                        
+
                         TextInput::make('salary_min')
                             ->label('Gaji Minimum')
                             ->numeric()
                             ->prefix('Rp')
                             ->placeholder('3000000')
                             ->helperText('Opsional'),
-                        
+
                         TextInput::make('salary_max')
                             ->label('Gaji Maksimum')
                             ->numeric()
@@ -117,6 +110,21 @@ class MagangForm
                             ->helperText('Opsional'),
                     ])
                     ->columns(3),
+
+                    Section::make('Link & Status')
+                    ->schema([
+                        TextInput::make('application_url')
+                            ->label('Link Pendaftaran')
+                            ->url()
+                            ->placeholder('https://example.com/apply')
+                            ->helperText('URL untuk melamar pekerjaan'),
+
+                        Toggle::make('is_active')
+                            ->label('Aktif')
+                            ->default(true)
+                            ->helperText('Matikan untuk menyembunyikan lowongan'),
+                    ])
+                    ->columns(2),
 
                 Section::make('Deskripsi & Detail')
                     ->schema([
@@ -134,7 +142,7 @@ class MagangForm
                                 'undo',
                                 'redo',
                             ]),
-                        
+
                         RichEditor::make('requirements')
                             ->label('Persyaratan')
                             ->required()
@@ -147,7 +155,7 @@ class MagangForm
                                 'undo',
                                 'redo',
                             ]),
-                        
+
                         RichEditor::make('benefits')
                             ->label('Benefit / Fasilitas')
                             ->required()
@@ -162,18 +170,24 @@ class MagangForm
                             ]),
                     ]),
 
-                Section::make('Link & Status')
+                    Section::make('Media & Branding')
                     ->schema([
-                        TextInput::make('application_url')
-                            ->label('Link Pendaftaran')
-                            ->url()
-                            ->placeholder('https://example.com/apply')
-                            ->helperText('URL untuk melamar pekerjaan'),
-                        
-                        Toggle::make('is_active')
-                            ->label('Aktif')
-                            ->default(true)
-                            ->helperText('Matikan untuk menyembunyikan lowongan'),
+                        FileUpload::make('logo')
+                            ->label('Logo Perusahaan (Kecil)')
+                            ->image()
+                            ->directory('magang-logos')
+                            ->visibility('public')
+                            ->maxSize(2048)
+                            ->helperText('Maksimal 2MB, format: JPG, PNG'),
+
+                        FileUpload::make('image')
+                            ->label('Foto Kegiatan / Flyer (Besar)')
+                            ->image()
+                            ->directory('magang-images')
+                            ->visibility('public')
+                            ->maxSize(5120)
+                            ->columnSpanFull()
+                            ->helperText('Upload flyer atau foto suasana kerja (Opsional). Maksimal 5MB, format: JPG, PNG'),
                     ])
                     ->columns(2),
             ]);

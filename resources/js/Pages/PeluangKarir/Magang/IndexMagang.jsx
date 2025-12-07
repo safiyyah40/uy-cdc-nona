@@ -434,7 +434,7 @@ export default function IndexMagang({ auth, magangs, pagination, filters, isGues
                                                 {/* Footer */}
                                                 <div className="mt-auto pt-4 border-t border-gray-100">
                                                     <div className="flex items-center justify-between text-sm font-bold text-yarsi-accent group-hover:text-yarsi-green transition-colors">
-                                                        <span>{isGuest ? 'Masuk untuk Melamar' : 'Lihat Detail'}</span>
+                                                        <span>{isGuest ? 'Masuk untuk Detail' : 'Lihat Detail'}</span>
                                                         <ArrowRight className="w-5 h-5 transform group-hover:translate-x-2 transition-transform" />
                                                     </div>
                                                 </div>
