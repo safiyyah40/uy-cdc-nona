@@ -4,9 +4,8 @@ import Footer from "@/Components/Footer";
 import { Head, useForm, Link } from "@inertiajs/react";
 import { ChevronLeft, Send, User, Phone, Mail, BookOpen, Calendar, Clock, Info, CheckCircle, AlertTriangle, X } from "lucide-react";
 
-// ---------------------------------------------------
-// 1. SUCCESS MODAL (Dipanggil setelah SUBMIT berhasil)
-// ---------------------------------------------------
+
+// SUCCESS MODAL (Dipanggil setelah SUBMIT berhasil)
 const SuccessModal = ({ isOpen, onNavigate }) => {
     if (!isOpen) return null;
 
@@ -33,9 +32,8 @@ const SuccessModal = ({ isOpen, onNavigate }) => {
     );
 };
 
-// ----------------------------------------------------
-// 2. ERROR/WARNING MODAL (Pop-up jika ada isian kosong)
-// ----------------------------------------------------
+
+// ERROR/WARNING MODAL (Pop-up jika ada isian kosong)
 const WarningModal = ({ isOpen, onClose, missingFields }) => {
     if (!isOpen) return null;
 
@@ -146,9 +144,10 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // --- VALIDASI FRONTEND ---
+        // VALIDASI FRONTEND
         const requiredFields = {
-            name: "Nama Lengkap",
+            phone: "Nomor Telepon (Whatsapp)",
+            email: "Email Aktif",
             topic: "Topik Konseling",
             notes: "Keterangan Singkat",
         };
@@ -170,21 +169,16 @@ const BookingForm = ({ auth, counselor_id, counselor_name, slot_date, slot_time,
             setIsWarningModalOpen(true);
             return;
         }
-
-        // Jika validasi sukses: Kirim data menggunakan Inertia.js (post)
-        // post(route('booking.store'), {
-        //     onSuccess: () => setIsSuccessModalOpen(true),
-        //     onError: (errors) => {
-        //         // Tangani error dari backend (misalnya konflik jadwal)
-        //         console.error(errors);
-        //         alert("Terjadi kesalahan saat menyimpan booking.");
-        //     }
-        // });
-
-        // --- SIMULASI SUCCESS ---
-        // Jika Anda masih menggunakan simulasi, gunakan ini:
-        console.log("Data siap dikirim:", data);
-        setIsSuccessModalOpen(true);
+        post(route('konsultasi.submit'), {
+            preserveScroll: true,
+                onSuccess: () => {
+                    // Opsional: Reset form atau tutup modal jika sukses
+                    // reset(); 
+                },
+                onError: (errors) => {
+                    console.error("Error submit:", errors);
+                }
+        });
     };
 
     // Helper Component untuk Input
