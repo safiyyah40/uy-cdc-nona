@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import MainLayout from "@/Layouts/MainLayout";
 import Footer from "@/Components/Footer";
 import { Head, Link } from "@inertiajs/react";
-import { ChevronLeft, Info, CheckCircle, Clock, Trash2, Edit } from "lucide-react";
+import { ChevronLeft, Info, Clock, Trash2, Edit, X } from "lucide-react";
 
 // Data Dummy untuk Tabel
 const dummyBookings = [
@@ -32,8 +32,38 @@ const dummyBookings = [
     },
 ];
 
-const UserCounselingList = ({ auth }) => { 
+const UserCounselingList = ({ auth }) => {
     const user = auth.user;
+
+    // State untuk mengontrol modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    // State untuk menyimpan ID booking yang akan dihapus
+    const [bookingToDelete, setBookingToDelete] = useState(null);
+
+    // Fungsi untuk menampilkan modal
+    const openDeleteModal = (bookingId) => {
+        setBookingToDelete(bookingId);
+        setIsModalOpen(true);
+    };
+
+    // Fungsi untuk menyembunyikan modal
+    const closeDeleteModal = () => {
+        setIsModalOpen(false);
+        setBookingToDelete(null); // Reset ID setelah modal ditutup
+    };
+
+    // Fungsi simulasi penghapusan
+    const confirmDelete = () => {
+        // --- LOGIKA PENGHAPUSAN NYATA DITEMPATKAN DI SINI ---
+        // Anda akan menggunakan Inertia.js (Link atau useForm) atau Axios di sini
+        // untuk mengirim permintaan DELETE ke server.
+        console.log(`Mengirim permintaan DELETE untuk Booking ID: ${bookingToDelete}`);
+
+        // Simulasi:
+        alert(`Booking ID ${bookingToDelete} telah dibatalkan! (Simulasi sukses)`);
+
+        closeDeleteModal();
+    };
 
     return (
         <MainLayout user={user}>
@@ -101,7 +131,7 @@ const UserCounselingList = ({ auth }) => {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                             <div className="flex justify-center space-x-2">
-                                                {/* Simulasi Tombol Aksi */}
+                                                {/* Simulasi Tombol Aksi Edit */}
                                                 <button
                                                     onClick={() => alert(`Lihat detail booking ID: ${booking.id}`)}
                                                     className="text-emerald-600 hover:text-emerald-900 p-1 rounded-full hover:bg-emerald-50 transition"
@@ -109,8 +139,9 @@ const UserCounselingList = ({ auth }) => {
                                                 >
                                                     <Edit className="w-4 h-4" />
                                                 </button>
+                                                {/* Tombol Hapus: Memanggil openDeleteModal */}
                                                 <button
-                                                    onClick={() => alert(`Batalkan booking ID: ${booking.id}`)}
+                                                    onClick={() => openDeleteModal(booking.id)}
                                                     className="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50 transition"
                                                     title="Batalkan Booking"
                                                 >
@@ -133,6 +164,72 @@ const UserCounselingList = ({ auth }) => {
 
                 </div>
             </div>
+
+            {/* --- MODAL KONFIRMASI PENGHAPUSAN (THE IMPROVED VERSION) --- */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                    {/* Overlay */}
+                    <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                        <div className="fixed inset-0 bg-gray-900 bg-opacity-70 transition-opacity" aria-hidden="true" onClick={closeDeleteModal}></div>
+
+                        {/* Konten Modal */}
+                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                        <div className="relative inline-block align-middle bg-white rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-sm sm:w-full border border-gray-100">
+
+                            {/* Tombol Tutup (di dalam konten) */}
+                            <button
+                                onClick={closeDeleteModal}
+                                className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 p-1 transition-colors rounded-full focus:outline-none focus:ring-2 focus:ring-red-500"
+                                title="Tutup"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+
+                            <div className="p-6">
+                                {/* Icon Area */}
+                                <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-50">
+                                    <Trash2 className="h-6 w-6 text-red-600" aria-hidden="true" />
+                                </div>
+
+                                {/* Text Content */}
+                                <div className="mt-4 text-center">
+                                    <h3 className="text-xl font-bold text-gray-900" id="modal-title">
+                                        Konfirmasi Pembatalan
+                                    </h3>
+                                    <div className="mt-2">
+                                        <p className="text-sm text-gray-500">
+                                            Apakah Anda yakin ingin <strong className="font-semibold text-red-600">membatalkan</strong> booking ini?
+                                            <span className="block mt-1">Aksi ini tidak dapat dibatalkan. (ID: {bookingToDelete})</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Footer/Action Buttons */}
+                            <div className="flex justify-between p-4 bg-gray-50 border-t border-gray-100">
+                                {/* Tombol Batal */}
+                                <button
+                                    type="button"
+                                    className="w-full mr-2 rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-100 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    onClick={closeDeleteModal}
+                                >
+                                    Batal
+                                </button>
+                                {/* Tombol Hapus */}
+                                <button
+                                    type="button"
+                                    className="w-full ml-2 inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-red-600 text-sm font-medium text-white hover:bg-red-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                    onClick={confirmDelete}
+                                >
+                                    Ya, Batalkan
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            )}
+            {/* --- AKHIR MODAL KONFIRMASI PENGHAPUSAN --- */}
 
             <Footer />
         </MainLayout>
