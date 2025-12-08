@@ -195,7 +195,11 @@ Route::prefix('layanan')->group(function () {
         return Inertia::render('Layanan/TabelCvReview');
     })->name('layanan.tabel.cv.review');
 
-    Route::get('/tes-minat-bakat', function () {
+Route::get('/detail-submission', function () {
+        return Inertia::render('Layanan/DetailSubmission');
+    })->name('layanan.detail.submission');
+
+Route::get('/tes-minat-bakat', function () {
         return Inertia::render('Layanan/TesMinatBakat');
     })->name('layanan.tes.minat.bakat');
 });

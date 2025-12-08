@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { router } from '@inertiajs/react';
 
 const Icons = {
     User: (props) => (
@@ -16,212 +17,319 @@ const Icons = {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.263M21 8l-7.89 5.263M21 6H3v12h18V6z"></path>
         </svg>
     ),
-    Briefcase: (props) => (
+    Upload: (props) => (
         <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13l-3-3m0 0l-3 3m3-3v10m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
         </svg>
     ),
-    GraduationCap: (props) => ( 
+    Document: (props) => (
         <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5l-9-5l-9 5l9 5zm0 0v10M3 10l9 5l9-5M3 10v9M21 10v9"></path>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+    ),
+    Trash: (props) => (
+        <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+        </svg>
+    ),
+    Info: (props) => (
+        <svg {...props} fillRule="evenodd" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+    ),
+    Done: (props) => (
+        <svg {...props} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
         </svg>
     )
 };
 
-const InputGroup = ({ id, label, type, placeholder, value, onChange, icon: Icon, isOptional = false }) => (
-    <div className="mb-6">
+const CustomSuccessModal = ({ isOpen, onClose, onNavigate }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 transition-opacity duration-300">
+            <div className="bg-white rounded-xl shadow-2xl p-6 sm:p-8 max-w-sm w-full transform transition-all duration-300 scale-100">
+                <div className="text-center">
+                    <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-emerald-100">
+                        <Icons.Done className="h-6 w-6 text-emerald-600" />
+                    </div>
+                    <h3 className="mt-4 text-lg leading-6 font-semibold text-gray-900">Pengunggahan Berhasil!</h3>
+                    <div className="mt-2">
+                        <p className="text-sm text-gray-500">
+                            Terima kasih, CV Anda telah berhasil diunggah dan disimpan.
+                        </p>
+                    </div>
+                </div>
+                <div className="mt-5 sm:mt-6">
+                    <button
+                        type="button"
+                        className="inline-flex justify-center w-full rounded-lg border border-transparent shadow-sm px-4 py-2 bg-emerald-600 text-base font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-150 sm:text-sm"
+                        onClick={onNavigate}
+                    >
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const InputGroupWithIcon = ({ id, label, type, placeholder, value, onChange, isOptional = false, className = "" }) => (
+    <div className={`mb-6 ${className}`}>
         <label htmlFor={id} className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-            {Icon && <Icon className="w-5 h-5 mr-2 text-emerald-600"/>}
             {label}
             {!isOptional && <span className="text-red-500 ml-1 text-base">*</span>}
             {isOptional && <span className="text-gray-500 ml-2 font-normal text-sm">(Opsional)</span>}
         </label>
-        <input
-            id={id}
-            type={type}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            required={!isOptional}
-            className="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-inner text-gray-800 
-                       focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition duration-200 ease-in-out 
-                       placeholder:text-gray-400"
-        />
+        <div className="relative">
+            <input
+                id={id}
+                type={type}
+                value={value}
+                onChange={onChange}
+                placeholder={placeholder}
+                required={!isOptional}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm text-gray-800
+                             focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition duration-200 ease-in-out
+                             placeholder:text-gray-400 h-12"
+            />
+        </div>
     </div>
 );
 
-const FormTinjauanCV = () => {
+const FileUploadInput = ({ fileCV, handleFileChange, handleRemoveFile, validationError }) => (
+    <div className="mb-6">
+        <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+            Unggah CV <span className="text-red-500 ml-1 text-base">*</span>
+        </label>
+
+        {fileCV ? (
+            <div className="flex flex-col sm:flex-row justify-between items-center bg-emerald-50 p-3 rounded-lg shadow-inner border border-emerald-300 min-h-12">
+                <div className="flex items-center flex-1 min-w-0 mb-2 sm:mb-0">
+                    <Icons.Document className="w-5 h-5 mr-3 text-emerald-700 flex-shrink-0"/>
+                    <div className="min-w-0">
+                        <p className="text-sm font-semibold text-gray-800 truncate" title={fileCV.name}>{fileCV.name}</p>
+                        <span className="text-xs text-emerald-600 font-medium hidden sm:inline">
+                             (${(fileCV.size / 1024 / 1024).toFixed(2)} MB)
+                        </span>
+                    </div>
+                </div>
+                <button
+                    type="button"
+                    onClick={handleRemoveFile}
+                    className="w-full sm:w-auto px-3 py-1 text-sm text-red-600 hover:text-white bg-red-100 hover:bg-red-500 rounded-lg transition font-semibold flex items-center justify-center shadow-sm"
+                    title="Hapus File"
+                >
+                    <Icons.Trash className="w-4 h-4 mr-1"/> Hapus
+                </button>
+            </div>
+        ) : (
+            <div className="w-full h-12">
+                <input
+                    type="file"
+                    id="fileCV"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleFileChange}
+                    required
+                    className="hidden"
+                />
+                <label
+                    htmlFor="fileCV"
+                    className={`cursor-pointer w-full h-full inline-flex items-center justify-center text-gray-500 font-medium text-base
+                             px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-gray-50
+                             hover:border-emerald-500 hover:text-emerald-600 transition duration-200 ease-in-out`}
+                >
+                    <Icons.Upload className="w-5 h-5 mr-2"/>
+                    Pilih File CV (.pdf, .doc, .docx) - Maks. 10 MB
+                </label>
+            </div>
+        )}
+
+        <p className="mt-1 text-xs text-gray-500">
+            Unggah CV dalam format .pdf, .doc, atau .docx. Ukuran file maksimal 10 MB.
+        </p>
+
+        {validationError && (
+            <div className="mt-3 p-3 bg-red-50 border border-red-300 text-red-700 rounded-lg flex items-start shadow-sm" role="alert">
+                <Icons.Info className="w-5 h-5 mr-3 mt-0.5 flex-shrink-0"/>
+                <p className="text-sm font-medium">{validationError}</p>
+            </div>
+        )}
+    </div>
+);
+
+
+const FormUnggahCv = ({ onFormSubmit }) => {
     const [namaLengkap, setNamaLengkap] = useState('');
     const [nomorTelp, setNomorTelp] = useState('');
     const [npm, setNPM] = useState('');
     const [email, setEmail] = useState('');
     const [posisi, setPosisi] = useState('');
     const [keterangan, setKeterangan] = useState('');
-    const [validationError, setValidationError] = useState(''); 
+    const [fileCV, setFileCV] = useState(null);
+    const [fileError, setFileError] = useState('');
+    const [formError, setFormError] = useState('');
+    
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const onFormSubmit = (data) => {
-        console.log("Data CV berhasil dikirim (Simulasi):", data);
-    }
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setFileError('');
+        const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        const maxSize = 10 * 1024 * 1024;
+
+        if (file) {
+            if (!allowedTypes.includes(file.type)) {
+                setFileError('Tipe file tidak didukung. Mohon unggah PDF atau DOC/DOCX.');
+                setFileCV(null);
+                return;
+            }
+            if (file.size > maxSize) {
+                setFileError('Ukuran file melebihi batas 10MB.');
+                setFileCV(null);
+                return;
+            }
+            setFileCV(file);
+        } else {
+            setFileCV(null);
+        }
+    };
+
+    const handleRemoveFile = () => {
+        setFileCV(null);
+        setFileError('');
+        const fileInput = document.getElementById('fileCV');
+        if (fileInput) fileInput.value = null;
+    };
+
+    const handleModalCloseAndNavigate = () => {
+        setIsModalOpen(false);
+        router.visit(route('layanan.tabel.cv.review')); 
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setValidationError(''); 
+        setFormError('');
 
-        if (!namaLengkap || !posisi || !nomorTelp || !email) {
-            setValidationError("Harap lengkapi semua kolom wajib (*) sebelum melanjutkan.");
+        if (!namaLengkap || !posisi || !nomorTelp || !email || !npm || !fileCV) {
+            setFormError("Harap lengkapi semua kolom wajib (*) dan unggah file CV.");
             return;
         }
-        
-        const newData = {
-            id: Date.now(),
+
+        if (fileError) {
+             setFormError("Terdapat masalah pada file CV. Harap periksa kembali.");
+            return;
+        }
+
+        const dataSubmission = {
+            media: fileCV.name,
             namaLengkap,
             nomorTelp,
             npm,
             email,
             posisi,
-            keterangan: keterangan || `Tinjauan untuk ${namaLengkap} - Posisi: ${posisi}.`,
-            status: 'Diproses',
-            hasil: 'Menunggu',
+            keterangan: keterangan || '-',
+            submissionDate: new Date().toISOString(),
         };
 
-        onFormSubmit(newData);
-        alert("Formulir berhasil disimulasikan!"); 
-        
-        setNamaLengkap('');
-        setNomorTelp('');
-        setNPM('');
-        setEmail('');
-        setPosisi('');
-        setKeterangan('');
+        localStorage.setItem('cvSubmissionData', JSON.stringify(dataSubmission));
+
+        if (onFormSubmit) onFormSubmit(dataSubmission);
+
+        setIsModalOpen(true);
     };
 
     return (
-        <div className="min-h-screen flex items-start justify-center p-4 sm:p-8">
-            <div className="w-full max-w-6xl mt-12 mb-12 bg-white rounded-3xl shadow-2xl p-6 sm:p-10 lg:p-14 border border-gray-100">
-                
-                {/* Header Formulir */}
-                <div className="text-center mb-10">
-                    <h2 className="text-4xl font-extrabold font-sans text-emerald-700 mb-3 tracking-tight">
-                        Formulir Tinjauan CV
-                    </h2>
-                    <p className="text-lg text-gray-500">
-                        Lengkapi data di bawah untuk memulai proses peninjauan CV Anda.
-                    </p>
-                    <div className="h-1 w-24 bg-emerald-500 mx-auto mt-4 rounded-full"></div>
-                </div>
-                
-                <hr className="my-8 border-t border-gray-200"/>
+        <div 
+            className="min-h-screen flex items-center justify-center p-4 sm:p-8"
+            style={{
+                backgroundImage: 'url("/images/bg-dreamina.jpg")', 
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundAttachment: 'fixed'
+            }}
+        >
+            <div className="w-full max-w-5xl bg-white rounded-xl shadow-2xl p-6 sm:p-10 lg:p-12 border border-gray-200">
+
+                <h2 className="text-3xl font-extrabold text-gray-900 mb-8 text-center">Formulir Unggah CV</h2>
 
                 <form onSubmit={handleSubmit}>
 
-                    <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                        <Icons.User className="w-6 h-6 mr-3 text-emerald-600"/>
-                        Data Pribadi
-                    </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 mb-8">
-                        {/* Nama Lengkap */}
-                        <InputGroup 
-                            id="namaLengkap" 
-                            label="Nama Lengkap" 
-                            type="text"
-                            placeholder="Masukkan nama lengkap Anda"
-                            value={namaLengkap}
-                            onChange={(e) => setNamaLengkap(e.target.value)}
-                            icon={Icons.User}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+                        <InputGroupWithIcon
+                            id="namaLengkap" label="Nama Lengkap" type="text" placeholder="Nama Lengkap Anda"
+                            value={namaLengkap} onChange={(e) => setNamaLengkap(e.target.value)}
                         />
-
-                        {/* E-mail */}
-                        <InputGroup 
-                            id="email" 
-                            label="E-mail" 
-                            type="email"
-                            placeholder="alamat@email.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            icon={Icons.Mail}
+                        <InputGroupWithIcon
+                            id="nomorTelp" label="Nomor Telepon" type="tel" placeholder="Contoh: 081234567890"
+                            value={nomorTelp} onChange={(e) => setNomorTelp(e.target.value)}
                         />
-
-                        {/* Nomor Telepon */}
-                        <InputGroup 
-                            id="nomorTelp" 
-                            label="Nomor Telepon" 
-                            type="tel"
-                            placeholder="Contoh: 0812xxxxxx"
-                            value={nomorTelp}
-                            onChange={(e) => setNomorTelp(e.target.value)}
-                            icon={Icons.Phone}
+                        <InputGroupWithIcon
+                            id="npm" label="NPM" type="text" placeholder="Nomor Pokok Mahasiswa"
+                            value={npm} onChange={(e) => setNPM(e.target.value)}
                         />
-
-                        {/* NPM */}
-                        <InputGroup 
-                            id="npm" 
-                            label="NPM" 
-                            type="text"
-                            placeholder="Jika berlaku"
-                            value={npm}
-                            onChange={(e) => setNPM(e.target.value)}
-                            icon={Icons.GraduationCap}
-                            
+                        <InputGroupWithIcon
+                            id="email" label="E-mail" type="email" placeholder="Alamat E-mail Aktif"
+                            value={email} onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
-                    
-                    <hr className="my-8 border-t border-gray-200"/>
 
-                    <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                        <Icons.Briefcase className="w-6 h-6 mr-3 text-emerald-600"/>
-                        Detail Tinjauan
-                    </h3>
+                    <hr className="my-6 border-gray-200" />
 
-                    {/* Posisi Target Pekerjaan */}
-                    <InputGroup 
-                        id="posisi" 
-                        label="Posisi/Target Pekerjaan" 
-                        type="text"
-                        placeholder="Contoh: Senior Frontend Developer"
-                        value={posisi}
-                        onChange={(e) => setPosisi(e.target.value)}
-                        icon={Icons.Briefcase}
+                    <InputGroupWithIcon
+                        id="posisi" label="Posisi / Target Pekerjaan" type="text"
+                        placeholder="Contoh: Quality Assurance Engineer"
+                        value={posisi} onChange={(e) => setPosisi(e.target.value)} className="w-full"
                     />
 
-                    {/* Keterangan */}
-                    <div className="mb-10">
+                    <FileUploadInput
+                        fileCV={fileCV} handleFileChange={handleFileChange}
+                        handleRemoveFile={handleRemoveFile} validationError={fileError}
+                    />
+
+                    <div className="mb-8">
                         <label htmlFor="keterangan" className="block text-sm font-semibold text-gray-700 mb-2">
                             Keterangan <span className="text-gray-500 ml-2 font-normal text-sm">(Opsional)</span>
                         </label>
                         <textarea
-                            id="keterangan"
-                            rows="4"
-                            value={keterangan}
+                            id="keterangan" rows="4" value={keterangan}
                             onChange={(e) => setKeterangan(e.target.value)}
-                            placeholder="Tuliskan catatan khusus atau fokus yang Anda inginkan dari tinjauan ini. (Maksimal 500 karakter)"
+                            placeholder="Tambahkan keterangan atau fokus khusus untuk peninjauan (opsional). Maks. 500 karakter."
                             maxLength={500}
-                            className="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-inner text-gray-800 resize-none 
-                                       focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition duration-200 ease-in-out
-                                       placeholder:text-gray-400"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm text-gray-800 resize-none
+                                             focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition duration-200 ease-in-out
+                                             placeholder:text-gray-400"
                         ></textarea>
                     </div>
 
-                    {/* Pesan Error Validasi */}
-                    {validationError && (
-                        <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg" role="alert">
-                            <p className="font-bold">Kesalahan!</p>
-                            <p className="text-sm">{validationError}</p>
+                    {formError && (
+                        <div className="mb-6 p-4 bg-red-50 border border-red-300 text-red-700 rounded-lg flex items-start shadow-md" role="alert">
+                            <Icons.Info className="w-5 h-5 mr-3 mt-0.5 flex-shrink-0"/>
+                            <p className="text-sm font-medium">{formError}</p>
                         </div>
                     )}
 
-                    {/* Button Simpan/Submit */}
-                    <button
-                        type="submit"
-                        className="w-full py-4 px-4 rounded-xl shadow-lg text-xl font-extrabold text-white 
-                                   bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-offset-2 
-                                   focus:ring-emerald-500/70 transition duration-300 transform hover:scale-[1.005] active:scale-[0.99]"
-                    >
-                        Simpan
-                    </button>
+                    <div className="flex justify-center mt-6">
+                        <button
+                            type="submit"
+                            className="w-full sm:w-auto py-3 px-12 rounded-lg shadow-xl text-lg font-bold text-white
+                                     bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-offset-2
+                                     focus:ring-emerald-500/70 transition duration-300 transform hover:scale-[1.01] active:scale-[0.99]"
+                        >
+                            Simpan
+                        </button>
+                    </div>
                 </form>
             </div>
+
+            <CustomSuccessModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)} 
+                onNavigate={handleModalCloseAndNavigate} 
+            />
         </div>
     );
 };
 
-export default FormTinjauanCV;
+export default FormUnggahCv;
