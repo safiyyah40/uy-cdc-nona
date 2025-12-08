@@ -18,7 +18,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Login');
+        return Inertia::render('Auth/Login', [
+            'canResetPassword' => Route::has('password.request'),
+            'status' => session('status'),
+        ]);
     }
 
     /**
@@ -29,14 +32,14 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        // Cek apakah user perlu melengkapi profil
         $user = Auth::user();
         
+        // Cek apakah user perlu melengkapi profil?
         if ($user->needsProfileCompletion()) {
             return redirect()->route('profile.complete');
         }
 
-        return redirect()->intended(route('dashboard'));
+       return redirect()->intended(route('dashboard'));
     }
 
     /**
@@ -45,6 +48,7 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

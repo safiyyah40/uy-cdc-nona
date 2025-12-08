@@ -14,13 +14,15 @@ return new class extends Migration
         Schema::create('counselors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('title'); // Jabatan/Gelar
-            $table->string('faculty')->nullable(); // Fakultas
-            $table->string('expertise')->nullable(); // Keahlian
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('title');
+            $table->string('faculty')->nullable();
+            $table->string('expertise')->nullable();
             $table->text('bio')->nullable();
             $table->string('photo_path')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->integer('order_column')->default(0); // Untuk sorting
+            $table->integer('order_column')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

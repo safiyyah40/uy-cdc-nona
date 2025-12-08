@@ -172,9 +172,12 @@ function MobileDropdown({ title, children }) {
 // --- KOMPONEN LAYOUT UTAMA ---
 export default function MainLayout({ children }) {
     const { auth } = usePage().props;
+    const user = auth.user;
+    const isCounselor = user?.role === 'konselor';
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const profileDropdownRef = useRef(null);
+    
 
     // Tutup dropdown profil jika klik di luar
     useEffect(() => {
@@ -231,7 +234,7 @@ export default function MainLayout({ children }) {
                             </NavDropdown>
 
                             <NavDropdown title="LAYANAN" basePath="/layanan">
-                                <DropdownLink href={route('layanan.konsultasi')}>KONSULTASI</DropdownLink>
+                                <DropdownLink href="/layanan/konsultasi">KONSULTASI</DropdownLink>
                                 <DropdownLink href={route('layanan.cv.review')}>CV REVIEW</DropdownLink>
                                 <DropdownLink href={route('layanan.tes.minat.bakat')}>TES MINAT DAN BAKAT</DropdownLink>
                             </NavDropdown>

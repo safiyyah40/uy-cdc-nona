@@ -8,7 +8,6 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -20,6 +19,9 @@ class User extends Authenticatable
         'name',
         'username',
         'id_number',
+        'faculty',
+        'study_program',
+        'gender',
         'email',
         'phone',
         'photo_url',
@@ -47,18 +49,26 @@ class User extends Authenticatable
      */
     public function needsProfileCompletion(): bool
     {
-        // Jika is_profile_complete true, berarti sudah lengkap
+        // Jika flag manual sudah true, berarti sudah oke
         if ($this->is_profile_complete) {
             return false;
         }
 
-        // Jika phone kosong, perlu dilengkapi
-        if (empty($this->phone)) {
+        // Cek Data Wajib UNTUK SEMUA USER
+        // Phone wajib. Gender wajib (tapi bisa jadi null dari LDAP, maka harus diisi user)
+        if (empty($this->phone) || empty($this->gender)) {
             return true;
         }
 
-        // Auto-fix jika phone ada tapi flag masih false
+        // Khusus Mahasiswa wajib punya Fakultas & Prodi
+        if ($this->role === 'mahasiswa') {
+            if (empty($this->faculty) || empty($this->study_program)) {
+                return true;
+            }
+        }
+
         $this->update(['is_profile_complete' => true]);
+        
         return false;
     }
 

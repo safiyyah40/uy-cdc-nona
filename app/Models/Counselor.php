@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Counselor extends Model
@@ -12,11 +11,16 @@ class Counselor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'title',
-        'photo_path',
-        'is_active',
-        'order_column',
+        'name', 
+        'title', 
+        'faculty', 
+        'expertise', 
+        'bio', 
+        'photo_path', 
+        'email', 
+        'phone', 
+        'is_active', 
+        'order_column'
     ];
     protected $appends = ['photo_url'];
 
@@ -32,5 +36,37 @@ class Counselor extends Model
     public function slots(): HasMany
     {
         return $this->hasMany(CounselorSlot::class);
+    }
+
+     public function bookings()
+    {
+        return $this->hasMany(CounselingBooking::class);
+    }
+
+    public function reports()
+    {
+        return $this->hasMany(CounselingReport::class);
+    }
+
+     // Helper Methods
+    public function getAvailableSlots()
+    {
+        return $this->slots()
+            ->where('is_available', true)
+            ->where('date', '>=', now()->format('Y-m-d'))
+            ->orderBy('date')
+            ->orderBy('start_time')
+            ->get();
+    }
+
+    // Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('order_column');
     }
 }

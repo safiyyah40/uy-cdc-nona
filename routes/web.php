@@ -3,7 +3,6 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfilKonselorController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ProfileController;
@@ -13,16 +12,16 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\CampusHiringController;
 use App\Http\Controllers\TipsDanTrikController;
 use App\Http\Controllers\SeminarController;
-use App\Http\Controllers\KonsultasiController;
 use App\Http\Controllers\SertifikasiController;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Berita;
 use App\Models\Magang;
 use App\Models\Loker;
 use App\Models\BerandaSlide;
 use App\Http\Controllers\MagangController;
 use App\Http\Controllers\LokerController;
+use App\Http\Controllers\KonsultasiController;
+use App\Http\Controllers\KonselorController;
 
 Route::get('/', function () {
     $slides = BerandaSlide::where('is_active', true)
@@ -110,35 +109,47 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/akun/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/akun/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-    // ROUTE KHUSUS KONSELOR
-    Route::middleware(['auth'])->prefix('konselor')->name('konselor.')->group(function () {
-        // Menampilkan tabel daftar konsultasi
-        Route::get('/table-konsultasi-konselor', function () {
-            $consultations = [];
-            return Inertia::render('Konselor/TableKonsultasiKonselor', [
-                'consultations' => $consultations,
-                'currentRoute' => 'table_konsultasi'
-            ]);
-        })->name('table_konsultasi');
-
-        // Route Detail Formulir Mahasiswa (diakses oleh tombol 'Lihat')
-        Route::get('/konsultasi/{id}', function ($id) {
-            return Inertia::render('Konselor/FormulirDetailMahasiswa');
-        })->name('konsultasi.show');
-
-        // Route Aksi Setujui (Dummy)
-        Route::post('/konsultasi/{id}/setujui', function ($id) {
-            return redirect()->back()->with('success', 'Dummy Setujui berhasil!');
-        })->name('approve');
-
-        // Route Aksi Tolak (Dummy)
-    Route::post('/konsultasi/{id}/tolak', function ($id) {
-            return redirect()->back()->with('error', 'Dummy Tolak berhasil!');
-        })->name('reject');
-    });
 });
 
-// GROUP PUBLIC
+// AREA KONSELOR
+Route::middleware(['auth', 'verified'])->prefix('konselor')->name('konselor.')->group(function () {
+
+    // PORTAL KONSELOR (Halaman Input Jadwal / KonsultasiKonselor.jsx)
+    Route::get('/dashboard', [KonselorController::class, 'index'])->name('dashboard');
+
+    // HALAMAN TABEL BOOKING
+    Route::get('/booking-list', [KonselorController::class, 'tableKonsultasi'])->name('table_konsultasi');
+
+    // AKSI (Simpan/Hapus Slot)
+    Route::post('/slots', [KonselorController::class, 'storeSlot'])->name('slots.store');
+
+    // EDIT SLOT
+    Route::patch('/slots/{slotId}', [KonselorController::class, 'updateSlot'])->name('slots.update');
+
+    Route::delete('/slots/{slotId}', [KonselorController::class, 'deleteSlot'])->name('slots.delete');
+    // DETAIL & APPROVAL
+    Route::get('/konsultasi/{id}', [KonselorController::class, 'show'])->name('konsultasi.show');
+    Route::post('/konsultasi/{id}/approve', [KonselorController::class, 'approve'])->name('approve');
+    Route::post('/konsultasi/{id}/reject', [KonselorController::class, 'reject'])->name('reject');
+    Route::post('/konsultasi/{id}/complete', [KonselorController::class, 'complete'])->name('complete');
+    Route::post('/konsultasi/{id}/report', [KonselorController::class, 'storeReport'])->name('report.store');
+});
+
+// AREA MAHASISWA (Booking Konsultasi)
+Route::get('/layanan/konsultasi', [KonsultasiController::class, 'index'])->name('layanan.konsultasi');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/layanan/konsultasi/booking', [KonsultasiController::class, 'showBookingForm'])->name('konsultasi.booking');
+    Route::post('/layanan/konsultasi/submit', [KonsultasiController::class, 'store'])->name('konsultasi.submit');
+
+    // LIST RIWAYAT
+    Route::get('/layanan/konsultasi/riwayat', [KonsultasiController::class, 'userList'])->name('konsultasi.list');
+
+    // BARU: DETAIL KONSULTASI (Harus ada parameter ID)
+    Route::get('/layanan/konsultasi/riwayat/{id}', [KonsultasiController::class, 'show'])->name('konsultasi.show');
+
+    Route::post('/layanan/konsultasi/cancel/{id}', [KonsultasiController::class, 'cancel'])->name('konsultasi.cancel');
+});
 
 // Profil
 Route::get('/profil/puskaka', [ProfilPuskakaController::class, 'index'])->name('profil.puskaka');
@@ -156,17 +167,17 @@ Route::get('/program/orientasi-dunia-kerja', function () {
 
 Route::prefix('program')->name('program.')->group(function () {
 
-// Seminar
-Route::get('/seminar', [SeminarController::class, 'index'])->name('seminar');
-Route::get('/seminar/{id}/{slug}', [SeminarController::class, 'show'])->name('seminar.show');
+    // Seminar
+    Route::get('/seminar', [SeminarController::class, 'index'])->name('seminar');
+    Route::get('/seminar/{id}/{slug}', [SeminarController::class, 'show'])->name('seminar.show');
 
-// Campus Hiring
-Route::get('/campus-hiring', [CampusHiringController::class, 'index'])->name('campus.hiring');
-Route::get('/campus-hiring/{id}/{slug}', [CampusHiringController::class, 'show'])->name('campus.hiring.show');
+    // Campus Hiring
+    Route::get('/campus-hiring', [CampusHiringController::class, 'index'])->name('campus.hiring');
+    Route::get('/campus-hiring/{id}/{slug}', [CampusHiringController::class, 'show'])->name('campus.hiring.show');
 
-// Tips & Trik
-Route::get('/tips-dan-trik', [TipsDanTrikController::class, 'index'])->name('tips-dan-trik');
-Route::get('/tips-dan-trik/{id}/{slug}', [TipsDanTrikController::class, 'show'])->name('tips-dan-trik.show');
+    // Tips & Trik
+    Route::get('/tips-dan-trik', [TipsDanTrikController::class, 'index'])->name('tips-dan-trik');
+    Route::get('/tips-dan-trik/{id}/{slug}', [TipsDanTrikController::class, 'show'])->name('tips-dan-trik.show');
 
     // Berita
     Route::get('/berita', [BeritaController::class, 'index'])->name('berita');
@@ -175,36 +186,19 @@ Route::get('/tips-dan-trik/{id}/{slug}', [TipsDanTrikController::class, 'show'])
 
 // Route Layanan
 Route::prefix('layanan')->group(function () {
-Route::get('/konsultasi', [ProfilKonselorController::class, 'layanan'])
-        ->name('layanan.konsultasi');
 
-Route::get('/konsultasi/booking', [KonsultasiController::class, 'showBookingForm'])
-        ->name('konsultasi.booking')
-        ->middleware(['auth', 'verified']);
-
-// Aksi Submit Form (POST)
-Route::post('/konsultasi/submit', [KonsultasiController::class, 'store'])
-        ->name('konsultasi.submit')
-        ->middleware(['auth', 'verified']);
-
-Route::get('/cv-review', function () {
+    Route::get('/cv-review', function () {
         return Inertia::render('Layanan/CvReview');
     })->name('layanan.cv.review');
 
-Route::get('/tabel-cv-review', function () {
+    Route::get('/tabel-cv-review', function () {
         return Inertia::render('Layanan/TabelCvReview');
     })->name('layanan.tabel.cv.review');
 
-Route::get('/tes-minat-bakat', function () {
+    Route::get('/tes-minat-bakat', function () {
         return Inertia::render('Layanan/TesMinatBakat');
     })->name('layanan.tes.minat.bakat');
 });
-
-Route::get('/konsultasi/daftar-saya', function () {
-    return Inertia::render('Konsultasi/UserCounselingList', [
-        'auth' => Auth::check() ? ['user' => Auth::user()] : null,
-    ]);
-})->middleware(['auth'])->name('konsultasi.list');
 
 // Route Detail Berita
 Route::get('/berita/{id}/{slug}', function ($id) {
