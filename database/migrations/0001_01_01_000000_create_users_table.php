@@ -13,30 +13,23 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            
-            // Field untuk LDAP integration
             $table->string('username')->unique()->nullable();
-            $table->string('id_number')->nullable(); // NIP/NPM
+            $table->string('id_number')->nullable();
+            $table->string('faculty')->nullable();
+            $table->string('study_program')->nullable();
+            $table->string('gender', 10)->nullable();
             $table->string('phone')->nullable();
             $table->boolean('is_profile_complete')->default(false);
-            
-            // Password nullable karena LDAP
             $table->string('password')->nullable();
-            
-            // Role system
-            $table->enum('role', ['mahasiswa', 'konselor', 'admin', 'super_admin'])
-                  ->default('mahasiswa');
-            
-            // Photo profile
+            $table->enum('role', ['mahasiswa', 'konselor', 'admin', 'super_admin'])->default('mahasiswa');
             $table->string('photo_url')->nullable();
-            
             $table->rememberToken();
             $table->timestamps();
             
             // Indexes untuk performa
             $table->index('username');
             $table->index('id_number');
-            $table->index('role');
+            $table->index(['faculty', 'study_program']);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

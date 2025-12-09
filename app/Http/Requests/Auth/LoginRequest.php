@@ -30,7 +30,11 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // Ambil data dari Simulasi LDAP
+        if (Auth::attempt($this->only('username', 'password'), $this->boolean('remember'))) {
+            RateLimiter::clear($this->throttleKey());
+            return;
+        }
+
         $ldapData = $this->authenticateWithLDAP(
             $this->input('username'),
             $this->input('password')
@@ -43,62 +47,49 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        // Cek apakah user sudah ada di database lokal?
-        $user = User::where('username', $ldapData['username'])->first();
-
-        if ($user) {
-            $user->update([
+        // SYNC KE DATABASE
+        $user = User::updateOrCreate(
+            ['username' => $ldapData['username']],
+            [
                 'name' => $ldapData['name'],
-                'id_number' => $ldapData['id_number'],
                 'email' => $ldapData['email'],
-                'password' => $ldapData['password'] ? Hash::make($ldapData['password']) : $user->password,
-                'role' => $ldapData['role'],
-            ]);
-        } else {
-            $user = User::create([
-                'username' => $ldapData['username'],
-                'name' => $ldapData['name'],
                 'id_number' => $ldapData['id_number'],
-                'email' => $ldapData['email'],
-                'password' => $ldapData['password'] ? Hash::make($ldapData['password']) : null,
                 'role' => $ldapData['role'],
-                'phone' => null,
-                'is_profile_complete' => false
-            ]);
-        }
+                'password' => Hash::make($ldapData['password']),
+                'faculty' => $ldapData['faculty'] ?? null,
+                'study_program' => $ldapData['study_program'] ?? null,
+                'gender' => $ldapData['gender'] ?? null,
+            ]
+        );
 
-        // Login User
         Auth::login($user, $this->boolean('remember'));
-
         RateLimiter::clear($this->throttleKey());
     }
     
+    // DATA DUMMY LDAP
     private function authenticateWithLDAP(string $username, string $password): ?array
     {
         $ldapUsers = [
             'admin' => [
                 'username' => 'admin',
-                'name' => 'Admin CDC',
+                'name' => 'Administrator CDC',
                 'id_number' => '199001012020011001',
                 'email' => 'admin@yarsi.ac.id',
                 'password' => 'password',
                 'role' => 'admin',
+                'faculty' => 'Rektorat',
+                'gender' => 'L',
             ],
             'konselor' => [
                 'username' => 'konselor',
-                'name' => 'Konselor CDC',
+                'name' => 'Dr. Siti Konselor, M.Psi',
                 'id_number' => '198505152015011002',
                 'email' => 'konselor@yarsi.ac.id',
                 'password' => 'password',
                 'role' => 'konselor',
-            ],
-            'budi.konselor' => [
-                'username' => 'budi.konselor',
-                'name' => 'Budi Konselor',
-                'id_number' => '198505152015011003',
-                'email' => 'budi.konselor@yarsi.ac.id',
-                'password' => 'budikonselor123',
-                'role' => 'konselor',
+                'faculty' => 'Psikologi',
+                'study_program' => 'Psikologi',
+                'gender' => 'P',
             ],
             'adzana.ashel' => [
                 'username' => 'adzana.ashel',
@@ -107,14 +98,31 @@ class LoginRequest extends FormRequest
                 'email' => 'adzana.ashel@yarsi.ac.id',
                 'password' => 'adzanaashel123',
                 'role' => 'mahasiswa',
+                'faculty' => 'Teknologi Informasi',
+                'study_program' => 'Teknik Informatika',
+                'gender' => 'P',
             ],
             'farhan.jijima' => [
                 'username' => 'farhan.jijima',
                 'name' => 'Farhan Jijima',
-                'id_number' => '1402021201',
+                'id_number' => '1402022001',
                 'email' => 'farhan.jijima@yarsi.ac.id',
                 'password' => 'farhanjijima123',
                 'role' => 'mahasiswa',
+                'faculty' => 'Fakultas Ekonomi dan Bisnis',
+                'study_program' => 'Manajemen',
+                'gender' => 'L',
+            ],
+            'maba.baru' => [
+                'username' => 'maba.baru',
+                'name' => 'Mahasiswa Baru',
+                'id_number' => '1402024001',
+                'email' => 'maba@yarsi.ac.id',
+                'password' => 'maba123',
+                'role' => 'mahasiswa',
+                'faculty' => null,
+                'study_program' => null,
+                'gender' => 'L',
             ],
         ];
 

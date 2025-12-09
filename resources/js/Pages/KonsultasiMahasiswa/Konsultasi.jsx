@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import MainLayout from "@/Layouts/MainLayout";
 import Footer from "@/Components/Footer";
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
-import { Head, Link, usePage, router } from "@inertiajs/react"; // Tambah router
+import { Head, Link, usePage, router } from "@inertiajs/react";
 import { 
     Search, ChevronLeft, ChevronRight, 
-    ArrowRight, Briefcase, Calendar, Clock, Lock, Check // Tambah Calendar & Clock
+    ArrowRight, Briefcase, Calendar, Clock, Lock, Check , History
 } from "lucide-react";
 
-// --- ICON COMPONENTS (Custom/Manual SVG) ---
+// ICON COMPONENTS
 const Icons = {
     Academic: () => (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -18,11 +18,11 @@ const Icons = {
     ),
 };
 
-// --- KOMPONEN KARTU KONSELOR (Mahasiswa/Tamu View) ---
+// KOMPONEN KARTU KONSELOR (Mahasiswa/Tamu View)
 const CounselorCard = ({ counselor, user }) => {
     const [imageError, setImageError] = useState(false);
     
-    // FIX 1: Definisikan state untuk slot yang dipilih
+    // state untuk slot yang dipilih
     const [selectedSlot, setSelectedSlot] = useState(null);
     
     const isGuest = !user;
@@ -34,7 +34,7 @@ const CounselorCard = ({ counselor, user }) => {
         return isGuest ? "/login" : "/layanan/konsultasi/booking";
     };
 
-    // FIX 2: Buat fungsi handleBooking
+    // Fungsi handleBooking
     const handleBooking = () => {
         if (isGuest) {
             router.visit('/login');
@@ -83,7 +83,7 @@ const CounselorCard = ({ counselor, user }) => {
             <div className="md:w-3/5 p-4 flex flex-col justify-between bg-white">
                 <div>
                     <div className="flex items-center gap-2 mb-3">
-                        {/* FIX 3: Gunakan Calendar yang sudah diimport */}
+                        {/* Calendar yang sudah diimport */}
                         <div className="p-1 bg-emerald-800/10 text-emerald-800 rounded"><Calendar className="w-4 h-4" /></div>
                         <h4 className="font-semibold text-xs text-gray-800">Pilih Jadwal Tersedia</h4>
                     </div>
@@ -168,7 +168,7 @@ const HeroSection = ({ user, scrollToList, isCounselorView = false }) => {
 
     return (
         <div className="min-h-screen bg-white relative overflow-hidden flex items-center">
-            {/* Background Blob/Animation */}
+            {/* Background */}
             <div className="absolute -top-24 -right-24 w-[600px] h-[600px] bg-[#00CA65] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob pointer-events-none"></div>
             <div className="absolute top-1/2 -left-24 w-[400px] h-[400px] bg-[#00CA65] rounded-full mix-blend-multiply filter blur-3xl opacity-20 pointer-events-none"></div>
 
@@ -206,6 +206,16 @@ const HeroSection = ({ user, scrollToList, isCounselorView = false }) => {
                                         {mainButtonText}
                                     </button>
                                 )}
+                                {!isCounselorView && user && (
+                                    <Link 
+                                        href="/layanan/konsultasi/riwayat" // Pastikan route ini sesuai di web.php
+                                        className="px-8 py-4 bg-white text-[#004d40] border-2 border-[#004d40] font-bold rounded-xl hover:bg-gray-50 shadow-lg transition-all transform hover:-translate-y-1 inline-flex items-center gap-2"
+                                    >
+                                        <History className="w-5 h-5" />
+                                        Riwayat Konseling
+                                    </Link>
+                                )}
+
                                 {!user && !isCounselorView && (
                                     <Link href="/login" className="px-8 py-4 bg-white text-[#004d40] border border-[#004d40] font-bold rounded-xl hover:bg-gray-50 transition-all">
                                         Masuk ke Akunmu
@@ -341,5 +351,4 @@ const Konsultasi = ({ counselors = [] }) => {
         </MainLayout>
     );
 };
-
 export default Konsultasi;
