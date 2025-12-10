@@ -34,9 +34,9 @@ class CounselingReport extends Model
     // Helper
     public function getPhotosUrlAttribute()
     {
-        if (!$this->documentation_photos) return [];
+        if (!$this->getFilesUrlAttribute) return [];
         
-        return collect($this->documentation_photos)->map(function($path) {
+        return collect($this->documentation_files)->map(function($path) {
             return asset('storage/' . $path);
         })->toArray();
     }

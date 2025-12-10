@@ -27,11 +27,11 @@ const SuccessModal = ({ isOpen, waUrl, onNavigate }) => {
                     </div>
                     
                     <h3 className="text-2xl font-extrabold text-gray-900 mb-3 font-serif">
-                        Booking Berhasil!
+                        Reservasi Berhasil!
                     </h3>
                     
                     <p className="text-gray-600 mb-8 text-sm leading-relaxed">
-                        Data booking Anda telah tersimpan. Mohon tunggu verifikasi maksimal <strong>2x24 jam</strong>. 
+                        Data Reservasi Sesi Anda telah tersimpan. Mohon tunggu verifikasi maksimal <strong>2x24 jam</strong>. 
                         Anda dapat menghubungi Admin untuk konfirmasi lebih cepat.
                     </p>
 
@@ -191,7 +191,7 @@ const BookingForm = ({ counselor_id, counselor_name, slot_date, slot_time, slot_
                     <Link href={route('layanan.konsultasi')} className="inline-flex items-center text-sm text-gray-500 hover:text-[#004d40] transition mb-4">
                         <ChevronLeft className="w-4 h-4 mr-1" /> Kembali ke Daftar Konselor
                     </Link>
-                    <h1 className="text-3xl font-bold text-gray-900 font-serif">Formulir Booking Konsultasi</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 font-serif">Formulir Resevasi Sesi Konsultasi</h1>
                     <p className="text-gray-600 mt-1">Lengkapi data diri dan detail sesi Anda.</p>
                 </div>
             </div>

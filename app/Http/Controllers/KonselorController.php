@@ -130,7 +130,7 @@ class KonselorController extends Controller
                 'files' => $consultation->report->documentation_files 
                     ? array_map(function($path) {
                         return [
-                            'url' => Storage::url($path),
+                            'url' => asset('storage/' . $path),
                             'name' => basename($path),
                             'is_image' => preg_match('/\.(jpg|jpeg|png|gif)$/i', $path)
                         ];
@@ -303,13 +303,16 @@ public function storeReport(Request $request, $bookingId)
         try {
             // Upload Multiple Files
             $filePaths = [];
-            if ($request->hasFile('documentation_files')) {
-                foreach ($request->file('documentation_files') as $file) {
-                    // Simpan file
-                    $path = $file->store('counseling_reports', 'public');
-                    $filePaths[] = $path;
-                }
+        if ($request->hasFile('documentation_files')) {
+            foreach ($request->file('documentation_files') as $file) {
+                $originalName = $file->getClientOriginalName();
+                $cleanName = str_replace(' ', '_', $originalName);
+                $fileName = time() . '_' . $cleanName;
+                $path = $file->storeAs('counseling_reports', $fileName, 'public');
+                
+                $filePaths[] = $path;
             }
+        }
 
             // Simpan ke Database
             CounselingReport::create([

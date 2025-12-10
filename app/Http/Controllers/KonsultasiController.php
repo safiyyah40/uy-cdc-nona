@@ -17,43 +17,48 @@ class KonsultasiController extends Controller
      * TAMPILAN UNTUK MAHASISWA: LIST KONSELOR
      */
     public function index()
-    {
-        $user = Auth::user();
-        if ($user && $user->role === 'konselor') {
-            return redirect()->route('konselor.dashboard');
-        }
-
-        // Ambil data konselor untuk ditampilkan ke Mahasiswa
-        $counselors = Counselor::with(['slots' => function ($query) {
-            $query->where('is_available', true)
-                ->where('date', '>=', now()->toDateString())
-                ->orderBy('date', 'asc')
-                ->orderBy('start_time', 'asc')
-                ->limit(5);
-        }])
-            ->get()
-            ->map(function ($counselor) {
-                return [
-                    'id' => $counselor->id,
-                    'name' => $counselor->name,
-                    'title' => $counselor->title,
-                    'photo_url' => $counselor->photo_url,
-                    'slots' => $counselor->slots->map(function ($slot) {
-                        return [
-                            'id' => $slot->id,
-                            'date_string' => Carbon::parse($slot->date)->locale('id')->isoFormat('dddd, D MMM'),
-                            'time_string' => substr($slot->start_time, 0, 5) . ' - ' . substr($slot->end_time, 0, 5),
-                        ];
-                    }),
-                ];
-            });
-
-        // Render halaman khusus Mahasiswa
-        return Inertia::render('KonsultasiMahasiswa/Konsultasi', [
-            'counselors' => $counselors,
-            'auth' => ['user' => $user],
-        ]);
+{
+    $user = Auth::user();
+    if ($user && $user->role === 'konselor') {
+        return redirect()->route('konselor.dashboard');
     }
+
+    $counselors = Counselor::with(['slots' => function ($query) {
+        $query->where('is_available', true)
+            ->where('date', '>=', now()->toDateString())
+            ->orderBy('date', 'asc')
+            ->orderBy('start_time', 'asc')
+            ->limit(5);
+    }])
+        ->get()
+        ->map(function ($counselor) {
+            return [
+                'id' => $counselor->id,
+                'name' => $counselor->name,
+                'title' => $counselor->title,
+                'photo_url' => $counselor->photo_url,
+                'slots' => $counselor->slots->map(function ($slot) {
+                    // FORMAT YANG LEBIH JELAS
+                    $date = Carbon::parse($slot->date);
+                    
+                    return [
+                        'id' => $slot->id,
+                        // Format: "Jumat, 12 Des" atau "Jumat, 12 Desember"
+                        'date_string' => $date->locale('id')->isoFormat('dddd, D MMMM'),
+                        // Format: "18:00 - 19:00"
+                        'time_string' => substr($slot->start_time, 0, 5) . ' - ' . substr($slot->end_time, 0, 5),
+                        'raw_date' => $slot->date,
+                        'raw_time' => $slot->start_time,
+                    ];
+                }),
+            ];
+        });
+
+    return Inertia::render('KonsultasiMahasiswa/Konsultasi', [
+        'counselors' => $counselors,
+        'auth' => ['user' => $user],
+    ]);
+}
 
     /**
      * Form Booking (Hanya untuk User Login)

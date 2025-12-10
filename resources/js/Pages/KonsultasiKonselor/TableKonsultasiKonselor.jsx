@@ -49,7 +49,7 @@ const TableKonsultasiKonselor = ({ consultations }) => {
 
                     <div className="text-center mb-12">
                         <h1 className="text-4xl font-extrabold text-[#004d40] font-serif mb-3">
-                            Daftar Booking Masuk
+                            Daftar Sesi Konsultasi Masuk
                         </h1>
                         <p className="text-gray-600 text-lg">Halo, {user.name}. Berikut adalah daftar mahasiswa yang mengajukan konsultasi.</p>
                     </div>
@@ -65,7 +65,7 @@ const TableKonsultasiKonselor = ({ consultations }) => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
                         <div className="bg-white p-8 rounded-2xl shadow-lg border-l-8 border-[#004d40] flex justify-between items-center transform hover:scale-105 transition-transform duration-300">
                             <div>
-                                <p className="text-gray-500 text-base font-semibold uppercase tracking-wide">Total Booking</p>
+                                <p className="text-gray-500 text-base font-semibold uppercase tracking-wide">Total Sesi Konsultasi</p>
                                 <p className="text-4xl font-extrabold text-gray-900 mt-1">{consultations.length}</p>
                             </div>
                             <div className="p-4 bg-emerald-100 rounded-full">

@@ -216,7 +216,7 @@ const CounselorCardSelf = ({ counselor }) => {
 // HERO SECTION
 const HeroSection = ({ user }) => {
     const heroTitle = useScrollFadeIn(0.2);
-    // Mengarahkan ke Tabel Booking List Konselor
+    // Mengarahkan ke Tabel Sesi Konsultasi List Konselor
     const bookingListUrl = route('konselor.table_konsultasi');
 
     return (
@@ -233,7 +233,7 @@ const HeroSection = ({ user }) => {
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00CA65] opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00CA65]"></span>
                                 </span>
-                                Panel Manajemen Konselor
+                                Manajamen Sesi Konsultasi Konselor
                             </div>
                             
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 font-serif text-[#004d40]">
@@ -248,7 +248,7 @@ const HeroSection = ({ user }) => {
                                     href={bookingListUrl}
                                     className="px-8 py-4 bg-[#004d40] text-white font-bold rounded-xl hover:bg-[#00382e] shadow-lg transition-all transform hover:-translate-y-1 inline-flex items-center gap-2 justify-center"
                                 >
-                                    <Briefcase className="w-5 h-5" /> Lihat Permintaan Booking
+                                    <Briefcase className="w-5 h-5" /> Lihat Permintaan Sesi Konsultasi
                                 </Link>
                             </div>
                         </div>

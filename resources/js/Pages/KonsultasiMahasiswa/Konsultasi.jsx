@@ -3,9 +3,9 @@ import MainLayout from "@/Layouts/MainLayout";
 import Footer from "@/Components/Footer";
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 import { Head, Link, usePage, router } from "@inertiajs/react";
-import { 
-    Search, ChevronLeft, ChevronRight, 
-    ArrowRight, Briefcase, Calendar, Clock, Lock, Check , History
+import {
+    Search, ChevronLeft, ChevronRight,
+    ArrowRight, Briefcase, Calendar, Clock, Lock, Check, History
 } from "lucide-react";
 
 // ICON COMPONENTS
@@ -21,10 +21,7 @@ const Icons = {
 // KOMPONEN KARTU KONSELOR (Mahasiswa/Tamu View)
 const CounselorCard = ({ counselor, user }) => {
     const [imageError, setImageError] = useState(false);
-    
-    // state untuk slot yang dipilih
     const [selectedSlot, setSelectedSlot] = useState(null);
-    
     const isGuest = !user;
 
     const getBookingUrl = (slot) => {
@@ -34,7 +31,6 @@ const CounselorCard = ({ counselor, user }) => {
         return isGuest ? "/login" : "/layanan/konsultasi/booking";
     };
 
-    // Fungsi handleBooking
     const handleBooking = () => {
         if (isGuest) {
             router.visit('/login');
@@ -56,11 +52,11 @@ const CounselorCard = ({ counselor, user }) => {
                 <div className="relative mb-4 z-10">
                     <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-white shadow-lg relative bg-white">
                         {counselor.photo_url && !imageError ? (
-                            <img 
-                                src={counselor.photo_url} 
-                                alt={counselor.name} 
-                                onError={() => setImageError(true)} 
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                            <img
+                                src={counselor.photo_url}
+                                alt={counselor.name}
+                                onError={() => setImageError(true)}
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                             />
                         ) : (
                             <div className="w-full h-full bg-[#004d40] flex items-center justify-center text-white">
@@ -83,7 +79,6 @@ const CounselorCard = ({ counselor, user }) => {
             <div className="md:w-3/5 p-4 flex flex-col justify-between bg-white">
                 <div>
                     <div className="flex items-center gap-2 mb-3">
-                        {/* Calendar yang sudah diimport */}
                         <div className="p-1 bg-emerald-800/10 text-emerald-800 rounded"><Calendar className="w-4 h-4" /></div>
                         <h4 className="font-semibold text-xs text-gray-800">Pilih Jadwal Tersedia</h4>
                     </div>
@@ -95,16 +90,15 @@ const CounselorCard = ({ counselor, user }) => {
                                     key={slot.id}
                                     onClick={() => {
                                         if (selectedSlot?.id === slot.id) {
-                                            setSelectedSlot(null); // batalin
+                                            setSelectedSlot(null);
                                         } else {
-                                            setSelectedSlot(slot); // pilih baru
+                                            setSelectedSlot(slot);
                                         }
                                     }}
-                                    className={`flex items-center justify-between p-2 rounded border transition-all text-left w-full ${
-                                        selectedSlot?.id === slot.id 
-                                        ? 'border-emerald-600 bg-emerald-50 ring-1 ring-emerald-600' 
-                                        : 'border-gray-200 hover:border-emerald-400 hover:bg-gray-50'
-                                    }`}
+                                    className={`flex items-center justify-between p-2 rounded border transition-all text-left w-full ${selectedSlot?.id === slot.id
+                                            ? 'border-emerald-600 bg-emerald-50 ring-1 ring-emerald-600'
+                                            : 'border-gray-200 hover:border-emerald-400 hover:bg-gray-50'
+                                        }`}
                                 >
                                     <div>
                                         <div className="text-xs font-bold text-gray-800">{slot.date_string}</div>
@@ -129,17 +123,16 @@ const CounselorCard = ({ counselor, user }) => {
                         <button
                             onClick={handleBooking}
                             disabled={!selectedSlot}
-                            className={`w-full py-2 text-white text-xs font-bold uppercase tracking-wider rounded shadow-md transition-all flex items-center justify-center gap-1 ${
-                                !selectedSlot 
-                                ? 'bg-gray-300 cursor-not-allowed' 
-                                : 'bg-[#004d40] hover:bg-[#00382e] cursor-pointer hover:shadow-lg hover:-translate-y-0.5'
-                            }`}
+                            className={`w-full py-2 text-white text-xs font-bold uppercase tracking-wider rounded shadow-md transition-all flex items-center justify-center gap-1 ${!selectedSlot
+                                    ? 'bg-gray-300 cursor-not-allowed'
+                                    : 'bg-[#004d40] hover:bg-[#00382e] cursor-pointer hover:shadow-lg hover:-translate-y-0.5'
+                                }`}
                         >
-                            {selectedSlot ? 'Lanjut Booking' : 'Pilih Jadwal Dulu'} <ArrowRight className="w-4 h-4" />
+                            {selectedSlot ? 'Lanjut Reservasi Sesi' : 'Pilih Jadwal Dulu'} <ArrowRight className="w-4 h-4" />
                         </button>
                     ) : (
                         <Link href="/login" className="w-full py-2 bg-[#004d40] text-white text-xs font-bold uppercase tracking-wider rounded shadow-md hover:bg-[#00382e] flex items-center justify-center hover:shadow-lg transition-all">
-                            Login untuk Booking
+                            Masuk untuk Reservasi Sesi
                         </Link>
                     )}
                 </div>
@@ -148,17 +141,17 @@ const CounselorCard = ({ counselor, user }) => {
     );
 };
 
-// --- KOMPONEN HERO SECTION ---
+// KOMPONEN HERO SECTION
 const HeroSection = ({ user, scrollToList, isCounselorView = false }) => {
     const heroTitle = useScrollFadeIn(0.2);
 
     const title = isCounselorView ? `SELAMAT DATANG, ${user?.name?.toUpperCase() || 'KONSELOR'}!` : "KONSULTASI";
     const subtext = isCounselorView
-        ? "Anda masuk sebagai Konselor. Kelola jadwal konsultasi, lihat daftar booking, dan akses laporan melalui Dashboard khusus Anda."
+        ? "Anda masuk sebagai Konselor. Kelola jadwal konsultasi, lihat daftar sesi, dan akses laporan melalui Dashboard khusus Anda."
         : "Konsultasi ini hadir sebagai sarana bagi mahasiswa untuk berbagi cerita, mendapatkan arahan, serta menemukan solusi dari berbagai permasalahan akademik maupun personal.";
-    const mainButtonText = isCounselorView ? "Lihat Jadwal Konseling" : (user ? "Lihat Jadwal & Booking" : "Cek Jadwal Konselor");
+    const mainButtonText = isCounselorView ? "Lihat Jadwal Konseling" : (user ? "Lihat Jadwal & Reservasi" : "Cek Jadwal Konselor");
     const mainButtonHref = isCounselorView ? "/konselor/table-konsultasi-konselor" : "#list-konselor";
-    
+
     const handleScroll = (e) => {
         if (!isCounselorView && scrollToList) {
             e.preventDefault();
@@ -183,7 +176,7 @@ const HeroSection = ({ user, scrollToList, isCounselorView = false }) => {
                                 </span>
                                 Career Development Center
                             </div>
-                            
+
                             <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 font-serif ${isCounselorView ? 'text-[#004d40]' : 'text-gray-900'}`}>
                                 {title}
                             </h1>
@@ -207,8 +200,8 @@ const HeroSection = ({ user, scrollToList, isCounselorView = false }) => {
                                     </button>
                                 )}
                                 {!isCounselorView && user && (
-                                    <Link 
-                                        href="/layanan/konsultasi/riwayat" // Pastikan route ini sesuai di web.php
+                                    <Link
+                                        href="/layanan/konsultasi/riwayat"
                                         className="px-8 py-4 bg-white text-[#004d40] border-2 border-[#004d40] font-bold rounded-xl hover:bg-gray-50 shadow-lg transition-all transform hover:-translate-y-1 inline-flex items-center gap-2"
                                     >
                                         <History className="w-5 h-5" />
@@ -248,13 +241,38 @@ const Konsultasi = ({ counselors = [] }) => {
     const isCounselor = user && user.username && user.username.includes('.konselor');
 
     const [searchTerm, setSearchTerm] = useState('');
+    const [scheduleSearch, setScheduleSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
 
-    const filteredCounselors = counselors.filter(c =>
-        (c.name && c.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (c.title && c.title.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+    // FILTER DENGAN JADWAL
+    const filteredCounselors = counselors.filter(c => {
+        // Filter berdasarkan nama/prodi
+        const nameMatch = (c.name && c.name.toLowerCase().includes(searchTerm.toLowerCase())) || (c.title && c.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
+        // Filter berdasarkan jadwal
+        let scheduleMatch = true;
+
+        if (scheduleSearch.trim() !== '') {
+            const search = scheduleSearch.toLowerCase().trim();
+
+            scheduleMatch = c.slots && c.slots.some(slot => {
+                const dateString = (slot.date_string || '').toLowerCase();
+                const timeString = (slot.time_string || '').toLowerCase();
+                const fullSchedule = `${dateString} ${timeString}`;
+                const searchWords = search.split(/[\s,]+/).filter(w => w.length > 0);
+                const allWordsMatch = searchWords.every(word =>
+                    fullSchedule.includes(word)
+                );
+
+                const directMatch = fullSchedule.includes(search);
+
+                return allWordsMatch || directMatch;
+            });
+        }
+
+        return nameMatch && scheduleMatch;
+    });
 
     const totalPages = Math.ceil(filteredCounselors.length / itemsPerPage);
     const currentItems = filteredCounselors.slice(
@@ -292,7 +310,9 @@ const Konsultasi = ({ counselors = [] }) => {
                                 <p className="text-gray-600 mt-2">{user ? "Temukan konselor yang tepat dan atur jadwal konsultasi." : "Jadwal real-time terintegrasi dengan sistem akademik."}</p>
                             </div>
 
-                            <div className="mb-8 flex justify-center">
+                            {/* SEARCH BOX */}
+                            <div className="mb-8 flex flex-col sm:flex-row justify-center gap-4">
+                                {/* Search Nama/Prodi */}
                                 <div className="relative w-full max-w-md">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <Search className="w-5 h-5 text-gray-400" />
@@ -302,6 +322,20 @@ const Konsultasi = ({ counselors = [] }) => {
                                         placeholder="Cari nama dosen atau prodi..."
                                         value={searchTerm}
                                         onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#00CA65] focus:border-transparent shadow-sm"
+                                    />
+                                </div>
+
+                                {/* Search Jadwal */}
+                                <div className="relative w-full max-w-md">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <Calendar className="w-5 h-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Cari jadwal: jumat, 12 desember, 18:00 - 19:00"
+                                        value={scheduleSearch}
+                                        onChange={(e) => { setScheduleSearch(e.target.value); setCurrentPage(1); }}
                                         className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#00CA65] focus:border-transparent shadow-sm"
                                     />
                                 </div>
@@ -332,14 +366,18 @@ const Konsultasi = ({ counselors = [] }) => {
                                     )}
                                 </>
                             ) : (
-                                <div className="text-center py-16"><p className="text-gray-500">Tidak ada konselor yang ditemukan.</p></div>
+                                <div className="text-center py-16">
+                                    <p className="text-gray-500">
+                                        {scheduleSearch ? 'Tidak ada konselor dengan jadwal yang sesuai.' : 'Tidak ada konselor yang ditemukan.'}
+                                    </p>
+                                </div>
                             )}
 
                             {!user && (
                                 <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center rounded-3xl">
                                     <div className="bg-[#004d40] p-5 rounded-full shadow-xl mb-6 ring-4 ring-green-100"><div className="text-white"><Lock className="w-12 h-12" /></div></div>
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-2 font-serif">Akses Booking Terbatas</h3>
-                                    <p className="text-gray-600 max-w-lg mb-8">Silakan masuk menggunakan Akun Portal / SSO Anda untuk melakukan booking sesi.</p>
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-2 font-serif">Akses Reservasi Terbatas</h3>
+                                    <p className="text-gray-600 max-w-lg mb-8">Silakan masuk menggunakan Akun Portal / SSO Anda untuk melakukan reservasi sesi.</p>
                                     <Link href="/login" className="px-8 py-3 bg-[#004d40] hover:bg-[#00382e] text-white font-bold rounded-lg shadow-lg transition-all">Masuk Sekarang</Link>
                                 </div>
                             )}
@@ -351,4 +389,5 @@ const Konsultasi = ({ counselors = [] }) => {
         </MainLayout>
     );
 };
+
 export default Konsultasi;

@@ -21,7 +21,7 @@ const DetailKonsultasi = ({ consultation, auth }) => {
             cancelled: 'bg-gray-100 text-gray-600 border-gray-200',
         };
         const labels = {
-            pending: 'Menunggu Verifikasi',
+            pending: 'Menunggu Persetujuan',
             accepted: 'Disetujui / Akan Datang',
             completed: 'Selesai',
             rejected: 'Ditolak',

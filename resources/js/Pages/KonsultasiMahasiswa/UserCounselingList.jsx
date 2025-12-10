@@ -19,7 +19,7 @@ const getStatusColor = (status) => {
 // Helper Status Label Indonesia
 const getStatusLabel = (status) => {
     const map = {
-        'pending': 'Menunggu Verifikasi',
+        'pending': 'Menunggu Persetujuan',
         'accepted': 'Disetujui',
         'completed': 'Selesai',
         'rejected': 'Ditolak',
@@ -72,7 +72,7 @@ const UserCounselingList = ({ bookings = [] }) => {
                             href={route('layanan.konsultasi')} 
                             className="inline-flex items-center px-6 py-3 bg-[#004d40] text-white rounded-xl font-bold shadow-md hover:bg-[#00382e] transition transform hover:-translate-y-1"
                         >
-                            <ChevronLeft className="w-5 h-5 mr-2" /> Buat Booking Baru
+                            <ChevronLeft className="w-5 h-5 mr-2" /> Buat Sesi Baru
                         </Link>
                     </div>
 
