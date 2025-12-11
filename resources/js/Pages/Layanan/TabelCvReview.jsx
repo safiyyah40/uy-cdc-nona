@@ -100,7 +100,9 @@ const Modal = ({ children, title, onClose, isVisible }) => {
 const TabelCvReview = (props) => {
     const { auth } = usePage().props;
     const user = auth.user || {};
-    const isCounselor = user ? user.username?.includes('.konselor') : false;
+    
+    // --- UPDATED: LOGIKA ROLE BERDASARKAN DATABASE ---
+    const isCounselor = user?.role === 'konselor';
 
     // Inisialisasi data berdasarkan peran
     const initialData = isCounselor ? initialCounselorData : initialUserData;
@@ -167,10 +169,10 @@ const TabelCvReview = (props) => {
     };
 
     const confirmReview = (id) => {
-    console.log("NAVIGATE TO ID:", id); // DEBUG
-    setModal({ isVisible: false, type: null, id: null });
-    router.visit(`/layanan/layanan/konselor/review/${id}`);
-};
+        console.log("NAVIGATE TO ID:", id); // DEBUG
+        setModal({ isVisible: false, type: null, id: null });
+        router.visit(`/layanan/konselor/review/${id}`);
+    };
 
 
     const confirmComplete = () => {
@@ -419,7 +421,7 @@ const TabelCvReview = (props) => {
             <>
                 {/* JUDUL & SAPAAN MAHASISWA */}
                 <h1 className="text-4xl md:text-5xl font-extrabold mb-2 tracking-tight text-gray-900">
-                    Halo, <span className="text-emerald-800">{NAMA_PENGGUNA}</span> !
+                    Halo, <span className="text-emerald-800">{user.name || 'Mahasiswa'}</span>!
                 </h1>
                 <p className="text-xl font-light text-gray-600 mb-8">
                     Status riwayat tinjauan dokumen Anda.
@@ -474,7 +476,6 @@ const TabelCvReview = (props) => {
                                             {/* KOLOM HASIL (Mahasiswa) */}
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <div className="flex items-center justify-center">
-                                                    {/* Fungsi renderHasilContent dari kode asli Anda */}
                                                     {(() => {
                                                         switch (item.status) {
                                                             case 'Selesai':
@@ -642,7 +643,7 @@ const TabelCvReview = (props) => {
                 title={`Mulai Review: ID #${modal.id}`}
                 onClose={() => setModal({ isVisible: false, type: null, id: null })}
             >
-                <p className="text-gray-600 mb-6">Anda akan mulai mereview CV untuk **{modal.item?.user}**. Status tinjauan akan berubah menjadi **Sedang Dikerjakan**.</p>
+                <p className="text-gray-600 mb-6">Anda akan mulai mereview CV untuk {modal.item?.user}. Status tinjauan akan berubah menjadi Sedang Dikerjakan.</p>
                 <div className="flex justify-end space-x-3">
                     <button
                         onClick={() => setModal({ isVisible: false, type: null, id: null })}

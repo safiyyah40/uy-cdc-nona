@@ -42,7 +42,7 @@ class HandleInertiaRequests extends Middleware
                     'study_program' => $request->user()->study_program,
                     'gender' => $request->user()->gender,
                     'phone' => $request->user()->phone,
-                    'role' => $request->user()->roles,
+                    'role' => $request->user()->role,
                     'is_profile_complete' => $request->user()->is_profile_complete,
                 ] : null,
             ],
