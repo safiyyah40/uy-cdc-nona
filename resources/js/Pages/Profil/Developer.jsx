@@ -1,214 +1,280 @@
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
-import { Head } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import Footer from '@/Components/Footer';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Mousewheel, Autoplay, Parallax, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Users, Code, ArrowRight } from 'lucide-react';
+import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 
-import { useInView } from 'react-intersection-observer';
-import React, { useState, useRef, useCallback } from 'react';
-
-const teamMembers = [
-    { name: 'Safiyyah Yahya', npm: '1402023065', title: 'Backend Developer', image: '/images/safiyyah.jfif' },
-    { name: 'Citra Fatika', npm: '1402023014', title: 'Frontend Developer', image: '/images/citra.jfif' },
-    { name: 'Felicia Advi Syabani', npm: '1402023027', title: 'UI/UX Developer', image: '/images/felis.jfif' },
-];
-
-const slideData = [
-    // Slide 1
-    { image: '/images/pf1.jfif' },
-    // Slide 2
-    { image: '/images/pf2.jfif' },
-    // Slide 3
-    { image: '/images/pf3.jfif' },
-];
-
-export default function Developer() {
-
-    const { ref: descRef, inView: descInView } = useInView({ triggerOnce: true, threshold: 0.1 });
-    const { ref: teamTitleRef, inView: teamTitleInView } = useInView({ triggerOnce: true, threshold: 0.1 });
-    const { ref: teamCardsRef, inView: teamCardsInView } = useInView({ triggerOnce: true, threshold: 0.1 });
-    const { ref: slideRef, inView: slideInView } = useInView({ triggerOnce: true, threshold: 0.1 });
-
-    const getFadeClass = (inView, delay = 0) =>
-        `transition-opacity duration-1000 ${inView ? 'opacity-100' : 'opacity-0'}` +
-        (delay > 0 ? ` delay-[${delay}ms]` : '');
-
-    const [currentSlide, setCurrentSlide] = useState(0);
-    const sliderContainerRef = useRef(null);
-
-    const scrollToSlide = useCallback((index) => {
-        if (sliderContainerRef.current) {
-            const slideWidth = sliderContainerRef.current.offsetWidth;
-            sliderContainerRef.current.scrollTo({
-                left: index * slideWidth,
-                behavior: 'smooth'
-            });
-            setCurrentSlide(index);
-        }
-    }, []);
-
-    const handleNext = () => {
-        const nextIndex = (currentSlide + 1) % slideData.length;
-        scrollToSlide(nextIndex);
-    };
-
-    const handlePrev = () => {
-        const prevIndex = (currentSlide - 1 + slideData.length) % slideData.length;
-        scrollToSlide(prevIndex);
-    };
+// KOMPONEN KARTU TIM YANG SAMA DENGAN ProfilPuskaka
+function PuskakaTeamCard({ name, title, photoUrl, npm }) {
+    const { ref, style } = useScrollFadeIn(0.1);
 
     return (
-        <>
-            <Head title="Pengembang" />
+        <div
+            ref={ref}
+            style={style}
+            className="group relative w-full max-w-[300px] mx-auto bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-emerald-100/50 border border-gray-100 hover:border-yarsi-green/30 transition-all duration-500 hover:-translate-y-2"
+        >
+            {/* CONTAINER FOTO */}
+            <div className="relative w-full aspect-[3/4] overflow-hidden">
+                <div className="absolute inset-0 bg-emerald-50 animate-pulse"></div>
 
-            <div className="fixed inset-0 bg-[url('/images/bg-dreamina.jpg')] bg-cover bg-center bg-fixed -z-10">
+                <img
+                    src={photoUrl || '/images/placeholder-avatar.png'}
+                    alt={`Foto ${name}`}
+                    className="relative z-10 w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-110"
+                    onError={(e) => {
+                        e.target.src = '/images/placeholder-avatar.png';
+                        // Menghapus animasi loading placeholder jika terjadi error
+                        e.target.previousSibling.classList.remove('animate-pulse');
+                    }}
+                />
+
+                <div className="absolute inset-0 z-20 bg-gradient-to-t from-yarsi-green-dark/90 via-yarsi-green/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-multiply"></div>
+                <div className="absolute bottom-0 left-0 z-30 w-full h-1.5 bg-gradient-to-r from-yarsi-green via-yarsi-accent to-yarsi-green transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
             </div>
 
-            <div className="relative z-10">
+            {/* CONTAINER TEXT */}
+            <div className="p-6 text-center relative bg-white transition-colors duration-500 group-hover:bg-emerald-50/30">
+                <h3 className="text-lg md:text-xl font-bold font-kaisei text-gray-900 group-hover:text-yarsi-green-dark transition-colors duration-300 leading-tight mb-1">
+                    {name}
+                </h3>
+                {npm && (
+                    <p className="text-xs text-gray-500 font-medium leading-tight mb-2">
+                        {npm}
+                    </p>
+                )}
 
-                <div className="min-h-screen pt-40 pb-20 flex flex-col items-center justify-start">
-                    <div className="container mx-auto px-6 max-w-5xl text-center mt-10">
-                        {/* JUDUL */}
-                        <h1 className={`text-4xl md:text-5xl font-extrabold mb-10 tracking-wide
-                                       text-black font-kaisei
-                                       opacity-0 animate-fadeIn duration-1000`}>
-                            PENGEMBANG
-                        </h1>
-
-                        <div ref={descRef} className={`mx-auto max-w-4xl mb-32 ${getFadeClass(descInView, 300)}`}>
-                            <p className="text-xl md:text-2xl leading-relaxed mb-6 text-gray-800 font-sans
-                                          font-light tracking-wide">
-                                Halo, kami NONA! tiga mahasiswi Teknik Informatika, Fakultas Teknologi Informasi, Universitas YARSI, angkatan 2023. Proyek ini kami buat sebagai bagian dari tugas mata kuliah Pengembangan Aplikasi Multi Platform, yang bertujuan untuk melatih kemampuan kami dalam merancang, mengembangkan, dan menerapkan aplikasi yang dapat berjalan di berbagai platform.
-                            </p>
-                            <p className="text-xl md:text-2xl leading-relaxed text-gray-800 font-sans
-                                          font-light tracking-wide">
-                                Melalui proyek ini, kami berupaya untuk mengimplementasikan ilmu yang telah dipelajari selama perkuliahan, mulai dari tahap perancangan antarmuka, logika pemrograman, hingga proses pengujian aplikasi. Kami berharap hasil dari proyek ini tidak hanya menjadi bentuk penilaian akademik, tetapi juga menjadi pengalaman berharga yang dapat meningkatkan kemampuan kami dalam dunia pengembangan aplikasi modern.
-                            </p>
-                        </div>
+                <div className="mt-4 flex justify-center">
+                    <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-emerald-100/80 text-yarsi-green-dark border border-emerald-200/50 group-hover:bg-yarsi-green group-hover:text-white group-hover:border-transparent transition-all duration-300">
+                        <p className="text-[11px] font-bold uppercase tracking-wider leading-none">
+                            {title}
+                        </p>
                     </div>
                 </div>
-
-                {}
-                <div className="w-full py-20
-                                bg-gradient-to-t from-[#1E8449] to-[#044732]
-                                text-white shadow-2xl">
-                    <div className="container mx-auto px-6 text-center">
-
-                        <h2 ref={teamTitleRef}
-                            className={`text-5xl font-kaisei font-bold mb-12 ${getFadeClass(teamTitleInView)}`}>
-                            HALO, KAMI NONA!
-                        </h2>
-
-                        <div ref={teamCardsRef} className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto mb-10">
-                            {teamMembers.map((member, index) => (
-                                <div key={index}
-                                    className={`bg-white p-6 rounded-2xl
-                                             shadow-xl transition-all duration-500 ease-in-out
-                                             transform hover:scale-[1.05]
-                                             hover:shadow-green-500/50 hover:shadow-2xl
-                                             text-center overflow-visible
-                                             ${getFadeClass(teamCardsInView, index * 100)}`}
-                                    >
-
-                                    {}
-                                    <img
-                                        src={member.image}
-                                        alt={`Foto ${member.name}`}
-                                        className="w-full h-80 object-cover rounded-lg mb-4 mx-auto shadow-md"
-                                        onError={(e) => {
-                                            e.target.onerror = null;
-                                            e.target.className = 'w-full h-80 bg-gray-300 rounded-lg mb-4 mx-auto flex items-center justify-center text-gray-500 font-bold';
-                                            e.target.outerHTML = `<div class="${e.target.className}">Foto Tidak Ditemukan</div>`;
-                                        }}
-                                    />
-
-                                    <h3 className="text-xl font-bold text-gray-800 mb-1 leading-tight">{member.name}</h3>
-                                    <p className="text-sm font-medium text-gray-600 leading-tight mb-1">{member.title}</p>
-                                    <p className="text-sm font-medium text-gray-500">{member.npm}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {}
-                <div ref={slideRef}
-                     className={`w-full py-20 bg-gradient-to-b from-[#1E8449] to-[#82E0AA] text-white shadow-inner
-                                 ${getFadeClass(slideInView)}`}>
-                    <div className="container mx-auto px-6">
-
-                        <h2 className="text-5xl font-kaisei font-bold mb-10 text-center">
-                            OUR TEAMS
-                        </h2>
-
-                        {/* SLIDER CONTAINER */}
-                        <div ref={sliderContainerRef}
-                             className="flex overflow-x-hidden snap-x snap-mandatory scroll-smooth
-                                        relative rounded-xl h-[40rem] overflow-hidden">
-
-                            {slideData.map((slide, index) => (
-                                <div key={index}
-                                     className="w-full flex-shrink-0 snap-center flex flex-col justify-center items-center">
-                                    <div className="w-full h-full max-w-6xl flex flex-col">
-
-                                        {}
-                                        {slide.title && (
-                                            <h3 className="text-4xl font-bold text-center text-yellow-300 pt-10 pb-4 flex-shrink-0">
-                                                {slide.title}
-                                            </h3>
-                                        )}
-                                        {}
-                                        {!slide.title && <div className="pt-10 flex-shrink-0"></div>}
-
-                                        {}
-                                        <div className="flex-grow flex items-center justify-center w-full px-4">
-                                            <img
-                                                src={slide.image}
-                                                alt={slide.title || `Gambar ${index + 1}`}
-                                                className="w-full h-full object-contain rounded-xl shadow-2xl border-4 border-white/20"
-                                                onError={(e) => {
-                                                    e.target.onerror = null;
-                                                    e.target.className = 'w-full h-full bg-gray-700/50 rounded-xl flex items-center justify-center text-white text-xl font-bold';
-                                                    e.target.outerHTML = `<div class="${e.target.className}">Gambar ${index + 1} Tidak Ditemukan</div>`;
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* NAVIGATION BUTTONS */}
-                        <div className="flex justify-center space-x-4 mt-6">
-                            <button
-                                onClick={handlePrev}
-                                className="bg-white text-[#1E8449] p-3 rounded-full shadow-lg hover:bg-gray-200 transition duration-300 transform hover:scale-110">
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
-                            </button>
-
-                            <div className="flex space-x-2 items-center">
-                                {slideData.map((_, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => scrollToSlide(index)}
-                                        className={`w-3 h-3 rounded-full transition-all duration-300
-                                                   ${currentSlide === index ? 'bg-yellow-400 w-5' : 'bg-white/50 hover:bg-white'}`}
-                                        aria-label={`Go to slide ${index + 1}`}
-                                    ></button>
-                                ))}
-                            </div>
-
-                            <button
-                                onClick={handleNext}
-                                className="bg-white text-[#1E8449] p-3 rounded-full shadow-lg hover:bg-gray-200 transition duration-300 transform hover:scale-110">
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <Footer />
             </div>
-        </>
+        </div>
     );
 }
 
-Developer.layout = (page) => <MainLayout children={page} />;
+// Data lokal
+const teamMembers = [
+    { id: 1, name: 'Citra Fatika', npm: '1402023014', title: 'Frontend Developer', photo_url: '/images/citra.jpeg' },
+    { id: 2, name: 'Safiyyah Yahya', npm: '1402023065', title: 'Backend Developer', photo_url: '/images/safiyyah.jpeg' },
+    { id: 3, name: 'Felicia Advi Syabani', npm: '1402023027', title: 'UI/UX Developer', photo_url: '/images/felicia.jpeg' },
+];
+
+// Mengganti nama file foto di sini
+const photos = [
+    { id: 1, image_path: '/images/nona1.jpeg', title: 'Pengembangan Website' },
+    { id: 2, image_path: '/images/nona2.jpeg', title: 'Diskusi Tim' },
+    { id: 3, image_path: '/images/nona3.jpeg', title: 'Desain Antarmuka' },
+];
+
+// Komponen utama
+export default function Developer() {
+    const heroTitle = useScrollFadeIn(0.2);
+    const heroText = useScrollFadeIn(0.3);
+    const heroImage = useScrollFadeIn(0.4);
+    const teamTitle = useScrollFadeIn(0.2);
+    const ctaRef = useScrollFadeIn(0.5);
+
+    const targetUrl = '/';
+
+    return (
+        <>
+            <MainLayout>
+                <Head title="Tentang Pengembang - Tim NONA" />
+
+                {/* HERO SECTION */}
+                <section className="relative w-full py-14 md:py-20 pt-28 md:pt-40 bg-gradient-to-br from-white to-emerald-50 overflow-hidden">
+                    {/* Pattern dan Ornamen Background */}
+                    <div className="absolute inset-0 opacity-[0.05]"
+                        style={{ backgroundImage: 'radial-gradient(circle, #044732 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
+                    </div>
+                    <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-yarsi-accent/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply animate-blob"></div>
+                    <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-yarsi-green/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply animate-blob animation-delay-2000"></div>
+
+                    <div className="container mx-auto px-4 relative z-10">
+                        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                            <div className="lg:w-1/2 text-center lg:text-left">
+                                <div
+                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-yarsi-green/20 shadow-sm text-yarsi-green text-xs font-bold uppercase tracking-wider mb-6"
+                                    ref={heroTitle.ref}
+                                    style={heroTitle.style}
+                                >
+                                    <span className="relative flex h-2.5 w-2.5">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yarsi-accent opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yarsi-accent"></span>
+                                    </span>
+                                    Pengembang Aplikasi Multi Platform
+                                </div>
+
+                                <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 font-kaisei mb-6 leading-tight">
+                                    Kami Adalah Tim <br />
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-yarsi-green to-yarsi-accent">
+                                        NONA
+                                    </span>
+                                </h1>
+
+                                <p
+                                    ref={heroText.ref}
+                                    style={heroText.style}
+                                    className="text-lg text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light mb-8"
+                                >
+                                    Tiga mahasiswi Teknik Informatika, Universitas YARSI, angkatan 2023. Proyek ini dibuat sebagai tugas mata kuliah Pengembangan Aplikasi Multi Platform.
+                                </p>
+
+                                {/* Ganti Stats Grid dengan info tim yang relevan */}
+                                <div className="grid grid-cols-3 gap-4 border-t border-gray-200 pt-8 max-w-md mx-auto lg:mx-0">
+                                    <div>
+                                        <div className="text-3xl font-bold font-kaisei text-yarsi-green">3</div>
+                                        <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-1">Anggota Tim</div>
+                                    </div>
+                                    <div className="border-l border-gray-200 pl-4">
+                                        <div className="text-3xl font-bold font-kaisei text-yarsi-green">2023</div>
+                                        <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-1">Angkatan</div>
+                                    </div>
+                                    <div className="border-l border-gray-200 pl-4">
+                                        <div className="text-xl font-bold font-kaisei text-yarsi-green mt-1">Informatika</div>
+                                        <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-2">Jurusan</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="lg:w-1/2 relative w-full" ref={heroImage.ref} style={heroImage.style}>
+                                {/* Swiper Slider untuk Gambar Proyek */}
+                                <Swiper
+                                    modules={[Navigation, Pagination, Mousewheel, Autoplay, Parallax, A11y]}
+                                    spaceBetween={0}
+                                    slidesPerView={1}
+                                    parallax={true}
+                                    speed={1000}
+                                    navigation
+                                    pagination={{
+                                        clickable: true,
+                                        dynamicBullets: true,
+                                    }}
+                                    mousewheel={true}
+                                    grabCursor={true}
+                                    loop={true}
+                                    autoplay={{
+                                        delay: 5000,
+                                        disableOnInteraction: false,
+                                    }}
+                                    // Menggunakan class aesthetic-pagination untuk styling pagination yang sama
+                                    className="aspect-[4/3] relative rounded-[2rem] overflow-hidden border-4 border-white/80 ring-1 ring-gray-100/50 transform rotate-1 hover:rotate-0 transition-all duration-700 ease-out shadow-xl shadow-emerald-900/20 group aesthetic-pagination"
+                                >
+                                    <div slot="container-start" className="parallax-bg absolute inset-0 bg-cover bg-center" data-swiper-parallax="-23%"></div>
+                                    {photos.map((photo) => (
+                                        <SwiperSlide key={photo.id} className="overflow-hidden rounded-[2rem]">
+                                            <div
+                                                // Menggunakan path gambar yang ada di folder public
+                                                className="w-full h-full bg-cover bg-center transform scale-110 group-hover:scale-100 transition-transform duration-[2s] ease-out"
+                                                style={{ backgroundImage: `url(${photo.image_path})` }}
+                                                data-swiper-parallax="-20%"
+                                            >
+                                                <div className="absolute inset-0 bg-gradient-to-t from-yarsi-green-dark/80 via-yarsi-green/20 to-transparent mix-blend-overlay"></div>
+                                                <div className="absolute inset-0 bg-black/10"></div>
+                                            </div>
+                                            <div
+                                                className="absolute bottom-8 left-8 flex items-center gap-3 p-3 bg-white/70 backdrop-blur-md rounded-2xl shadow-sm border border-white/40 transition-all duration-300 hover:bg-white/90 hover:shadow-md hover:scale-105"
+                                                data-swiper-parallax="-300"
+                                                data-swiper-parallax-opacity="0.5"
+                                            >
+                                                <div className="bg-emerald-100/80 p-2 rounded-full text-yarsi-green shadow-inner">
+                                                    <Code className="w-5 h-5" />
+                                                </div>
+                                                <div>
+                                                    <div className="text-[10px] text-gray-500 uppercase font-semibold tracking-widest">Dokumentasi Proyek</div>
+                                                    <div className="text-sm font-bold text-gray-900">{photo.title || "Proyek Pengembangan"}</div>
+                                                </div>
+                                            </div>
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>
+                                <div className="absolute -z-10 top-10 -right-10 w-full h-full border-2 border-yarsi-green/20 rounded-[2rem] transform rotate-6"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* SEKSI ANGGOTA TIM */}
+                <div className="py-20 md:py-28 bg-slate-50 relative overflow-hidden">
+                    {/* Pattern Dot Halus */}
+                    <div className="absolute inset-0 opacity-[0.4]"
+                        style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-100/30 rounded-full blur-[80px] pointer-events-none"></div>
+                    <div className="container mx-auto px-6 lg:px-8 relative z-10">
+                        <div className="mb-14 max-w-4xl mx-auto text-center">
+                            <h2
+                                ref={teamTitle.ref}
+                                style={teamTitle.style}
+                                className="text-3xl font-bold text-gray-900 border-b-2 border-yarsi-accent/50 pb-2 inline-flex items-center font-kaisei"
+                            >
+                                <Users className="w-6 h-6 mr-2 text-yarsi-green" />
+                                Anggota Tim NONA
+                            </h2>
+                            <p className="text-gray-600 mt-3">Peran dan tanggung jawab dalam pengembangan aplikasi ini.</p>
+                        </div>
+
+                        {/* Menggunakan PuskakaTeamCard untuk menampilkan data tim */}
+                        {teamMembers && teamMembers.length > 0 ? (
+                            <div className="flex flex-wrap justify-center gap-8 max-w-screen-xl mx-auto">
+                                {teamMembers.map((member) => (
+                                    <PuskakaTeamCard
+                                        key={member.id}
+                                        name={member.name}
+                                        title={member.title}
+                                        photoUrl={member.photo_url}
+                                        npm={member.npm}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center text-xl font-bold text-gray-600 p-10 bg-white/50 rounded-3xl border border-dashed border-gray-300">
+                                Belum ada data anggota tim yang tersedia.
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* CTA SECTION */}
+                <section className="py-24 bg-gradient-to-br from-[#006241] to-[#004d33] relative overflow-hidden" ref={ctaRef.ref} style={ctaRef.style}>
+                    {/* Ornamen Lingkaran Abstrak */}
+                    <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full border-[20px] border-white/5 blur-sm"></div>
+                    <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full border-[30px] border-white/5 blur-sm"></div>
+
+                    {/* Noise Texture Overlay */}
+                    <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+
+                    <div className="container mx-auto px-4 lg:px-6 relative z-10">
+                        <div className="max-w-3xl mx-auto text-center">
+                            <h2 className="text-4xl sm:text-5xl font-bold font-kaisei text-white mb-6 leading-tight">
+                                Proyek Kami Telah Selesai!
+                            </h2>
+                            <p className="text-emerald-100 text-lg mb-10 font-light leading-relaxed">
+                                Senang dapat menyelesaikan tugas mata kuliah ini. Kunjungi halaman utama untuk melihat hasil akhir aplikasi.
+                            </p>
+                            <Link
+                                href={targetUrl}
+                                className="inline-flex items-center gap-3 bg-white text-yarsi-green-dark font-bold py-4 px-10 rounded-full hover:bg-emerald-50 transition-all duration-300 shadow-2xl hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] transform hover:-translate-y-1 group">
+                                <span>Kembali ke Beranda</span>
+                                <div className="bg-emerald-100 p-1.5 rounded-full group-hover:bg-emerald-200 transition-colors">
+                                    <ArrowRight className="w-5 h-5 text-yarsi-green-dark" />
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
+                </section>
+                <Footer />
+            </MainLayout>
+        </>
+    );
+}
