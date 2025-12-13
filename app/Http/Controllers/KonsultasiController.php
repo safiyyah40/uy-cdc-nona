@@ -188,7 +188,7 @@ class KonsultasiController extends Controller
                             'name' => basename($path),
                             'is_image' => preg_match('/\.(jpg|jpeg|png|gif)$/i', $path)
                         ];
-                    }, $booking->report->documentation_files) 
+                    }, $booking->report->documentation_files)
                     : [],
             ];
         }
