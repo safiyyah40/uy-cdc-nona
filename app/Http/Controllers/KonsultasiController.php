@@ -181,11 +181,12 @@ class KonsultasiController extends Controller
                 'session_duration' => $booking->report->session_duration,
                 'session_type' => $booking->report->session_type,
                 'session_location' => $booking->report->session_location,
-                'files' => $booking->report->documentation_files
-                    ? array_map(function ($path) {
+                'files' => $booking->report->documentation_files 
+                    ? array_map(function($path) {
                         return [
-                            'url' => Storage::url($path),
+                            'url' => asset('storage/' . $path),
                             'name' => basename($path),
+                            'is_image' => preg_match('/\.(jpg|jpeg|png|gif)$/i', $path)
                         ];
                     }, $booking->report->documentation_files)
                     : [],

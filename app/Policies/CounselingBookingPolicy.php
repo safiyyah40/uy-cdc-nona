@@ -13,7 +13,7 @@ class CounselingBookingPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class CounselingBookingPolicy
      */
     public function view(User $user, CounselingBooking $counselingBooking): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -37,7 +37,7 @@ class CounselingBookingPolicy
      */
     public function update(User $user, CounselingBooking $counselingBooking): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -45,7 +45,7 @@ class CounselingBookingPolicy
      */
     public function delete(User $user, CounselingBooking $counselingBooking): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -53,7 +53,7 @@ class CounselingBookingPolicy
      */
     public function restore(User $user, CounselingBooking $counselingBooking): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -61,6 +61,6 @@ class CounselingBookingPolicy
      */
     public function forceDelete(User $user, CounselingBooking $counselingBooking): bool
     {
-        return false;
+        return true;
     }
 }
