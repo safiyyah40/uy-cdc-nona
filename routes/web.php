@@ -1,28 +1,36 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\ProfilKonselorController;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProfilPuskakaController;
-use App\Http\Controllers\ProfileCompletionController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\CampusHiringController;
-use App\Http\Controllers\TipsDanTrikController;
+use App\Http\Controllers\CvReviewController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KonselorController;
+use App\Http\Controllers\KonsultasiController;
+use App\Http\Controllers\LokerController;
+use App\Http\Controllers\MagangController;
+use App\Http\Controllers\ProfileCompletionController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfilKonselorController;
+use App\Http\Controllers\ProfilPuskakaController;
 use App\Http\Controllers\SeminarController;
 use App\Http\Controllers\SertifikasiController;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Berita;
-use App\Models\Magang;
-use App\Models\Loker;
+use App\Http\Controllers\TipsDanTrikController;
 use App\Models\BerandaSlide;
+<<<<<<< HEAD
 use App\Models\Seminar;
 use App\Http\Controllers\MagangController;
 use App\Http\Controllers\LokerController;
 use App\Http\Controllers\KonsultasiController;
 use App\Http\Controllers\KonselorController;
+=======
+use App\Models\Berita;
+use App\Models\Loker;
+use App\Models\Magang;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
+>>>>>>> e9ea59df5d16d9a08ee77ffafa49deca9abc9e69
 
 Route::get('/', function () {
     $slides = BerandaSlide::where('is_active', true)
@@ -200,37 +208,51 @@ Route::prefix('program')->name('program.')->group(function () {
     Route::get('/berita/{id}/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 });
 
-// Route Layanan
-Route::prefix('layanan')->group(function () {
+Route::prefix('layanan')->name('layanan.')->group(function () {
+    // Landing Page CV Review (Public)
+    Route::get('/cv-review', [CvReviewController::class, 'index'])
+        ->name('cv.review');
 
-    Route::get('/cv-review', function () {
-        return Inertia::render('Layanan/CvReview');
-    })->name('layanan.cv.review');
+    // AUTH REQUIRED ROUTES
+    Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('/tabel-cv-review', function () {
-        return Inertia::render('Layanan/TabelCvReview');
-    })->name('layanan.tabel.cv.review');
+        // --- CV REVIEW ROUTES ---
+        Route::get('/tabel-cv-review', [CvReviewController::class, 'table'])
+            ->name('tabel.cv.review');
 
-Route::get('/detail-submission', function () {
-        return Inertia::render('Layanan/DetailSubmission');
-    })->name('layanan.detail.submission');
+        Route::get('/cv-review/upload', [CvReviewController::class, 'create'])
+            ->name('cv.review.upload');
 
-Route::prefix('layanan')->group(function () {
-    Route::get('/konselor/review/{id}', function ($id) {
-        return Inertia::render('Layanan/CvReviewWorkspaceKonselor', [
-            'reviewId' => $id
-        ]);
-    })->name('layanan.konselor.review');
-});
+        Route::post('/cv-review/store', [CvReviewController::class, 'store'])
+            ->name('cv.review.store');
 
-Route::get('/tes-minat-bakat', function () {
+        Route::get('/cv-review/{id}', [CvReviewController::class, 'show'])
+            ->name('cv.review.detail');
+
+        Route::delete('/cv-review/{id}', [CvReviewController::class, 'destroy'])
+            ->name('cv.review.delete');
+
+        Route::get('/cv-review/{id}/download', [CvReviewController::class, 'downloadCv'])
+            ->name('cv.download');
+
+        // Konselor Workspace
+        Route::get('/konselor/review/{id}', [CvReviewController::class, 'workspace'])
+            ->name('konselor.review');
+
+        Route::post('/konselor/review/{id}/feedback', [CvReviewController::class, 'submitFeedback'])
+            ->name('konselor.feedback');
+    });
+
+    // Tes minat bakat
+    Route::get('/tes-minat-bakat', function () {
         return Inertia::render('Layanan/TesMinatBakat');
-    })->name('layanan.tes.minat.bakat');
+    })->name('tes.minat.bakat');
 });
 
 // Route Detail Berita
 Route::get('/berita/{id}/{slug}', function ($id) {
     $user = auth()->guard('web')->user();
+
     return Inertia::render('Program/DetailBerita', [
         'newsId' => (int) $id,
         'auth' => [
@@ -281,4 +303,4 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

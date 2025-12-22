@@ -2,17 +2,16 @@
 
 namespace App\Filament\Resources\CounselingBookings\Schemas;
 
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TimePicker;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Grid;
-use App\Models\User;
-use App\Models\CounselorSlot;
 use App\Models\Counselor;
+use App\Models\CounselorSlot;
+use App\Models\User;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class CounselingBookingForm
@@ -38,6 +37,7 @@ class CounselingBookingForm
                                     $set('student_email', null);
                                     $set('student_faculty', null);
                                     $set('student_study_program', null);
+
                                     return;
                                 }
                                 $user = User::find($state);
@@ -107,7 +107,7 @@ class CounselingBookingForm
                             ->options(function (callable $get, ?string $operation, $record) {
                                 $counselorId = $get('counselor_id');
 
-                                if (!$counselorId) {
+                                if (! $counselorId) {
                                     return [];
                                 }
 
@@ -129,11 +129,11 @@ class CounselingBookingForm
                                         ->locale('id')
                                         ->isoFormat('dddd, D MMMM YYYY');
 
-                                    $timeRange = substr($slot->start_time, 0, 5) . ' - ' . substr($slot->end_time, 0, 5);
+                                    $timeRange = substr($slot->start_time, 0, 5).' - '.substr($slot->end_time, 0, 5);
 
                                     // indikator jika slot tidak available
                                     $label = "{$dateFormatted} | {$timeRange}";
-                                    if (!$slot->is_available) {
+                                    if (! $slot->is_available) {
                                         $label .= ' (Terpakai)';
                                     }
 
@@ -153,8 +153,7 @@ class CounselingBookingForm
                                 }
                             })
                             ->helperText(
-                                fn(?string $operation) =>
-                                $operation === 'create'
+                                fn (?string $operation) => $operation === 'create'
                                     ? 'Hanya menampilkan slot yang tersedia.'
                                     : 'Menampilkan slot tersedia + slot yang sedang dipakai.'
                             ),
@@ -205,7 +204,7 @@ class CounselingBookingForm
 
                         Textarea::make('rejection_reason')
                             ->label('Alasan Penolakan')
-                            ->visible(fn(callable $get) => $get('status') === 'rejected')
+                            ->visible(fn (callable $get) => $get('status') === 'rejected')
                             ->rows(3)
                             ->columnSpanFull(),
 

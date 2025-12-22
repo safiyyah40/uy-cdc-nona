@@ -14,7 +14,7 @@ class User extends Authenticatable
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
-     */ 
+     */
     protected $fillable = [
         'name',
         'username',
@@ -68,7 +68,7 @@ class User extends Authenticatable
         }
 
         $this->update(['is_profile_complete' => true]);
-        
+
         return false;
     }
 
@@ -77,7 +77,7 @@ class User extends Authenticatable
      */
     public function getIdLabelAttribute(): string
     {
-        return match($this->role) {
+        return match ($this->role) {
             'mahasiswa' => 'NPM',
             'konselor' => 'NIP',
             'admin' => 'NIP',
@@ -90,15 +90,27 @@ class User extends Authenticatable
      */
     public function getFormattedPhoneAttribute(): string
     {
-        if (!$this->phone) {
+        if (! $this->phone) {
             return '-';
         }
 
         if (substr($this->phone, 0, 2) === '62') {
-            return '0' . substr($this->phone, 2);
+            return '0'.substr($this->phone, 2);
         }
 
         return $this->phone;
+    }
+
+    public function counselor()
+    {
+        // User (Konselor) memiliki satu profil Counselor
+        return $this->hasOne(Counselor::class, 'user_id');
+    }
+
+    // Helper untuk cek apakah user ini konselor
+    public function isCounselor()
+    {
+        return $this->role === 'konselor';
     }
 
     /**
@@ -106,10 +118,15 @@ class User extends Authenticatable
      */
     public function getWhatsappLinkAttribute(): string
     {
-        if (!$this->phone) {
+        if (! $this->phone) {
             return '#';
         }
 
         return "https://wa.me/{$this->phone}";
+    }
+
+    public function counselingBookings()
+    {
+        return $this->hasMany(CounselingBooking::class);
     }
 }

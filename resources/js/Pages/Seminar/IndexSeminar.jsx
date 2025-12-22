@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import Footer from '@/Components/Footer';
 import { Head, Link, router } from '@inertiajs/react';
-import { ArrowRight, BookOpen, Clock, MapPin, Wifi, Calendar, Timer, LogIn, Search, Filter } from 'lucide-react';
+import { ArrowRight, BookOpen, Clock, MapPin, Wifi, Calendar, Timer, LogIn, Search, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Terima props baru: seminars, pagination, filters, isGuest, total
 export default function IndexSeminar({ auth, seminars, pagination, filters, isGuest, total }) {
 
-    // --- STATE MANAGEMENT ---
+    // STATE MANAGEMENT
     const [searchTerm, setSearchTerm] = useState(filters?.search || '');
     const [perPage, setPerPage] = useState(filters?.per_page || '12');
 
@@ -15,7 +15,7 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
     const mainGreen = "text-emerald-800";
     const accentGreen = "bg-emerald-600";
 
-    // --- HANDLERS ---
+    // HANDLERS
 
     // 1. Handle Pencarian
     const handleSearch = (e) => {
@@ -23,9 +23,9 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
         router.get(route('program.seminar'), {
             search: searchTerm,
             per_page: perPage
-        }, { 
-            preserveState: true, 
-            preserveScroll: true 
+        }, {
+            preserveState: true,
+            preserveScroll: true
         });
     };
 
@@ -36,9 +36,9 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
         router.get(route('program.seminar'), {
             search: searchTerm,
             per_page: val
-        }, { 
-            preserveState: true, 
-            preserveScroll: true 
+        }, {
+            preserveState: true,
+            preserveScroll: true
         });
     };
 
@@ -48,9 +48,9 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
             router.get(url, {
                 search: searchTerm,
                 per_page: perPage
-            }, { 
-                preserveState: true, 
-                preserveScroll: true 
+            }, {
+                preserveState: true,
+                preserveScroll: true
             });
         }
     };
@@ -92,13 +92,13 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
                 {/* SEMINAR LIST SECTION */}
                 <div className={`py-16 md:py-24 bg-white min-h-screen`}>
                     <div className="container mx-auto px-6 lg:px-8">
-                        
-                        {/* --- USER VIEW (SEARCH & FILTER) --- */}
+
+                        {/* USER VIEW (SEARCH & FILTER) */}
                         {!isGuest && (
                             <div className="mb-12 space-y-6">
                                 <div className="bg-white p-5 rounded-2xl shadow-lg border border-gray-100">
                                     <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                                        
+
                                         {/* Search Input */}
                                         <div className="md:col-span-8">
                                             <form onSubmit={handleSearch} className="flex gap-2">
@@ -112,8 +112,8 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
                                                         className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all outline-none"
                                                     />
                                                 </div>
-                                                <button 
-                                                    type="submit" 
+                                                <button
+                                                    type="submit"
                                                     className={`px-6 py-3 ${accentGreen} hover:bg-emerald-700 text-white font-semibold rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2`}
                                                 >
                                                     <Search className="w-4 h-4" />
@@ -155,7 +155,7 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
                                                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                                 </button>
                                             </span>
-                                            <button 
+                                            <button
                                                 onClick={handleReset}
                                                 className="text-sm text-gray-400 hover:text-emerald-600 underline underline-offset-4 decoration-dashed transition-colors ml-auto"
                                             >
@@ -167,13 +167,13 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
                             </div>
                         )}
 
-                        {/* --- GRID SEMINAR --- */}
+                        {/* GRID SEMINAR */}
                         {seminarList && seminarList.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                                 {seminarList.map((item) => {
                                     // Logic URL: Jika Guest arahkan ke Login, Jika User arahkan ke Detail
-                                    const detailUrl = isGuest 
-                                        ? route('login') 
+                                    const detailUrl = isGuest
+                                        ? route('login')
                                         : route('program.seminar.show', { id: item.id, slug: item.slug });
 
                                     const isOnline = item.type === 'Online';
@@ -191,10 +191,10 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
                                                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                                                     src={item.image_url}
                                                     alt={item.title}
-                                                    onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/600x400/ecfdf5/047857?text=Seminar+YARSI"; }} 
+                                                    onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/600x400/ecfdf5/047857?text=Seminar+YARSI"; }}
                                                 />
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-                                                
+
                                                 <div className={`absolute top-4 left-4 px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full border shadow-sm flex items-center gap-1.5 backdrop-blur-sm bg-white/90 text-gray-800`}>
                                                     <TypeIcon className={`w-3 h-3 ${isOnline ? 'text-sky-600' : 'text-orange-600'}`} />
                                                     {item.type || 'Event'}
@@ -249,7 +249,7 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
                                 <h3 className="text-xl font-bold text-gray-900">Tidak ada seminar ditemukan</h3>
                                 <p className="text-gray-500 mt-2">Coba kata kunci lain atau nantikan jadwal terbaru.</p>
                                 {!isGuest && (
-                                    <button 
+                                    <button
                                         onClick={handleReset}
                                         className="mt-6 px-6 py-2 bg-white border border-emerald-200 text-emerald-700 font-semibold rounded-lg hover:bg-emerald-50 transition-colors shadow-sm"
                                     >
@@ -259,28 +259,38 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
                             </div>
                         )}
 
-                        {/* --- PAGINATION (HANYA UNTUK USER) --- */}
+                        {/* PAGINATION (HANYA UNTUK USER) */}
                         {!isGuest && pagination && pagination.last_page > 1 && (
                             <div className="mt-16 flex justify-center">
                                 <div className="flex flex-col items-center gap-4">
                                     <div className="flex flex-wrap gap-2 bg-white p-2 rounded-xl border border-gray-200 shadow-sm">
-                                        {pagination.links.map((link, i) => (
-                                            <button
-                                                key={i}
-                                                onClick={() => handlePageChange(link.url)}
-                                                disabled={!link.url || link.active}
-                                                className={`
-                                                    px-4 py-2 rounded-lg text-sm font-bold transition-all
-                                                    ${link.active 
-                                                        ? 'bg-emerald-600 text-white shadow-md' 
-                                                        : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700'
-                                                    }
-                                                    ${!link.url && 'opacity-50 cursor-not-allowed hover:bg-transparent'}
-                                                `}
-                                                dangerouslySetInnerHTML={{ __html: link.label }}
-                                            />
-                                        ))}
+                                        {pagination.links.map((link, i) => {
+                                            let label = link.label;
+
+                                            if (label.includes('&laquo;') || label === 'Previous') {
+                                                label = <ChevronLeft className="w-4 h-4" />;
+                                            } else if (label.includes('&raquo;') || label === 'Next') {
+                                                label = <ChevronRight className="w-4 h-4" />;
+                                            }
+
+                                            return (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => handlePageChange(link.url)}
+                                                    disabled={!link.url || link.active}
+                                                    className={`
+                                                        px-4 py-2 rounded-lg text-sm font-bold transition-all
+                                                        ${link.active ? 'bg-emerald-600 text-white shadow-md' : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700'
+                                                        }
+                                                        ${!link.url && 'opacity-50 cursor-not-allowed hover:bg-transparent'}
+                                                    `}
+                                                >
+                                                    {label}
+                                                </button>
+                                            );
+                                        })}
                                     </div>
+
                                     <div className="text-xs text-gray-400">
                                         Menampilkan {pagination.from}-{pagination.to} dari {pagination.total} data
                                     </div>
@@ -288,7 +298,7 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
                             </div>
                         )}
 
-                        {/* --- GUEST VIEW (LIMITED ACCESS - CTA DI BAWAH) --- */}
+                        {/* GUEST VIEW (LIMITED ACCESS - CTA DI BAWAH) */}
                         {isGuest && (
                             <div className="mt-16 flex justify-center">
                                 <div className="text-center bg-emerald-50 p-8 rounded-2xl shadow-xl border border-emerald-100 max-w-2xl w-full">
@@ -303,12 +313,9 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
                                 </div>
                             </div>
                         )}
-
                     </div>
                 </div>
-
                 <Footer />
-
             </MainLayout>
         </>
     );

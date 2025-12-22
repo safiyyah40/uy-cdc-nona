@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
 import Footer from '@/Components/Footer';
-import { Calendar, MapPin, Briefcase, Search, Filter, Clock, ArrowRight, Building2, Wallet, TrendingUp, Award } from 'lucide-react';
+import { Calendar, MapPin, Briefcase, Search, Filter, Clock, ArrowRight, Building2, Wallet, TrendingUp, Award, ChevronLeft, ChevronRight  } from 'lucide-react';
 
 export default function IndexMagang({ auth, magangs, pagination, filters, isGuest, total, categoriesList, locationsList }) {
     // STATE MANAGEMENT
@@ -466,29 +466,42 @@ export default function IndexMagang({ auth, magangs, pagination, filters, isGues
                             <div className="mt-16 flex justify-center">
                                 <div className="flex flex-col items-center gap-4">
                                     <div className="flex flex-wrap gap-2 bg-white p-2 rounded-xl border border-gray-200 shadow-sm">
-                                        {pagination.links.map((link, i) => (
-                                            <button
-                                                key={i}
-                                                onClick={() => handlePageChange(link.url)}
-                                                disabled={!link.url || link.active}
-                                                className={`
-                                                    px-4 py-2 rounded-lg text-sm font-bold transition-all
-                                                    ${link.active
-                                                        ? 'bg-yarsi-green text-white shadow-md'
-                                                        : 'text-gray-600 hover:bg-emerald-50 hover:text-yarsi-green'
-                                                    }
-                                                    ${!link.url && 'opacity-50 cursor-not-allowed hover:bg-transparent'}
-                                                `}
-                                                dangerouslySetInnerHTML={{ __html: link.label }}
-                                            />
-                                        ))}
+                                        {pagination.links.map((link, i) => {
+                                            let label = link.label;
+
+                                            if (label.includes('&laquo;') || label === 'Previous') {
+                                                label = <ChevronLeft className="w-4 h-4" />;
+                                            } else if (label.includes('&raquo;') || label === 'Next') {
+                                                label = <ChevronRight className="w-4 h-4" />;
+                                            }
+
+                                            return (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => handlePageChange(link.url)}
+                                                    disabled={!link.url || link.active}
+                                                    className={`
+                                px-4 py-2 rounded-lg text-sm font-bold transition-all
+                                ${link.active
+                                                            ? 'bg-yarsi-green text-white shadow-md'
+                                                            : 'text-gray-600 hover:bg-emerald-50 hover:text-yarsi-green'
+                                                        }
+                                ${!link.url && 'opacity-50 cursor-not-allowed hover:bg-transparent'}
+                            `}
+                                                >
+                                                    {label}
+                                                </button>
+                                            );
+                                        })}
                                     </div>
+
                                     <div className="text-xs text-gray-400">
                                         Menampilkan {pagination.from}-{pagination.to} dari {pagination.total} lowongan
                                     </div>
                                 </div>
                             </div>
                         )}
+
 
                         {/* Guest CTA (Jika Guest) */}
                         {isGuest && (

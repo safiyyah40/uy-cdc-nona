@@ -235,7 +235,7 @@ export default function MainLayout({ children }) {
 
                             <NavDropdown title="LAYANAN" basePath="/layanan">
                                 <DropdownLink href="/layanan/konsultasi">KONSULTASI</DropdownLink>
-                                <DropdownLink href={route('layanan.cv.review')}>CV REVIEW</DropdownLink>
+                                <DropdownLink href={route('layanan.cv.review')}>REVIEW CV</DropdownLink>
                                 <DropdownLink href={route('layanan.tes.minat.bakat')}>TES MINAT DAN BAKAT</DropdownLink>
                             </NavDropdown>
 
@@ -367,7 +367,7 @@ export default function MainLayout({ children }) {
 
                             <MobileDropdown title="LAYANAN">
                                 <DropdownLink href={route('layanan.konsultasi')}>KONSULTASI</DropdownLink>
-                                <DropdownLink href={route('layanan.cv.review')}>CV REVIEW</DropdownLink>
+                                <DropdownLink href={route('layanan.cv.review')}>REVIEW CV</DropdownLink>
                                 <DropdownLink href={route('layanan.tes.minat.bakat')}>TES MINAT DAN BAKAT</DropdownLink>
                             </MobileDropdown>
 
