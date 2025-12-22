@@ -18,6 +18,7 @@ use App\Models\Berita;
 use App\Models\Magang;
 use App\Models\Loker;
 use App\Models\BerandaSlide;
+use App\Models\Seminar;
 use App\Http\Controllers\MagangController;
 use App\Http\Controllers\LokerController;
 use App\Http\Controllers\KonsultasiController;
@@ -90,12 +91,27 @@ Route::get('/', function () {
             ];
         });
 
+    $latestSeminar = Seminar::where('is_active', true)
+        ->orderBy('date', 'desc') // atau 'created_at'
+        ->take(3)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'title' => $item->title,
+                'date' => $item->date ? $item->date->format('d M Y') : '-',
+                'type' => $item->type, // Pastikan kolom 'type' ada di DB (Online/Offline)
+                'image_url' => $item->image ? Storage::url($item->image) : null,
+            ];
+        });
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'slides' => $slides,
         'latestNews' => $latestNews,
         'latestMagang' => $latestMagang,
         'latestLoker' => $latestLoker,
+        'latestSeminar' => $latestSeminar,
     ]);
 })->name('welcome');
 

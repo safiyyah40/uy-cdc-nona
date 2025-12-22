@@ -9,7 +9,7 @@ const getModulus = (n, m) => ((n % m) + m) % m;
 
 const JobCard = ({ job, isActive, transformStyle }) => {
     // Cek path logo benar (apakah URL lengkap atau path storage)
-    const logoUrl = job.logo 
+    const logoUrl = job.logo
         ? (job.logo.startsWith('http') ? job.logo : `/storage/${job.logo}`)
         : PLACEHOLDER_IMG;
 
@@ -21,8 +21,8 @@ const JobCard = ({ job, isActive, transformStyle }) => {
             <div className="w-full h-full p-4 rounded-xl flex flex-col items-center text-gray-800">
 
                 <div className="flex justify-center items-center h-20 w-20 rounded-xl overflow-hidden shadow-md bg-gray-50">
-                    <img 
-                        src={logoUrl} 
+                    <img
+                        src={logoUrl}
                         alt={`Logo ${job.company}`}
                         className="w-full h-full object-contain p-1"
                         onError={(e) => { e.target.onerror = null; e.target.src=PLACEHOLDER_IMG }}
@@ -36,7 +36,7 @@ const JobCard = ({ job, isActive, transformStyle }) => {
                     <p className="text-sm font-semibold mb-4 text-gray-600 line-clamp-1" title={job.company}>
                         {job.company}
                     </p>
-                    
+
                     <hr className="border-gray-200 mb-4" />
 
                     <div className="text-xs text-left space-y-1 text-gray-700 w-full">
@@ -55,7 +55,7 @@ const JobCard = ({ job, isActive, transformStyle }) => {
                     </div>
                 </div>
 
-                <Link 
+                <Link
                     href={route('loker.show', job.slug)}
                     className={`mt-8 px-6 py-2 bg-green-700 text-white font-semibold rounded-full shadow-lg hover:bg-green-800 transition-colors transform hover:scale-[1.02] ${!isActive ? 'pointer-events-none opacity-50' : ''}`}
                     tabIndex={isActive ? 0 : -1}
@@ -71,7 +71,7 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const [cardWidth, setCardWidth] = useState(320);
-    
+
     // Safety check: Pastikan jobs adalah array valid
     const jobList = Array.isArray(jobs) ? jobs : [];
     const totalJobs = jobList.length;
@@ -114,14 +114,14 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
 
     return (
         <section className="py-20 relative bg-gradient-to-b from-green-500 to-white font-inter overflow-hidden">
-            
+
             <div className="container mx-auto px-4 md:px-8 relative z-10">
 
                 <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-16 tracking-wide font-serif">
                     LOWONGAN PEKERJAAN
                 </h2>
 
-                <div 
+                <div
                     className="relative flex justify-center items-center h-[550px]"
                     onMouseEnter={() => setIsPaused(true)}
                     onMouseLeave={() => setIsPaused(false)}
@@ -130,7 +130,7 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
                     {/* Navigation Buttons (Hanya muncul jika lebih dari 1 job) */}
                     {totalJobs > 1 && (
                         <>
-                            <button 
+                            <button
                                 onClick={prevSlide}
                                 className="absolute left-0 top-1/2 -translate-y-1/2 z-30 p-3 ml-4 rounded-full bg-white/30 hover:bg-white/50 transition-colors focus:outline-none shadow-lg"
                                 aria-label="Previous"
@@ -138,7 +138,7 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
                                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" /></svg>
                             </button>
 
-                            <button 
+                            <button
                                 onClick={nextSlide}
                                 className="absolute right-0 top-1/2 -translate-y-1/2 z-30 p-3 mr-4 rounded-full bg-white/30 hover:bg-white/50 transition-colors focus:outline-none shadow-lg"
                                 aria-label="Next"
@@ -153,13 +153,13 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
                         {jobList.map((job, index) => {
                             // --- LOGIKA TRANSFORMASI KARTU ---
                             let offset = (index - activeIndex);
-                            
+
                             // Koreksi offset untuk circular loop
                             if (offset > totalJobs / 2) offset -= totalJobs;
                             if (offset < -totalJobs / 2) offset += totalJobs;
 
                             const isActive = offset === 0;
-                            
+
                             let translateX = 0;
                             let scale = 1;
                             let opacity = 1;
@@ -177,7 +177,7 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
                                 } else {
                                     translateX = -cardWidth * 0.5 + (offset + 1) * cardWidth * 0.7;
                                 }
-                                
+
                                 scale = 1 - (Math.min(Math.abs(offset), 2) * 0.15);
                                 opacity = 1 - (Math.min(Math.abs(offset), 2) * 0.3);
                             }
@@ -213,8 +213,8 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
                                 key={index}
                                 onClick={() => setActiveIndex(index)}
                                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                                    activeIndex === index 
-                                    ? 'bg-green-700 scale-110 shadow-md' 
+                                    activeIndex === index
+                                    ? 'bg-green-700 scale-110 shadow-md'
                                     : 'bg-gray-400 hover:bg-green-300'
                                 }`}
                                 aria-label={`Go to slide ${index + 1}`}
