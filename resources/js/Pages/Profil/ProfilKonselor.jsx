@@ -4,7 +4,7 @@ import { Head, Link } from '@inertiajs/react';
 import Footer from '@/Components/Footer';
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 
-// --- ICON COMPONENTS ---
+// ICON COMPONENTS
 const Icons = {
     Academic: () => (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,7 +44,7 @@ const Icons = {
     )
 };
 
-// --- KOMPONEN KARTU KONSELOR ---
+// KOMPONEN KARTU KONSELOR
 function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
     const { ref, style } = useScrollFadeIn(0.1);
     const [imageError, setImageError] = useState(false);
@@ -201,7 +201,7 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
     );
 }
 
-// --- HALAMAN UTAMA ---
+// HALAMAN UTAMA
 export default function ProfilKonselor({ counselors }) {
     const heroTitle = useScrollFadeIn(0.2);
     const heroText = useScrollFadeIn(0.3);
@@ -234,14 +234,14 @@ export default function ProfilKonselor({ counselors }) {
     return (
         <MainLayout>
             <Head title="Profil Konselor - CDC Universitas YARSI" />
-            {/* --- HERO SECTION --- */}
+            {/* HERO SECTION */}
             <section className="relative w-full py-14 md:py-20 bg-gradient-to-br from-white to-emerald-50 overflow-hidden">
                 {/* Dekorasi Latar Belakang */}
                 <div className="absolute inset-0 opacity-[0.05]"
                     style={{ backgroundImage: 'radial-gradient(circle, #044732 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
                 </div>
                 <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-yarsi-accent/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply animate-blob"></div>
-                <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-yarsi-green/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply animate-blob animation-delay-2000"></div>
+                <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w--80 h-80 bg-yarsi-green/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply animate-blob animation-delay-2000"></div>
 
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
@@ -293,7 +293,7 @@ export default function ProfilKonselor({ counselors }) {
                             </div>
                         </div>
 
-                        {/* --- VISUAL CARD --- */}
+                        {/* VISUAL CARD */}
                         <div className="lg:w-1/2 relative w-full" ref={heroImage.ref} style={heroImage.style}>
                             {/* Card Background */}
                             <div
@@ -324,7 +324,7 @@ export default function ProfilKonselor({ counselors }) {
                 </div>
             </section>
 
-            {/* --- LIST KONSELOR SECTION --- */}
+            {/* LIST KONSELOR SECTION */}
             <section className="py-20 lg:py-28 bg-white relative">
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-50/0 via-yarsi-green/5 to-gray-50/0"></div>
 

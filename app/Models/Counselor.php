@@ -11,26 +11,33 @@ class Counselor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 
-        'title', 
-        'faculty', 
-        'expertise', 
-        'bio', 
-        'photo_path', 
-        'email', 
-        'phone', 
-        'is_active', 
-        'order_column'
+        'name',
+        'title',
+        'faculty',
+        'expertise',
+        'bio',
+        'photo_path',
+        'email',
+        'phone',
+        'is_active',
+        'order_column',
     ];
+
     protected $appends = ['photo_url'];
 
     // Accessor untuk mengubah 'photo_path' menjadi URL lengkap
     public function getPhotoUrlAttribute()
     {
         if ($this->photo_path) {
-            return asset('storage/' . $this->photo_path);
+            return asset('storage/'.$this->photo_path);
         }
+
         return null;
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function slots(): HasMany
@@ -38,7 +45,7 @@ class Counselor extends Model
         return $this->hasMany(CounselorSlot::class);
     }
 
-     public function bookings()
+    public function bookings()
     {
         return $this->hasMany(CounselingBooking::class);
     }
@@ -48,7 +55,7 @@ class Counselor extends Model
         return $this->hasMany(CounselingReport::class);
     }
 
-     // Helper Methods
+    // Helper Methods
     public function getAvailableSlots()
     {
         return $this->slots()

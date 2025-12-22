@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Counselor;
 use App\Models\CounselingBooking;
-use App\Models\CounselorSlot;
 use App\Models\CounselingReport;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Counselor;
+use App\Models\CounselorSlot;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
+use Inertia\Inertia;
 
 class KonselorController extends Controller
 {
@@ -20,84 +19,151 @@ class KonselorController extends Controller
      * DASHBOARD KONSELOR: INPUT JADWAL
      */
     public function index()
-    {
-        $user = Auth::user();
-        
-        // Ambil data diri konselor yang sedang login
+{
+    $user = Auth::user();
+
+    // DEBUG: Cek user
+    if (!$user) {
+        return redirect()->route('login');
+    }
+
+    $counselor = Counselor::where('user_id', $user->id)
+        ->with(['slots' => function ($query) {
+            $query->where('is_available', true)
+                ->where('date', '>=', now()->toDateString())
+                ->orderBy('date', 'asc')
+                ->orderBy('start_time', 'asc');
+        }])
+        ->first();
+
+    if (!$counselor) {
         $counselor = Counselor::where('email', $user->email)
-            ->orWhere('name', $user->name)
-            ->with(['slots' => function($query) {
+            ->with(['slots' => function ($query) {
                 $query->where('is_available', true)
-                      ->where('date', '>=', now()->toDateString())
-                      ->orderBy('date', 'asc')
-                      ->orderBy('start_time', 'asc');
+                    ->where('date', '>=', now()->toDateString())
+                    ->orderBy('date', 'asc')
+                    ->orderBy('start_time', 'asc');
             }])
             ->first();
-
-        // Format data untuk dashboard
-        $counselorData = null;
-        if ($counselor) {
-            $counselorData = [
-                'id' => $counselor->id,
-                'name' => $counselor->name,
-                'title' => $counselor->title,
-                'photo_url' => $counselor->photo_url,
-                'slots' => $counselor->slots->map(function($slot) {
-                    return [
-                        'id' => $slot->id,
-                        'date_string' => \Carbon\Carbon::parse($slot->date)->locale('id')->isoFormat('dddd, D MMM'),
-                        'time_string' => substr($slot->start_time, 0, 5) . ' - ' . substr($slot->end_time, 0, 5),
-                    ];
-                }),
-            ];
-        }
-
-        // Render Halaman Khusus Konselor
-        return Inertia::render('KonsultasiKonselor/KonsultasiKonselor', [
-            'user' => $user,
-            'counselor' => $counselorData, 
-        ]);
     }
+
+    // DEBUG LOG
+    Log::info('Konselor Index Debug', [
+        'user_id' => $user->id,
+        'user_email' => $user->email,
+        'counselor_found' => $counselor ? 'YES' : 'NO',
+        'counselor_id' => $counselor ? $counselor->id : null,
+        'slots_count' => $counselor ? $counselor->slots->count() : 0
+    ]);
+
+    // Format data untuk dashboard
+    $counselorData = null;
+    if ($counselor) {
+        $counselorData = [
+            'id' => $counselor->id,
+            'name' => $counselor->name,
+            'title' => $counselor->title,
+            'photo_url' => $counselor->photo_url,
+            'slots' => $counselor->slots->map(function ($slot) {
+                return [
+                    'id' => $slot->id,
+                    'date_string' => \Carbon\Carbon::parse($slot->date)->locale('id')->isoFormat('dddd, D MMM YYYY'),
+                    'time_string' => substr($slot->start_time, 0, 5) . ' - ' . substr($slot->end_time, 0, 5),
+                ];
+            }),
+        ];
+    }
+
+    return Inertia::render('KonsultasiKonselor/KonsultasiKonselor', [
+        'user' => $user,
+        'counselor' => $counselorData,
+    ]);
+}
 
     /**
      * TABEL BOOKING
      */
-    public function tableKonsultasi()
+    public function tableKonsultasi(Request $request)
     {
         $user = Auth::user();
-        
+
         $counselor = Counselor::where('email', $user->email)
             ->orWhere('name', $user->name)
             ->first();
 
-        if (!$counselor) {
+        if (! $counselor) {
             return redirect()->route('dashboard')
                 ->with('error', 'Data konselor tidak ditemukan.');
         }
 
-        // HANYA booking milik konselor
-        $consultations = CounselingBooking::where('counselor_id', $counselor->id)
-            ->with(['user', 'slot'])
-            ->orderByRaw("FIELD(status, 'pending', 'accepted', 'completed', 'rejected', 'cancelled')")
-            ->orderBy('scheduled_date', 'desc')
-            ->get()
-            ->map(function($booking) {
-                return [
-                    'id' => $booking->id,
-                    'user_name' => $booking->student_name,
-                    'topic' => $booking->topic,
-                    'date' => Carbon::parse($booking->scheduled_date)->locale('id')->isoFormat('D MMM YYYY'),
-                    'time' => substr($booking->scheduled_time, 0, 5),
-                    'status' => $booking->status,
-                    'created_at' => $booking->created_at->diffForHumans(),
-                ];
+        // Query Dasar
+        $query = CounselingBooking::where('counselor_id', $counselor->id)
+            ->with(['user', 'slot']);
+
+        // FILTER SEARCH
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('student_name', 'like', "%{$search}%")
+                  ->orWhere('topic', 'like', "%{$search}%");
             });
+        }
+
+        // FILTER STATUS
+        if ($request->filled('status') && $request->input('status') !== 'all') {
+            $query->where('status', $request->input('status'));
+        }
+
+        // SORTING WAKTU
+        if ($request->filled('sort')) {
+            if ($request->input('sort') === 'oldest') {
+                $query->orderBy('scheduled_date', 'asc')->orderBy('scheduled_time', 'asc');
+            } else { // newest
+                $query->orderBy('scheduled_date', 'desc')->orderBy('scheduled_time', 'desc');
+            }
+        } else {
+            // Default Sorting: Prioritas Status -> Waktu Terdekat
+            $query->orderByRaw("FIELD(status, 'pending', 'accepted', 'completed', 'rejected', 'cancelled')")
+                  ->orderBy('scheduled_date', 'asc');
+        }
+
+        // PAGINATION
+        $bookings = $query->paginate(10)->withQueryString();
+
+        // MAPPING DATA
+        $mappedBookings = $bookings->through(function ($booking) {
+            return [
+                'id' => $booking->id,
+                'user_name' => $booking->student_name,
+                'topic' => $booking->topic,
+                'date' => Carbon::parse($booking->scheduled_date)->locale('id')->isoFormat('dddd, D MMM YYYY'),
+                'time' => substr($booking->scheduled_time, 0, 5) . ' WIB',
+                'status' => $booking->status,
+                'created_at' => $booking->created_at->diffForHumans(),
+            ];
+        });
+
+        // STATISTIK DASHBOARD
+        $stats = [
+            'total' => CounselingBooking::where('counselor_id', $counselor->id)->count(),
+            'pending' => CounselingBooking::where('counselor_id', $counselor->id)->where('status', 'pending')->count(),
+            'upcoming' => CounselingBooking::where('counselor_id', $counselor->id)->where('status', 'accepted')->count(),
+            'completed' => CounselingBooking::where('counselor_id', $counselor->id)->where('status', 'completed')->count(),
+        ];
 
         return Inertia::render('KonsultasiKonselor/TableKonsultasiKonselor', [
-            'consultations' => $consultations,
+            'consultations' => $mappedBookings->items(), // Data array
+            'pagination' => [
+                'links' => $mappedBookings->linkCollection()->toArray(),
+                'from' => $mappedBookings->firstItem(),
+                'to' => $mappedBookings->lastItem(),
+                'total' => $mappedBookings->total(),
+                'last_page' => $mappedBookings->lastPage(),
+                'current_page' => $mappedBookings->currentPage(),
+            ],
+            'stats' => $stats,
         ]);
     }
-
     /**
      * DETAIL BOOKING
      */
@@ -105,16 +171,18 @@ class KonselorController extends Controller
     {
         $user = Auth::user();
         $counselor = Counselor::where('email', $user->email)->orWhere('name', $user->name)->first();
-        if (!$counselor) abort(403);
+        if (! $counselor) {
+            abort(403);
+        }
 
         $consultation = CounselingBooking::where('counselor_id', $counselor->id)
-            ->with(['user', 'report']) 
+            ->with(['user', 'report'])
             ->findOrFail($id);
 
         $startTime = substr($consultation->scheduled_time, 0, 5);
-        $endTime = $consultation->slot 
-            ? substr($consultation->slot->end_time, 0, 5) 
-            : date('H:i', strtotime($startTime . '+60 minutes'));
+        $endTime = $consultation->slot
+            ? substr($consultation->slot->end_time, 0, 5)
+            : date('H:i', strtotime($startTime.'+60 minutes'));
 
         $timeString = "{$startTime} - {$endTime} WIB";
 
@@ -127,14 +195,14 @@ class KonselorController extends Controller
                 'session_duration' => $consultation->report->session_duration,
                 'session_type' => $consultation->report->session_type,
                 'session_location' => $consultation->report->session_location,
-                'files' => $consultation->report->documentation_files 
-                    ? array_map(function($path) {
+                'files' => $consultation->report->documentation_files
+                    ? array_map(function ($path) {
                         return [
-                            'url' => asset('storage/' . $path),
+                            'url' => asset('storage/'.$path),
                             'name' => basename($path),
-                            'is_image' => preg_match('/\.(jpg|jpeg|png|gif)$/i', $path)
+                            'is_image' => preg_match('/\.(jpg|jpeg|png|gif)$/i', $path),
                         ];
-                    }, $consultation->report->documentation_files) 
+                    }, $consultation->report->documentation_files)
                     : [],
             ];
         }
@@ -148,13 +216,13 @@ class KonselorController extends Controller
                 'student_email' => $consultation->student_email,
                 'student_faculty' => $consultation->user->faculty ?? '-',
                 'student_study_program' => $consultation->user->study_program ?? '-',
-                
+
                 'topic' => $consultation->topic,
                 'reason' => $consultation->notes,
                 'date_submitted' => $consultation->created_at->locale('id')->isoFormat('dddd, D MMMM YYYY'),
                 'preferred_date' => Carbon::parse($consultation->scheduled_date)->locale('id')->isoFormat('dddd, D MMMM YYYY'),
                 'preferred_time' => $timeString,
-                
+
                 'status' => $consultation->status,
                 'rejection_reason' => $consultation->rejection_reason,
                 'has_report' => $consultation->report !== null,
@@ -173,12 +241,14 @@ class KonselorController extends Controller
             ->orWhere('name', $user->name)
             ->first();
 
-        if (!$counselor) abort(403);
+        if (! $counselor) {
+            abort(403);
+        }
 
         $booking = CounselingBooking::where('counselor_id', $counselor->id)
             ->findOrFail($id);
 
-        if (!in_array($booking->status, ['pending', 'rejected'])) {
+        if (! in_array($booking->status, ['pending', 'rejected'])) {
             return back()->withErrors(['error' => 'Booking tidak dapat disetujui.']);
         }
 
@@ -191,11 +261,11 @@ class KonselorController extends Controller
             DB::commit();
 
             // Generate WhatsApp URL
-            $waMessage = "✅ *Booking Disetujui*\n\n" .
-                "Halo {$booking->student_name},\n\n" .
-                "Booking Anda telah disetujui oleh {$counselor->name}.\n\n" .
-                "📅 " . Carbon::parse($booking->scheduled_date)->locale('id')->isoFormat('dddd, D MMMM YYYY') . "\n" .
-                "🕐 " . substr($booking->scheduled_time, 0, 5) . " WIB\n" .
+            $waMessage = "✅ *Booking Disetujui*\n\n".
+                "Halo {$booking->student_name},\n\n".
+                "Booking Anda telah disetujui oleh {$counselor->name}.\n\n".
+                '📅 '.Carbon::parse($booking->scheduled_date)->locale('id')->isoFormat('dddd, D MMMM YYYY')."\n".
+                '🕐 '.substr($booking->scheduled_time, 0, 5)." WIB\n".
                 "📍 {$booking->topic}";
 
             $waUrl = $this->generateWhatsAppUrl($booking->student_phone, $waMessage);
@@ -206,7 +276,8 @@ class KonselorController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Approve Error: ' . $e->getMessage());
+            Log::error('Approve Error: '.$e->getMessage());
+
             return back()->withErrors(['error' => 'Gagal menyetujui.']);
         }
     }
@@ -218,7 +289,9 @@ class KonselorController extends Controller
             ->orWhere('name', $user->name)
             ->first();
 
-        if (!$counselor) abort(403);
+        if (! $counselor) {
+            abort(403);
+        }
 
         $booking = CounselingBooking::where('counselor_id', $counselor->id)
             ->findOrFail($id);
@@ -241,9 +314,9 @@ class KonselorController extends Controller
 
             DB::commit();
 
-            $waMessage = "❌ *Booking Ditolak*\n\n" .
-                "Halo {$booking->student_name},\n\n" .
-                "Maaf, booking Anda telah ditolak.\n\n" .
+            $waMessage = "❌ *Booking Ditolak*\n\n".
+                "Halo {$booking->student_name},\n\n".
+                "Maaf, booking Anda telah ditolak.\n\n".
                 "💬 Alasan: {$booking->rejection_reason}";
 
             $waUrl = $this->generateWhatsAppUrl($booking->student_phone, $waMessage);
@@ -254,37 +327,40 @@ class KonselorController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
+
             return back()->withErrors(['error' => 'Gagal menolak.']);
         }
     }
 
     public function showReportForm($bookingId)
-{
-    $user = Auth::user();
-    $counselor = Counselor::where('email', $user->email)
-        ->orWhere('name', $user->name)
-        ->first();
+    {
+        $user = Auth::user();
+        $counselor = Counselor::where('email', $user->email)
+            ->orWhere('name', $user->name)
+            ->first();
 
-    if (!$counselor) abort(403);
+        if (! $counselor) {
+            abort(403);
+        }
 
-    $booking = CounselingBooking::where('counselor_id', $counselor->id)
-        ->where('status', 'accepted')
-        ->with(['user'])
-        ->findOrFail($bookingId);
+        $booking = CounselingBooking::where('counselor_id', $counselor->id)
+            ->where('status', 'accepted')
+            ->with(['user'])
+            ->findOrFail($bookingId);
 
-    return Inertia::render('KonsultasiKonselor/UploadReportForm', [
-        'booking' => [
-            'id' => $booking->id,
-            'student_name' => $booking->student_name,
-            'student_npm' => $booking->student_npm,
-            'topic' => $booking->topic,
-            'scheduled_date' => Carbon::parse($booking->scheduled_date)->locale('id')->isoFormat('dddd, D MMMM YYYY'),
-            'scheduled_time' => substr($booking->scheduled_time, 0, 5) . ' WIB',
-        ],
-    ]);
-}
+        return Inertia::render('KonsultasiKonselor/UploadReportForm', [
+            'booking' => [
+                'id' => $booking->id,
+                'student_name' => $booking->student_name,
+                'student_npm' => $booking->student_npm,
+                'topic' => $booking->topic,
+                'scheduled_date' => Carbon::parse($booking->scheduled_date)->locale('id')->isoFormat('dddd, D MMMM YYYY'),
+                'scheduled_time' => substr($booking->scheduled_time, 0, 5).' WIB',
+            ],
+        ]);
+    }
 
-public function storeReport(Request $request, $bookingId)
+    public function storeReport(Request $request, $bookingId)
     {
         $request->validate([
             'feedback' => 'required|string|min:50',
@@ -303,18 +379,17 @@ public function storeReport(Request $request, $bookingId)
         try {
             // Upload Multiple Files
             $filePaths = [];
-        if ($request->hasFile('documentation_files')) {
-            foreach ($request->file('documentation_files') as $file) {
-                $originalName = $file->getClientOriginalName();
-                $cleanName = str_replace(' ', '_', $originalName);
-                $fileName = time() . '_' . $cleanName;
-                $path = $file->storeAs('counseling_reports', $fileName, 'public');
-                
-                $filePaths[] = $path;
-            }
-        }
+            if ($request->hasFile('documentation_files')) {
+                foreach ($request->file('documentation_files') as $file) {
+                    $originalName = $file->getClientOriginalName();
+                    $cleanName = str_replace(' ', '_', $originalName);
+                    $fileName = time().'_'.$cleanName;
+                    $path = $file->storeAs('counseling_reports', $fileName, 'public');
 
-            // Simpan ke Database
+                    $filePaths[] = $path;
+                }
+            }
+
             CounselingReport::create([
                 'booking_id' => $booking->id,
                 'counselor_id' => $booking->counselor_id,
@@ -331,12 +406,14 @@ public function storeReport(Request $request, $bookingId)
             $booking->update(['status' => 'completed', 'completed_at' => now()]);
 
             DB::commit();
+
             return redirect()->route('konselor.konsultasi.show', $booking->id)
                 ->with('success', 'Laporan berhasil disimpan dan sesi selesai.');
 
         } catch (\Exception $e) {
             DB::rollback();
             Log::error($e->getMessage());
+
             return back()->withErrors(['error' => 'Gagal menyimpan laporan.']);
         }
     }
@@ -357,7 +434,7 @@ public function storeReport(Request $request, $bookingId)
             ->orWhere('name', $user->name)
             ->first();
 
-        if (!$counselor) {
+        if (! $counselor) {
             return back()->withErrors(['error' => 'Profil konselor tidak ditemukan.']);
         }
 
@@ -372,7 +449,8 @@ public function storeReport(Request $request, $bookingId)
 
             return back()->with('success', 'Jadwal berhasil ditambahkan!');
         } catch (\Exception $e) {
-            Log::error('Store Slot Error: ' . $e->getMessage());
+            Log::error('Store Slot Error: '.$e->getMessage());
+
             return back()->withErrors(['error' => 'Gagal menambah jadwal.']);
         }
     }
@@ -384,13 +462,15 @@ public function storeReport(Request $request, $bookingId)
             ->orWhere('name', $user->name)
             ->first();
 
-        if (!$counselor) abort(403);
+        if (! $counselor) {
+            abort(403);
+        }
 
         $slot = CounselorSlot::where('id', $slotId)
             ->where('counselor_id', $counselor->id)
             ->first();
 
-        if (!$slot) {
+        if (! $slot) {
             return back()->withErrors(['error' => 'Slot tidak ditemukan.']);
         }
 
@@ -415,7 +495,7 @@ public function storeReport(Request $request, $bookingId)
         $phone = preg_replace('/^0/', '62', $phone);
         $phone = preg_replace('/^\+/', '', $phone);
         $encodedMessage = urlencode($message);
-        
+
         return "https://wa.me/{$phone}?text={$encodedMessage}";
     }
 
@@ -432,20 +512,22 @@ public function storeReport(Request $request, $bookingId)
         ]);
 
         $user = Auth::user();
-        
+
         // Cari Konselor
         $counselor = Counselor::where('email', $user->email)
             ->orWhere('name', $user->name)
             ->first();
 
-        if (!$counselor) abort(403);
+        if (! $counselor) {
+            abort(403);
+        }
 
         // Cari Slot berdasarkan ID dan ID Konselor (Security Check)
         $slot = CounselorSlot::where('id', $slotId)
             ->where('counselor_id', $counselor->id)
             ->first();
 
-        if (!$slot) {
+        if (! $slot) {
             return back()->withErrors(['error' => 'Slot tidak ditemukan atau bukan milik Anda.']);
         }
 
@@ -469,8 +551,9 @@ public function storeReport(Request $request, $bookingId)
 
             return back()->with('success', 'Jadwal berhasil diperbarui!');
         } catch (\Exception $e) {
-            Log::error('Update Slot Error: ' . $e->getMessage());
+            Log::error('Update Slot Error: '.$e->getMessage());
+
             return back()->withErrors(['error' => 'Gagal memperbarui jadwal.']);
         }
-    }   
+    }
 }

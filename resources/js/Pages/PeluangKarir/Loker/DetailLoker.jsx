@@ -213,7 +213,7 @@ export default function DetailLoker({ auth, loker }) {
                                     <img
                                         src={loker.image.startsWith('http') ? loker.image : `/storage/${loker.image}`}
                                         alt={loker.title}
-                                        className="w-full h-64 object-cover"
+                                        className="w-full h-auto block"
                                     />
                                 </div>
                             )}
