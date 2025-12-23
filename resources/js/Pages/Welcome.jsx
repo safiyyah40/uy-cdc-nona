@@ -11,8 +11,9 @@ import Footer from '../Components/Footer';
 import ODKCard from '@/Components/ODKCard';
 import CampusHiringCard from '@/Components/CampusHiringCard';
 import SeminarCard from '@/Components/SeminarCard';
+import TipsCard from '@/Components/TipsCard';
 
-export default function Welcome({ auth, slides, latestNews, latestMagang, latestLoker, latestSeminar = [] }) {
+export default function Welcome({ auth, slides, latestNews, latestMagang, latestLoker, latestSeminar = [], latestTips = [] }) {
     return (
         <MainLayout>
             <Head title="Selamat Datang di CDC YARSI" />
@@ -78,6 +79,8 @@ export default function Welcome({ auth, slides, latestNews, latestMagang, latest
                     <section className="w-full">
                         <SeminarCard seminars={latestSeminar} />
                     </section>
+
+                    <TipsCard tips={latestTips} />
 
                     {/* Berita */}
                    <div className="w-full">

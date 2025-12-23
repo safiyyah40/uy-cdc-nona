@@ -52,7 +52,7 @@ const HeroSection = ({ user, scrollToContent }) => {
     const handleMainClick = (e) => {
         if (user) {
             // Arahkan ke dashboard tes jika user sudah login
-            router.get('/layanan/tabel-tes-minat-bakat');
+            router.get('/layanan/tes-mbti');
         } else {
             e.preventDefault();
             scrollToContent();
@@ -98,7 +98,7 @@ const HeroSection = ({ user, scrollToContent }) => {
 
                                 {!user && (
                                     <Link
-                                        href="/login?redirect_to=/layanan/tabel-tes-minat-bakat"
+                                        href="/login?redirect_to=/layanan/tes-minat-bakat"
                                         className="px-8 py-4 bg-white text-[#004d40] border border-[#004d40] font-bold rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center"
                                     >
                                         Masuk & Ikuti Tes
@@ -220,7 +220,7 @@ function TesMinatBakat(props) {
                              {user && (
                                 <div className="mt-12 text-center">
                                     <button
-                                        onClick={() => router.get('/layanan/tabel-tes-minat-bakat')}
+                                        onClick={() => router.get('/layanan/tes-mbti')}
                                         className="px-10 py-4 bg-[#00CA65] text-white font-bold rounded-xl hover:bg-[#00b058] shadow-lg transition-all transform hover:-translate-y-1 inline-flex items-center gap-2"
                                     >
                                         <Sparkles className="w-5 h-5" />
