@@ -5,10 +5,6 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\CampusHiringController;
 use App\Http\Controllers\CvReviewController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\KonselorController;
-use App\Http\Controllers\KonsultasiController;
-use App\Http\Controllers\LokerController;
-use App\Http\Controllers\MagangController;
 use App\Http\Controllers\ProfileCompletionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilKonselorController;
@@ -17,10 +13,16 @@ use App\Http\Controllers\SeminarController;
 use App\Http\Controllers\SertifikasiController;
 use App\Http\Controllers\TipsDanTrikController;
 use App\Models\BerandaSlide;
+use App\Models\Seminar;
+use App\Http\Controllers\MagangController;
+use App\Http\Controllers\LokerController;
+use App\Http\Controllers\KonsultasiController;
+use App\Http\Controllers\KonselorController;
 use App\Models\Berita;
 use App\Models\Loker;
 use App\Models\Magang;
 use App\Models\Seminar;
+use App\Models\TipsDanTrik;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -106,6 +108,22 @@ Route::get('/', function () {
             ];
         });
 
+    $latestTips = TipsDanTrik::where('is_active', true)
+        ->latest()
+        ->take(3)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'title' => $item->title,
+                'slug' => $item->slug,
+                'summary' => $item->summary, // Pastikan ada kolom summary/excerpt di DB
+                'category' => $item->category,
+                'reading_time' => $item->reading_time, // Misalnya '5 Menit'
+                'image_url' => $item->image ? Storage::url($item->image) : null,
+            ];
+        });
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'slides' => $slides,
@@ -113,6 +131,7 @@ Route::get('/', function () {
         'latestMagang' => $latestMagang,
         'latestLoker' => $latestLoker,
         'latestSeminar' => $latestSeminar,
+        'latestTips' => $latestTips,
     ]);
 })->name('welcome');
 
@@ -240,6 +259,10 @@ Route::prefix('layanan')->name('layanan.')->group(function () {
     Route::get('/tes-minat-bakat', function () {
         return Inertia::render('Layanan/TesMinatBakat');
     })->name('tes.minat.bakat');
+
+    Route::get('/tes-mbti', function () {
+        return Inertia::render('Layanan/TesMBTI');
+    })->name('tes-mbti');
 });
 
 // Route Detail Berita

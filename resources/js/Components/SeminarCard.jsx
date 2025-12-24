@@ -3,13 +3,12 @@ import { Link } from '@inertiajs/react';
 import { Calendar, MapPin, Wifi, ArrowRight, BookOpen } from 'lucide-react';
 
 const SeminarCard = ({ seminars = [] }) => {
-    // Jangan tampilkan section jika data kosong
     if (!seminars || seminars.length === 0) return null;
 
     return (
         <section id="seminar-section" className="relative py-20 bg-white overflow-hidden">
 
-            {/* Background Decor - Menggunakan tone biru/emerald agar senada */}
+            {/* Background Decor */}
             <div className="absolute top-0 inset-x-0 h-full w-full pointer-events-none overflow-hidden">
                 <div className="absolute top-[-5%] left-[-5%] w-[500px] h-[500px] bg-blue-50 rounded-full blur-[110px] opacity-50 mix-blend-multiply"></div>
                 <div className="absolute bottom-[0%] right-[-5%] w-[450px] h-[450px] bg-emerald-50 rounded-full blur-[100px] opacity-60 mix-blend-multiply"></div>
