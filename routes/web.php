@@ -17,20 +17,13 @@ use App\Http\Controllers\SeminarController;
 use App\Http\Controllers\SertifikasiController;
 use App\Http\Controllers\TipsDanTrikController;
 use App\Models\BerandaSlide;
-<<<<<<< HEAD
-use App\Models\Seminar;
-use App\Http\Controllers\MagangController;
-use App\Http\Controllers\LokerController;
-use App\Http\Controllers\KonsultasiController;
-use App\Http\Controllers\KonselorController;
-=======
 use App\Models\Berita;
 use App\Models\Loker;
 use App\Models\Magang;
+use App\Models\Seminar;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
->>>>>>> e9ea59df5d16d9a08ee77ffafa49deca9abc9e69
 
 Route::get('/', function () {
     $slides = BerandaSlide::where('is_active', true)

@@ -1,5 +1,6 @@
 import React from 'react';
 import MainLayout from '@/Layouts/MainLayout';
+import VisiMisi from "@/Components/VisiMisi";
 import { Head, Link, usePage } from '@inertiajs/react';
 import Footer from '@/Components/Footer';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -71,7 +72,7 @@ export default function ProfilPuskaka({ teamMembers = [], photos = [] }) {
             <MainLayout>
                 <Head title="Profil Puskaka UY - CDC Universitas YARSI" />
 
-                {/* --- HERO SECTION (TIDAK DIUBAH) --- */}
+                {/* HERO SECTION */}
                 <section className="relative w-full py-14 md:py-20 -mt-10 md:-mt-32 bg-gradient-to-br from-white to-emerald-50 overflow-hidden">
                     <div className="absolute inset-0 opacity-[0.05]"
                         style={{ backgroundImage: 'radial-gradient(circle, #044732 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
@@ -179,6 +180,10 @@ export default function ProfilPuskaka({ teamMembers = [], photos = [] }) {
                         </div>
                     </div>
                 </section>
+
+                <div className="relative z-20 bg-white"> 
+                     <VisiMisi />
+                </div>
 
                 {/* --- STRUKTUR ORGANISASI --- */}
                 <div className="py-20 md:py-28 bg-slate-50 relative overflow-hidden">
