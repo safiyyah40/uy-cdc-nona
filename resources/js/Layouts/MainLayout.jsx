@@ -55,12 +55,7 @@ function ProfileDropdownLink({ href, method = 'get', as = 'a', children }) {
             href={href}
             method={method}
             as={as}
-            className="
-                block w-full px-5 py-3 text-left text-lg font-semibold
-                text-cdc-green-dark
-                transition-all duration-200
-                hover:bg-cdc-green-dark hover:text-white
-            "
+            className="block w-full px-5 py-3 text-left text-lg font-semibold text-cdc-green-dark transition-all duration-200 hover:bg-cdc-green-dark hover:text-white"
         >
             {children}
         </Link>
@@ -98,20 +93,11 @@ function NavDropdown({ title, children, basePath }) {
                     viewBox="0 0 20 20"
                     fill="currentColor"
                 >
-                    <path
-                        fillRule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                    />
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
             </button>
 
-            {/* Isi Dropdown */}
-            <div
-                className="absolute left-0 mt-2 min-w-full origin-top-left bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50
-                      opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:scale-100 scale-95
-                      transition-all duration-200"
-            >
+            <div className="absolute left-0 mt-2 min-w-full origin-top-left bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:scale-100 scale-95 transition-all duration-200">
                 <div className="py-1">{children}</div>
             </div>
         </div>
@@ -128,10 +114,7 @@ function MobileNavLink({ href, children, onClick }) {
             href={href}
             onClick={onClick}
             className={`block px-4 py-3 text-base font-semibold rounded-lg transition-all duration-200
-            ${isActive
-                ? 'bg-cdc-green-dark text-white'
-                : 'text-cdc-green-dark hover:bg-cdc-green-dark hover:text-white'
-            }`}
+            ${isActive ? 'bg-cdc-green-dark text-white' : 'text-cdc-green-dark hover:bg-cdc-green-dark hover:text-white'}`}
         >
             {children}
         </Link>
@@ -149,75 +132,51 @@ function MobileDropdown({ title, children }) {
                 className="flex items-center justify-between w-full px-4 py-3 text-base font-semibold text-cdc-green-dark hover:bg-gray-50 transition-all"
             >
                 {title}
-                <svg
-                    className={`h-5 w-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                >
-                    <path
-                        fillRule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                    />
+                <svg className={`h-5 w-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
             </button>
-            {isOpen && (
-                <div className="pl-4 pb-2 space-y-1">
-                    {children}
-                </div>
-            )}
+            {isOpen && <div className="pl-4 pb-2 space-y-1">{children}</div>}
         </div>
     );
 }
-// --- KOMPONEN LAYOUT UTAMA ---
+
 export default function MainLayout({ children }) {
     const { auth } = usePage().props;
     const user = auth.user;
     const isCounselor = user?.role === 'konselor';
-    const [isProfileOpen, setIsProfileOpen] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const profileDropdownRef = useRef(null);
-    
 
-    // Tutup dropdown profil jika klik di luar
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [isNotifOpen, setIsNotifOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const profileDropdownRef = useRef(null);
+    const notifDropdownRef = useRef(null);
+
     useEffect(() => {
         function handleClickOutside(event) {
-            if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
-                setIsProfileOpen(false);
-            }
+            if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) setIsProfileOpen(false);
+            if (notifDropdownRef.current && !notifDropdownRef.current.contains(event.target)) setIsNotifOpen(false);
         }
         document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [profileDropdownRef]);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
-    // Tutup menu mobile saat pindah halaman
     useEffect(() => {
         setIsMobileMenuOpen(false);
     }, [usePage().url]);
 
     return (
         <div className="min-h-screen bg-transparent overflow-x-hidden relative">
-            {/* Header */}
-            <header className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-xl shadow-[0_8px_25px_rgba(0,0,0,0.12)] rounded-b-[60px] transition-all duration-300">
-            <nav className="w-full flex items-center px-6 lg:px-20 py-4 md:py-5">
-                    {/* Logo dan Menu Desktop */}
+            <header className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-xl shadow-[0_8px_25px_rgba(0,0,0,0.12)] rounded-b-[60px]">
+                <nav className="w-full flex items-center px-6 lg:px-20 py-4 md:py-5">
                     <div className="flex items-center space-x-8">
                         <Link href="/" className="flex-shrink-0">
-                            <img
-                                src={LOGO_YARSI_CDC}
-                                alt="Logo CDC YARSI"
-                                className="h-16 md:h-[92px] object-contain"
-                                onError={(e) => e.target.src = 'https://placehold.co/200x92/006241/white?text=LOGO'}
-                            />
+                            <img src={LOGO_YARSI_CDC} alt="Logo" className="h-16 md:h-[92px] object-contain" />
                         </Link>
 
-                        {/* Menu Navigasi Desktop */}
                         <div className="hidden md:flex items-center space-x-6">
-                            <NavLink href={auth.user ? route('dashboard') : '/'}>
-                                BERANDA
-                            </NavLink>
+                            <NavLink href={auth.user ? route('dashboard') : '/'}>BERANDA</NavLink>
 
                             <NavDropdown title="PROFIL" basePath="/profil">
                                 <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
@@ -247,116 +206,72 @@ export default function MainLayout({ children }) {
                         </div>
                     </div>
 
-                    {/* Bagian Kanan (User Profile / Login) */}
-                    <div className="flex items-center space-x-6 ml-auto">
+                    <div className="flex items-center space-x-4 md:space-x-6 ml-auto">
+                        {/* Lonceng Dropdown */}
+                        {auth.user && (
+                            <div className="relative" ref={notifDropdownRef}>
+                                <button onClick={() => setIsNotifOpen(!isNotifOpen)} className="relative p-2 text-cdc-green-dark rounded-full hover:bg-gray-100 transition-all group">
+                                    <svg className="h-8 w-8 md:h-10 md:w-10 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                    </svg>
+                                    <span className="absolute top-2 right-2 flex h-3 w-3 md:h-4 md:w-4">
+                                        <span className="animate-ping absolute h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                        <span className="relative rounded-full h-3 w-3 md:h-4 md:w-4 bg-red-500 border-2 border-white"></span>
+                                    </span>
+                                </button>
+                                {isNotifOpen && (
+                                    <div className="absolute top-full right-0 mt-4 w-72 md:w-80 bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden z-50">
+                                        <div className="px-5 py-3 bg-cdc-green-dark text-white font-bold text-center">NOTIFIKASI</div>
+                                        <div className="max-h-60 overflow-y-auto">
+                                            <div className="px-5 py-4 text-center text-sm text-gray-500">Belum ada notifikasi baru</div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
                         {auth.user ? (
-                            // Tampilan Jika Sudah Login
                             <div className="relative hidden md:block" ref={profileDropdownRef}>
-                                <button
-                                    onClick={() => setIsProfileOpen(prev => !prev)}
-                                    className={`
-                                        flex items-center justify-center rounded-xl p-3 transition-all duration-200 relative
-                                        ${isProfileOpen
-                                            ? 'bg-cdc-green-dark text-white shadow-[0_3px_10px_rgba(0,0,0,0.18)] scale-[1.03]'
-                                            : 'text-cdc-green-dark hover:bg-cdc-green-dark hover:text-white hover:shadow-[0_3px_10px_rgba(0,0,0,0.18)]'
-                                        }
-                                    `}
-                                >
-                                    <svg
-                                        className={`h-10 w-10 transition-all duration-300 ${isProfileOpen ? 'rotate-90' : ''}`}
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
+                                <button onClick={() => setIsProfileOpen(!isProfileOpen)} className={`p-3 rounded-xl transition-all ${isProfileOpen ? 'bg-cdc-green-dark text-white shadow-md' : 'text-cdc-green-dark hover:bg-gray-100'}`}>
+                                    <svg className={`h-10 w-10 transition-transform ${isProfileOpen ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16m-16 6h16" />
                                     </svg>
                                 </button>
-
-                                {/* Dropdown Profil */}
                                 {isProfileOpen && (
                                     <div className="absolute top-full right-0 mt-4 w-64 bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden z-50">
-                                        <div className="px-5 py-4 border-b bg-gray-50 border-gray-200">
+                                        <div className="px-5 py-4 border-b bg-gray-50 text-center">
                                             <p className="text-sm text-gray-500">Masuk sebagai</p>
-                                            <div className="flex items-center gap-2 mt-1">
-                                                <svg className="w-6 h-6 text-cdc-green-dark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path d="M10 4A4 4 0 0 0 6 8A4 4 0 0 0 10 12A4 4 0 0 0 14 8A4 4 0 0 0 10 4M10 14C5.58 14 2 15.79 2 18V20H18V18C18 15.79 14.42 14 10 14Z" />
-                                                </svg>
-                                                <p className="text-lg font-bold text-cdc-green-dark truncate">{auth.user.name}</p>
-                                            </div>
+                                            <p className="text-lg font-bold text-cdc-green-dark truncate">{auth.user.name}</p>
                                         </div>
-
-                                        <div className="py-2">
-                                            <ProfileDropdownLink href={route('profile.show')}>
-                                                <div className="flex items-center gap-3">
-                                                    <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                        <path d="M10 4A4 4 0 0 0 6 8A4 4 0 0 0 10 12A4 4 0 0 0 14 8A4 4 0 0 0 10 4M17 12C16.87 12 16.76 12.09 16.74 12.21L16.55 13.53C16.25 13.66 15.96 13.82 15.7 14L14.46 13.5C14.35 13.5 14.22 13.5 14.15 13.63L13.15 15.36C13.09 15.47 13.11 15.6 13.21 15.68L14.27 16.5C14.25 16.67 14.24 16.83 14.24 17C14.24 17.17 14.25 17.33 14.27 17.5L13.21 18.32C13.12 18.4 13.09 18.53 13.15 18.64L14.15 20.37C14.21 20.5 14.34 20.5 14.46 20.5L15.7 20C15.96 20.18 16.24 20.35 16.55 20.47L16.74 21.79C16.76 21.91 16.86 22 17 22H19C19.11 22 19.22 21.91 19.24 21.79L19.43 20.47C19.73 20.34 20 20.18 20.27 20L21.5 20.5C21.63 20.5 21.76 20.5 21.83 20.37L22.83 18.64C22.89 18.53 22.86 18.4 22.77 18.32L21.7 17.5C21.72 17.33 21.74 17.17 21.74 17C21.74 16.83 21.73 16.67 21.7 16.5L22.76 15.68C22.85 15.6 22.88 15.47 22.82 15.36L21.82 13.63C21.76 13.5 21.63 13.5 21.5 13.5L20.27 14C20 13.82 19.73 13.65 19.42 13.53L19.23 12.21C19.22 12.09 19.11 12 19 12H17M10 14C5.58 14 2 15.79 2 18V20H11.68A7 7 0 0 1 11 17A7 7 0 0 1 11.64 14.09C11.11 14.03 10.56 14 10 14M18 15.5C18.83 15.5 19.5 16.17 19.5 17C19.5 17.83 18.83 18.5 18 18.5C17.16 18.5 16.5 17.83 16.5 17C16.5 16.17 17.17 15.5 18 15.5Z" />
-                                                    </svg>
-                                                    AKUN
-                                                </div>
-                                            </ProfileDropdownLink>
-
-                                            <ProfileDropdownLink href={route('logout')} method="post" as="button">
-                                                <div className="flex items-center gap-3">
-                                                    <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                        <path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
-                                                    </svg>
-                                                    KELUAR
-                                                </div>
-                                            </ProfileDropdownLink>
+                                        <div className="py-2 text-center">
+                                            <ProfileDropdownLink href={route('profile.show')}>AKUN</ProfileDropdownLink>
+                                            <ProfileDropdownLink href={route('logout')} method="post" as="button">KELUAR</ProfileDropdownLink>
                                         </div>
                                     </div>
                                 )}
                             </div>
                         ) : (
-                            // Tampilan Jika Tamu (Belum Login)
-                            <Link
-                                href={route('login')}
-                                className="hidden md:inline-flex items-center justify-center rounded-[10px] bg-gradient-to-r from-[#09AD79] to-[#044732] px-9 py-4 text-[22px] font-semibold text-white shadow-[0_6px_15px_rgba(0,0,0,0.25)] hover:scale-105 hover:brightness-110 transition-all duration-300"
-                            >
-                                MASUK
-                            </Link>
+                            <Link href={route('login')} className="hidden md:inline-flex rounded-[10px] bg-gradient-to-r from-[#09AD79] to-[#044732] px-9 py-4 text-[22px] font-semibold text-white shadow-lg hover:scale-105 transition-all">MASUK</Link>
                         )}
 
-                        {/* Tombol Hamburger Mobile */}
-                        <button
-                            onClick={() => setIsMobileMenuOpen(prev => !prev)}
-                            className="inline-flex md:hidden items-center justify-center rounded-md p-3 text-gray-700 hover:bg-gray-100 hover:text-cdc-green-dark transition-all duration-200"
-                        >
-                            <svg className="h-14 w-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                {isMobileMenuOpen ? (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
-                                ) : (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16M4 18h16" />
-                                )}
+                        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-3 text-gray-700">
+                            <svg className="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                {isMobileMenuOpen ? <path d="M6 18L18 6M6 6l12 12" /> : <path d="M4 6h16M4 12h16m-16 6h16" />}
                             </svg>
                         </button>
                     </div>
                 </nav>
 
-                {/* Menu Mobile */}
+                {/* Mobile Menu */}
                 {isMobileMenuOpen && (
-                    <div className="
-                        md:hidden
-                        bg-white
-                        shadow-[0_8px_25px_rgba(0,0,0,0.15)]
-                        p-4
-                        rounded-b-3xl
-                        max-h-[75vh]
-                        overflow-y-auto
-                        border-t border-gray-200
-                    ">
-
+                    <div className="md:hidden bg-white shadow-xl p-4 rounded-b-3xl border-t">
                         <div className="flex flex-col space-y-2">
-                            <MobileNavLink href={auth.user ? route('dashboard') : '/'} onClick={() => setIsMobileMenuOpen(false)}>
-                                BERANDA
-                            </MobileNavLink>
-
+                            <MobileNavLink href={auth.user ? route('dashboard') : '/'} onClick={() => setIsMobileMenuOpen(false)}>BERANDA</MobileNavLink>
                             <MobileDropdown title="PROFIL">
                                 <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
                                 <DropdownLink href={route('profil.konselor')}>KONSELOR</DropdownLink>
                                 <DropdownLink href={route('profil.developer')}>PENGEMBANG</DropdownLink>
                             </MobileDropdown>
-
                             <MobileDropdown title="PROGRAM">
                                 <DropdownLink href={route('program.orientasi.kerja')}>ORIENTASI DUNIA KERJA</DropdownLink>
                                 <DropdownLink href={route('program.campus.hiring')}>CAMPUS HIRING</DropdownLink>
@@ -364,34 +279,21 @@ export default function MainLayout({ children }) {
                                 <DropdownLink href={route('program.tips-dan-trik')}>TIPS DAN TRIK</DropdownLink>
                                 <DropdownLink href={route('program.berita')}>BERITA</DropdownLink>
                             </MobileDropdown>
-
                             <MobileDropdown title="LAYANAN">
                                 <DropdownLink href={route('layanan.konsultasi')}>KONSULTASI</DropdownLink>
                                 <DropdownLink href={route('layanan.cv.review')}>REVIEW CV</DropdownLink>
                                 <DropdownLink href={route('layanan.tes.minat.bakat')}>TES MINAT DAN BAKAT</DropdownLink>
                             </MobileDropdown>
-
                             <MobileDropdown title="PELUANG KARIR">
                                 <DropdownLink href={route('magang.index')}>LOWONGAN MAGANG</DropdownLink>
                                 <DropdownLink href={route('loker.index')}>LOWONGAN PEKERJAAN</DropdownLink>
                                 <DropdownLink href={route('sertifikasi.index')}>PROGRAM SERTIFIKASI</DropdownLink>
                             </MobileDropdown>
-
-                            {!auth.user && (
-                                <Link
-                                    href={route('login')}
-                                    className="mt-4 block text-center rounded-lg bg-gradient-to-r from-[#09AD79] to-[#044732] px-6 py-4 text-lg font-semibold text-white shadow-lg"
-                                >
-                                    MASUK
-                                </Link>
-                            )}
-
-                            {auth.user && (
-                                <div className="mt-4 pt-4 border-t border-gray-200 space-y-2">
-                                    <div className="px-4 py-2">
-                                        <p className="text-base font-bold text-gray-900 truncate">{auth.user.name}</p>
-                                        <p className="text-sm text-gray-500">{auth.user.email}</p>
-                                    </div>
+                            {!auth.user ? (
+                                <Link href={route('login')} className="mt-4 block text-center rounded-lg bg-cdc-green-dark py-4 text-white font-bold">MASUK</Link>
+                            ) : (
+                                <div className="mt-4 pt-4 border-t space-y-2 text-center">
+                                    <p className="font-bold text-cdc-green-dark">{auth.user.name}</p>
                                     <ProfileDropdownLink href={route('profile.show')}>AKUN</ProfileDropdownLink>
                                     <ProfileDropdownLink href={route('logout')} method="post" as="button">KELUAR</ProfileDropdownLink>
                                 </div>
@@ -400,9 +302,8 @@ export default function MainLayout({ children }) {
                     </div>
                 )}
             </header>
-
-            {/* Konten Halaman */}
-            <main className="pt-[120px] md:pt-[130px] overflow-visible">{children}</main>
+            <main className="pt-[120px] md:pt-[130px]">{children}</main>
         </div>
     );
 }
+ 
