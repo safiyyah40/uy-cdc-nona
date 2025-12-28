@@ -195,7 +195,7 @@ export default function MainLayout({ children }) {
                             <NavDropdown title="LAYANAN" basePath="/layanan">
                                 <DropdownLink href="/layanan/konsultasi">KONSULTASI</DropdownLink>
                                 <DropdownLink href={route('layanan.cv.review')}>REVIEW CV</DropdownLink>
-                                <DropdownLink href={route('layanan.tes.minat.bakat')}>TES MINAT DAN BAKAT</DropdownLink>
+                                <DropdownLink href={route('layanan.tes.minat.bakat')}>TES MINAT & BAKAT RIASEC</DropdownLink>
                             </NavDropdown>
 
                             <NavDropdown title="PELUANG KARIR" basePath="/peluang-karir">
@@ -282,7 +282,7 @@ export default function MainLayout({ children }) {
                             <MobileDropdown title="LAYANAN">
                                 <DropdownLink href={route('layanan.konsultasi')}>KONSULTASI</DropdownLink>
                                 <DropdownLink href={route('layanan.cv.review')}>REVIEW CV</DropdownLink>
-                                <DropdownLink href={route('layanan.tes.minat.bakat')}>TES MINAT DAN BAKAT</DropdownLink>
+                                <DropdownLink href={route('layanan.tes.minat.bakat')}>TES MINAT & BAKAT RIASEC</DropdownLink>
                             </MobileDropdown>
                             <MobileDropdown title="PELUANG KARIR">
                                 <DropdownLink href={route('magang.index')}>LOWONGAN MAGANG</DropdownLink>

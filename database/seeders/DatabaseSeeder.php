@@ -25,6 +25,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call([
+            RiasecCategorySeeder::class,
+            RiasecQuestionSeeder::class,
+        ]);
         // User
         User::factory()->create([
             'name' => 'Admin Puskaka',

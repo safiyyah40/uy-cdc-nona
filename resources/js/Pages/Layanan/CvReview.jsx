@@ -11,30 +11,7 @@ import {
     MousePointerClick, Eye, ChevronLeft, ChevronRight, GraduationCap, TrendingUp
 } from "lucide-react";
 
-// FEATURE CARD
-const FeatureCard = ({ icon: Icon, title, description }) => {
-    return (
-        <div className="group bg-white rounded-2xl border border-emerald-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-full">
-            <div className="p-6 flex items-center justify-center bg-gray-50 border-b border-emerald-50 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[#00CA65]/5"></div>
-                <div className="relative z-10">
-                    <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center ring-1 ring-emerald-100 shadow-sm group-hover:scale-110 transition-transform duration-500">
-                        <Icon className="w-8 h-8 text-[#004d40]" />
-                    </div>
-                </div>
-            </div>
-            <div className="p-6 flex flex-col flex-grow text-center">
-                <h3 className="text-lg font-bold text-gray-900 mb-2 font-serif group-hover:text-[#00CA65] transition-colors">
-                    {title}
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                    {description}
-                </p>
-            </div>
-        </div>
-    );
-};
-
+// TEMPLATE CARD COMPONENT
 const TemplateCard = ({ template, onKlik }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
 

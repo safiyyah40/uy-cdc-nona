@@ -5,19 +5,19 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\CampusHiringController;
 use App\Http\Controllers\CvReviewController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KonselorController;
+use App\Http\Controllers\KonsultasiController;
+use App\Http\Controllers\LokerController;
+use App\Http\Controllers\MagangController;
 use App\Http\Controllers\ProfileCompletionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilKonselorController;
 use App\Http\Controllers\ProfilPuskakaController;
+use App\Http\Controllers\RiasecTestController;
 use App\Http\Controllers\SeminarController;
 use App\Http\Controllers\SertifikasiController;
 use App\Http\Controllers\TipsDanTrikController;
 use App\Models\BerandaSlide;
-use App\Models\Seminar;
-use App\Http\Controllers\MagangController;
-use App\Http\Controllers\LokerController;
-use App\Http\Controllers\KonsultasiController;
-use App\Http\Controllers\KonselorController;
 use App\Models\Berita;
 use App\Models\Loker;
 use App\Models\Magang;
@@ -254,28 +254,25 @@ Route::prefix('layanan')->name('layanan.')->group(function () {
         Route::post('/konselor/review/{id}/feedback', [CvReviewController::class, 'submitFeedback'])
             ->name('konselor.feedback');
     });
-
-    // Tes minat bakat
-    Route::get('/tes-minat-bakat', function () {
-        return Inertia::render('Layanan/TesMinatBakat');
-    })->name('tes.minat.bakat');
-
-    Route::get('/tes-mbti', function () {
-        return Inertia::render('Layanan/TesMBTI');
-    })->name('tes-mbti');
 });
 
-// Route Detail Berita
-Route::get('/berita/{id}/{slug}', function ($id) {
-    $user = auth()->guard('web')->user();
+Route::get('/layanan/tes-minat-bakat', [RiasecTestController::class, 'index'])
+    ->name('layanan.tes.minat.bakat');
 
-    return Inertia::render('Program/DetailBerita', [
-        'newsId' => (int) $id,
-        'auth' => [
-            'user' => $user,
-        ],
-    ]);
-})->name('berita.show');
+
+// --- 2. BAGIAN PRIVATE (Harus Login) ---
+// Taruh di DALAM middleware auth
+Route::middleware(['auth'])->group(function () {
+    
+    // Halaman Kuis (Saat klik "Mulai Tes")
+    Route::get('/layanan/tes-mbti', [RiasecTestController::class, 'quiz'])
+        ->name('riasec.quiz');
+
+    // API & Submit Data
+    Route::get('/layanan/tes-minat-bakat/questions', [RiasecTestController::class, 'getQuestions'])->name('riasec.questions');
+    Route::post('/layanan/tes-minat-bakat/submit', [RiasecTestController::class, 'submitTest'])->name('riasec.submit');
+    Route::get('/layanan/tes-minat-bakat/history', [RiasecTestController::class, 'history'])->name('riasec.history');
+});
 
 //  Route Peluang Karir - Index Sertifikasi
 Route::get('/peluang-karir/sertifikasi', [SertifikasiController::class, 'index'])
