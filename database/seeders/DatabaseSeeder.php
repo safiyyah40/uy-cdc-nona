@@ -264,6 +264,7 @@ class DatabaseSeeder extends Seeder
 
             // 2. BUAT PROFIL KONSELOR (COUNSELORS TABLE)
             $counselor = Counselor::create([
+                'user_id' => $user->id,
                 'name' => $data['name'],
                 'title' => $data['title'],
                 'email' => $email,

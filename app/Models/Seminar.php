@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Seminar extends Model
 {
@@ -29,6 +30,7 @@ class Seminar extends Model
 
      protected $casts = [
         'date' => 'date',
+        'time' => 'datetime',
         'is_active' => 'boolean',
     ];
 
@@ -59,5 +61,9 @@ class Seminar extends Model
     public function scopeLatest($query)
     {
         return $query->orderBy('date', 'desc')->orderBy('created_at', 'desc');
+    }
+    public function calendarEvent(): MorphOne
+    {
+        return $this->morphOne(CalendarEvent::class, 'eventable');
     }
 }

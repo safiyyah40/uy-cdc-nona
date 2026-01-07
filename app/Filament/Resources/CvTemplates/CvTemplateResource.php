@@ -27,7 +27,7 @@ class CvTemplateResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Manajemen Layanan';
 
-    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $recordTitleAttribute = 'judul_template';
     
 
     public static function getModelLabel(): string

@@ -79,8 +79,7 @@ class User extends Authenticatable
     {
         return match ($this->role) {
             'mahasiswa' => 'NPM',
-            'konselor' => 'NIP',
-            'admin' => 'NIP',
+            'konselor', 'admin', 'super_admin' => 'NIP',
             default => 'ID'
         };
     }
@@ -99,6 +98,14 @@ class User extends Authenticatable
         }
 
         return $this->phone;
+    }
+
+    /**
+     * Cek role mahasiswa
+     */
+    public function isMahasiswa(): bool
+    {
+        return $this->role === 'mahasiswa';
     }
 
     public function counselor()
@@ -128,5 +135,13 @@ class User extends Authenticatable
     public function counselingBookings()
     {
         return $this->hasMany(CounselingBooking::class);
+    }
+    
+    /**
+     * Cek role admin
+     */
+    public function isAdmin(): bool
+    {
+        return in_array($this->role, ['admin', 'super_admin']);
     }
 }

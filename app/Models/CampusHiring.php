@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
 
 class CampusHiring extends Model
@@ -18,7 +19,7 @@ class CampusHiring extends Model
         'content',
         'image',
         'registration_link',
-        'is_active'
+        'is_active',
     ];
 
     protected $casts = [
@@ -26,7 +27,7 @@ class CampusHiring extends Model
         'is_active' => 'boolean',
     ];
 
-     // Auto generate slug
+    // Auto generate slug
     protected static function boot()
     {
         parent::boot();
@@ -54,5 +55,10 @@ class CampusHiring extends Model
     public function scopeLatest($query)
     {
         return $query->orderBy('date', 'desc')->orderBy('created_at', 'desc');
+    }
+
+    public function calendarEvent(): MorphOne
+    {
+        return $this->morphOne(CalendarEvent::class, 'eventable');
     }
 }

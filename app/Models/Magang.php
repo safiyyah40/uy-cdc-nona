@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
 
 class Magang extends Model
@@ -30,7 +31,7 @@ class Magang extends Model
         'is_active',
     ];
 
-        protected $casts = [
+    protected $casts = [
         'categories' => 'array',
         'deadline' => 'date',
         'posted_date' => 'date',
@@ -54,9 +55,14 @@ class Magang extends Model
         });
 
         static::updating(function ($magang) {
-            if ($magang->isDirty('title') && !$magang->isDirty('slug')) {
+            if ($magang->isDirty('title') && ! $magang->isDirty('slug')) {
                 $magang->slug = Str::slug($magang->title);
             }
         });
+    }
+
+    public function calendarEvent(): MorphOne
+    {
+        return $this->morphOne(CalendarEvent::class, 'eventable');
     }
 }

@@ -27,7 +27,7 @@ class CvReviewResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Manajemen Layanan';
 
-    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $recordTitleAttribute = 'target_position';
     protected static ?int $navigationSort = 2;
 
     public static function getModelLabel(): string

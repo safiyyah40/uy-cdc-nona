@@ -4,17 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Loker extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title', 'slug', 'company', 'location', 
+        'title', 'slug', 'company', 'location',
         'type', 'work_model', 'experience_level', 'categories',
         'salary_min', 'salary_max', 'deadline', 'posted_date',
         'logo', 'image', 'description', 'requirements', 'benefits',
-        'application_url', 'is_active'
+        'application_url', 'is_active',
     ];
 
     protected $guarded = ['id'];
@@ -27,4 +28,9 @@ class Loker extends Model
         'salary_max' => 'decimal:2',
         'is_active' => 'boolean',
     ];
+
+    public function calendarEvent(): MorphOne
+    {
+        return $this->morphOne(CalendarEvent::class, 'eventable');
+    }
 }

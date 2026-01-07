@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CampusHiringController;
 use App\Http\Controllers\CvReviewController;
 use App\Http\Controllers\DashboardController;
@@ -95,7 +96,7 @@ Route::get('/', function () {
         });
 
     $latestSeminar = Seminar::where('is_active', true)
-        ->orderBy('date', 'desc') // atau 'created_at'
+        ->orderBy('date', 'desc')
         ->take(3)
         ->get()
         ->map(function ($item) {
@@ -103,7 +104,7 @@ Route::get('/', function () {
                 'id' => $item->id,
                 'title' => $item->title,
                 'date' => $item->date ? $item->date->format('d M Y') : '-',
-                'type' => $item->type, // Pastikan kolom 'type' ada di DB (Online/Offline)
+                'type' => $item->type,
                 'image_url' => $item->image ? Storage::url($item->image) : null,
             ];
         });
@@ -117,7 +118,7 @@ Route::get('/', function () {
                 'id' => $item->id,
                 'title' => $item->title,
                 'slug' => $item->slug,
-                'summary' => $item->summary, // Pastikan ada kolom summary/excerpt di DB
+                'summary' => $item->summary,
                 'category' => $item->category,
                 'reading_time' => $item->reading_time, // Misalnya '5 Menit'
                 'image_url' => $item->image ? Storage::url($item->image) : null,
@@ -145,12 +146,49 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/akun/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/akun/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+   // GET - Ambil semua events
+    Route::get('/api/calendar/events', [CalendarController::class, 'getEvents']);
+    
+    // GET - Ambil events by date
+    Route::get('/api/calendar/events/{date}', [CalendarController::class, 'getEventsByDate']);
+    
+    // POST - Tambah event baru
+    Route::post('/api/calendar/events', [CalendarController::class, 'store']);
+    
+    // PUT - Update event
+    Route::put('/api/calendar/events/{id}', [CalendarController::class, 'update']);
+    
+    // DELETE - Hapus event
+    Route::delete('/api/calendar/events/{id}', [CalendarController::class, 'destroy']);
+    
+    // AREA MAHASISWA (Booking Konsultasi)
+    Route::get('/layanan/konsultasi/booking', [KonsultasiController::class, 'showBookingForm'])->name('konsultasi.booking');
+    Route::post('/layanan/konsultasi/submit', [KonsultasiController::class, 'store'])->name('konsultasi.submit');
+
+    // LIST RIWAYAT
+    Route::get('/layanan/konsultasi/riwayat', [KonsultasiController::class, 'userList'])->name('konsultasi.list');
+
+    // DETAIL KONSULTASI (Harus ada parameter ID)
+    Route::get('/layanan/konsultasi/riwayat/{id}', [KonsultasiController::class, 'show'])->name('konsultasi.show');
+
+    Route::post('/layanan/konsultasi/cancel/{id}', [KonsultasiController::class, 'cancel'])->name('konsultasi.cancel');
+
+    // Route Peluang Karir - Detail Sertifikasi
+    Route::get('/peluang-karir/sertifikasi/{id}', [SertifikasiController::class, 'show'])
+        ->name('sertifikasi.show');
+
+    // Route Peluang Karir - Detail Magang
+    Route::get('/peluang-karir/magang/{slug}', [MagangController::class, 'show'])->name('magang.show');
+
+    // Route Peluang Karir - Detail Lowongan Kerja
+    Route::get('/peluang-karir/lowongan-kerja/{slug}', [LokerController::class, 'show'])->name('loker.show');
 });
 
 // AREA KONSELOR
 Route::middleware(['auth', 'verified'])->prefix('konselor')->name('konselor.')->group(function () {
 
-    // PORTAL KONSELOR (Halaman Input Jadwal / KonsultasiKonselor.jsx)
+    // PORTAL KONSELOR (Halaman Input Jadwal)
     Route::get('/dashboard', [KonselorController::class, 'index'])->name('dashboard');
 
     // HALAMAN TABEL BOOKING
@@ -173,19 +211,6 @@ Route::middleware(['auth', 'verified'])->prefix('konselor')->name('konselor.')->
 
 // AREA MAHASISWA (Booking Konsultasi)
 Route::get('/layanan/konsultasi', [KonsultasiController::class, 'index'])->name('layanan.konsultasi');
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/layanan/konsultasi/booking', [KonsultasiController::class, 'showBookingForm'])->name('konsultasi.booking');
-    Route::post('/layanan/konsultasi/submit', [KonsultasiController::class, 'store'])->name('konsultasi.submit');
-
-    // LIST RIWAYAT
-    Route::get('/layanan/konsultasi/riwayat', [KonsultasiController::class, 'userList'])->name('konsultasi.list');
-
-    // BARU: DETAIL KONSULTASI (Harus ada parameter ID)
-    Route::get('/layanan/konsultasi/riwayat/{id}', [KonsultasiController::class, 'show'])->name('konsultasi.show');
-
-    Route::post('/layanan/konsultasi/cancel/{id}', [KonsultasiController::class, 'cancel'])->name('konsultasi.cancel');
-});
 
 // Profil
 Route::get('/profil/puskaka', [ProfilPuskakaController::class, 'index'])->name('profil.puskaka');
@@ -259,11 +284,10 @@ Route::prefix('layanan')->name('layanan.')->group(function () {
 Route::get('/layanan/tes-minat-bakat', [RiasecTestController::class, 'index'])
     ->name('layanan.tes.minat.bakat');
 
-
 // --- 2. BAGIAN PRIVATE (Harus Login) ---
 // Taruh di DALAM middleware auth
 Route::middleware(['auth'])->group(function () {
-    
+
     // Halaman Kuis (Saat klik "Mulai Tes")
     Route::get('/layanan/tes-mbti', [RiasecTestController::class, 'quiz'])
         ->name('riasec.quiz');
@@ -278,12 +302,6 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/peluang-karir/sertifikasi', [SertifikasiController::class, 'index'])
     ->name('sertifikasi.index');
 
-// Route Peluang Karir - Detail Sertifikasi
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/peluang-karir/sertifikasi/{id}', [SertifikasiController::class, 'show'])
-        ->name('sertifikasi.show');
-});
-
 // Route Detail Berita (Jika ingin wajib login, taruh di dalam middleware auth)
 Route::middleware(['auth'])->group(function () {
     Route::get('/berita/{id}/{slug}', [BeritaController::class, 'show'])
@@ -292,18 +310,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Route Peluang Karir - Index Magang
 Route::get('/peluang-karir/magang', [MagangController::class, 'index'])->name('magang.index');
-
-// Route Peluang Karir - Detail Magang
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/peluang-karir/magang/{slug}', [MagangController::class, 'show'])->name('magang.show');
-});
-
 Route::get('/peluang-karir/lowongan-kerja', [LokerController::class, 'index'])->name('loker.index');
-
-// Auth
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/peluang-karir/lowongan-kerja/{slug}', [LokerController::class, 'show'])->name('loker.show');
-});
 
 // Route akun profile
 Route::middleware(['auth'])->group(function () {

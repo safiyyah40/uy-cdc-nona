@@ -91,7 +91,7 @@ export default function Welcome({ auth, slides, latestNews, latestMagang, latest
                     </div>
                      </div>
 
-                    <KalenderSection />
+                    {auth.user && <KalenderSection />}
                 </div>
                         <StatistikLayanan />
 

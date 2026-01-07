@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -86,8 +87,8 @@ class Sertifikasi extends Model
     public function scopePublished($query)
     {
         return $query->where('status', 'Published')
-                     ->whereNotNull('published_at')
-                     ->where('published_at', '<=', now());
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now());
     }
 
     public function scopeActive($query)
@@ -101,25 +102,25 @@ class Sertifikasi extends Model
         if ($this->is_free) {
             return 'Gratis';
         }
-        
-        return number_format($this->fee, 0, ',', '.') . ' ' . $this->fee_currency;
+
+        return number_format($this->fee, 0, ',', '.').' '.$this->fee_currency;
     }
 
     public function getIsDeadlineSoonAttribute()
     {
-        if (!$this->registration_deadline) {
+        if (! $this->registration_deadline) {
             return false;
         }
 
         $deadline = $this->registration_deadline;
         $daysUntilDeadline = now()->diffInDays($deadline, false);
-        
+
         return $daysUntilDeadline <= 7 && $daysUntilDeadline > 0;
     }
 
     public function getIsFullAttribute()
     {
-        if (!$this->quota) {
+        if (! $this->quota) {
             return false;
         }
 
@@ -135,5 +136,10 @@ class Sertifikasi extends Model
     public function incrementEnrolledCount()
     {
         $this->increment('enrolled_count');
+    }
+
+    public function calendarEvent(): MorphOne
+    {
+        return $this->morphOne(CalendarEvent::class, 'eventable');
     }
 }

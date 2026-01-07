@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CounselingBooking extends Model
@@ -17,7 +18,7 @@ class CounselingBooking extends Model
         'topic', 'notes',
         'scheduled_date', 'scheduled_time', 'counselor_name',
         'status', 'rejection_reason', 'counselor_notes',
-        'accepted_at', 'rejected_at', 'completed_at', 'cancelled_at'
+        'accepted_at', 'rejected_at', 'completed_at', 'cancelled_at',
     ];
 
     protected $casts = [
@@ -73,8 +74,8 @@ class CounselingBooking extends Model
 
     public function canUploadReport()
     {
-        return $this->status === 'accepted' && 
-               !$this->report;
+        return $this->status === 'accepted' &&
+               ! $this->report;
     }
 
     // Scopes
@@ -106,6 +107,11 @@ class CounselingBooking extends Model
     public function scopeUpcoming($query)
     {
         return $query->where('scheduled_date', '>=', now()->format('Y-m-d'))
-                     ->whereIn('status', ['pending', 'accepted']);
+            ->whereIn('status', ['pending', 'accepted']);
+    }
+
+    public function calendarEvent(): MorphOne
+    {
+        return $this->morphOne(CalendarEvent::class, 'eventable');
     }
 }
