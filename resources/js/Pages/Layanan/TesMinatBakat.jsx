@@ -127,7 +127,7 @@ const HeroSection = ({ user, scrollToContent }) => {
                                 </div>
                                 <div className="border-l border-gray-200 pl-4">
                                     <div className="text-xl font-bold font-kaisei text-yarsi-green mt-1">6</div>
-                                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-2">Tipe RIASE</div>
+                                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-2">Tipe RIASEC</div>
                                 </div>
                             </div>
                         </div>

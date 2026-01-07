@@ -5,11 +5,13 @@ import BeritaSection from "../Components/BeritaSection";
 import StatistikLayanan from '../Components/StatistikLayanan';
 import LowonganPekerjaan from '../Components/LowonganPekerjaan';
 import InfoMagang from '../Components/InfoMagang';
-import TesMinatBakat from '../Components/TesMinatBakat';
+import TesMinatBakat from '../Components/TesMinatBakatComp';
+import KonsultasiComp from '@/Components/KonsultasiComp';
 import KalenderSection from '../Components/KalenderSection';
 import Footer from '../Components/Footer';
 import ODKCard from '@/Components/ODKCard';
 import CampusHiringCard from '@/Components/CampusHiringCard';
+import CvReviewComp from '@/Components/CvReviewComp';
 import SeminarCard from '@/Components/SeminarCard';
 import TipsCard from '@/Components/TipsCard';
 
@@ -31,7 +33,7 @@ export default function Welcome({ auth, slides, latestNews, latestMagang, latest
                         </h3>
 
                         <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight mb-6 drop-shadow-sm font-kaisei">
-                            Career Development Center <br/>
+                            Career Development Center <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-teal-500">
                                 Universitas YARSI
                             </span>
@@ -50,16 +52,18 @@ export default function Welcome({ auth, slides, latestNews, latestMagang, latest
                 {/* --- 3. LAYANAN & PROGRAM --- */}
                 <div className="space-y-24 pb-20 mt-16">
 
+                    <KonsultasiComp />
+                    <CvReviewComp />
                     <TesMinatBakat />
 
                     {/* --- Info Magang --- */}
-                <div className="w-full">
-                    <div className="max-w-7xl mx-auto px-6 mb-8">
-                    </div>
                     <div className="w-full">
-                        <InfoMagang latestMagang={latestMagang} />
+                        <div className="max-w-7xl mx-auto px-6 mb-8">
+                        </div>
+                        <div className="w-full">
+                            <InfoMagang latestMagang={latestMagang} />
+                        </div>
                     </div>
-                </div>
 
                     {/* Lowongan Pekerjaan */}
                     <div className="w-full">
@@ -83,17 +87,17 @@ export default function Welcome({ auth, slides, latestNews, latestMagang, latest
                     <TipsCard tips={latestTips} />
 
                     {/* Berita */}
-                   <div className="w-full">
-                    <div className="max-w-7xl mx-auto px-6 mb-8">
+                    <div className="w-full">
+                        <div className="max-w-7xl mx-auto px-6 mb-8">
                         </div>
                         <div className="w-full">
-                        <BeritaSection latestNews={latestNews} />
+                            <BeritaSection latestNews={latestNews} />
+                        </div>
                     </div>
-                     </div>
 
                     {auth.user && <KalenderSection />}
                 </div>
-                        <StatistikLayanan />
+                <StatistikLayanan />
 
                 <Footer />
             </div>

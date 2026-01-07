@@ -6,7 +6,7 @@ import { Clock, Calendar, MapPin, User, ArrowLeft, ArrowRight } from 'lucide-rea
 
 export default function DetailCampusHiring({ auth, campusHiring }) {
     const mainGreen = "text-emerald-700";
-    const accentGreen = "bg-emerald-600";
+    const borderGreen = "group-hover:border-emerald-700";
     const accentYellow = "bg-yellow-500";
 
     const data = campusHiring;
@@ -25,13 +25,17 @@ export default function DetailCampusHiring({ auth, campusHiring }) {
                 {/* HEADER SECTION */}
                 <div className="pt-24 pb-12 relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-emerald-50 border-b border-emerald-100/50">
                     <div className="container mx-auto px-6 max-w-[90rem] relative z-10">
-                        <Link
-                            href={route('program.campus.hiring')}
-                            className={`inline-flex items-center text-gray-600 hover:${mainGreen} transition-colors mb-6 font-medium text-sm uppercase tracking-widest`}
-                        >
-                            <ArrowLeft className="w-4 h-4 mr-2" />
-                            Kembali ke Daftar Campus Hiring
-                        </Link>
+                        <div className="mb-8">
+                            <Link
+                                href={route('program.campus.hiring')}
+                                className={`inline-flex items-center gap-2 text-gray-500 hover:${mainGreen} transition-all font-medium text-sm group`}
+                            >
+                                <div className={`p-1 rounded-full bg-white border border-gray-200 ${borderGreen} transition-colors`}>
+                                    <ArrowLeft className="w-4 h-4" />
+                                </div>
+                                <span className="uppercase tracking-wider text-xs">Kembali ke Daftar Campus Hiring</span>
+                            </Link>
+                        </div>
 
                         <h1 className="text-4xl md:text-6xl font-serif font-bold text-gray-900 leading-tight mb-6">
                             {data.title}
@@ -67,7 +71,6 @@ export default function DetailCampusHiring({ auth, campusHiring }) {
 
                         {/* Info Card & CTA */}
                         <div className="lg:col-span-1 space-y-8">
-                            {/* Info Card */}
                             <div className="bg-white text-gray-800 p-8 rounded-2xl shadow-xl border-t-4 border-emerald-600 sticky top-8">
                                 <h3 className={`text-2xl font-bold mb-5 ${mainGreen} border-b border-gray-200 pb-3`}>
                                     Informasi Acara
@@ -131,7 +134,7 @@ export default function DetailCampusHiring({ auth, campusHiring }) {
     );
 }
 
-// KOMPONEN INFO ITEM
+/* KOMPONEN INFO ITEM */
 const InfoItem = ({ Icon, label, value, mainGreen }) => (
     <li className="flex items-start">
         <Icon className={`w-5 h-5 mt-1 mr-4 flex-shrink-0 ${mainGreen}`} />
