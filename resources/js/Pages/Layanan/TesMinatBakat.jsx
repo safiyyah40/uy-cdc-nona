@@ -59,7 +59,7 @@ const HeroSection = ({ user, scrollToContent }) => {
 
     const handleMainClick = (e) => {
         if (user) {
-            router.get('/layanan/tes-mbti');
+            router.get('/layanan/tes-riasec');
         } else {
             e.preventDefault();
             scrollToContent();
@@ -361,7 +361,7 @@ function TesMinatBakat() {
                                 Mulai perjalanan penemuan diri Anda sekarang. Hanya butuh 10 menit untuk mengubah masa depan karir Anda.
                             </p>
                             <button
-                                onClick={() => user ? router.get('/layanan/tes-mbti') : router.get('/login?redirect_to=/layanan/tes-minat-bakat')}
+                                onClick={() => user ? router.get('/layanan/tes-riasec') : router.get('/login?redirect_to=/layanan/tes-minat-bakat')}
                                 className="group px-10 py-5 bg-[#004d40] text-white font-bold text-lg rounded-xl hover:bg-[#00382e] shadow-2xl hover:shadow-emerald-900/30 transition-all transform hover:-translate-y-2 inline-flex items-center gap-3"
                             >
                                 <BrainCircuit className="w-6 h-6" />

@@ -68,7 +68,7 @@ const RIASEC_STYLES = {
     }
 };
 
-const TesMBTI = ({ auth }) => {
+const TesRiasec = ({ auth }) => {
     // State Management
     const [step, setStep] = useState("intro"); // intro, quiz, result
     const [loading, setLoading] = useState(false);
@@ -486,4 +486,4 @@ const TesMBTI = ({ auth }) => {
     );
 };
 
-export default TesMBTI;
+export default TesRiasec;

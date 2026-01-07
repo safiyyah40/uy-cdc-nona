@@ -289,7 +289,7 @@ Route::get('/layanan/tes-minat-bakat', [RiasecTestController::class, 'index'])
 Route::middleware(['auth'])->group(function () {
 
     // Halaman Kuis (Saat klik "Mulai Tes")
-    Route::get('/layanan/tes-mbti', [RiasecTestController::class, 'quiz'])
+    Route::get('/layanan/tes-riasec', [RiasecTestController::class, 'quiz'])
         ->name('riasec.quiz');
 
     // API & Submit Data

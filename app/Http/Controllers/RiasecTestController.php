@@ -155,7 +155,7 @@ class RiasecTestController extends Controller
 
     public function quiz()
     {
-        return Inertia::render('Layanan/TesMBTI');
+        return Inertia::render('Layanan/TesRiasec');
     }
 
     /**
