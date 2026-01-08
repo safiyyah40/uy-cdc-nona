@@ -212,7 +212,7 @@ const HeroSection = ({ user, isCounselor, scrollToContent }) => {
 };
 
 // MAIN PAGE COMPONENT
-function CvReview(props) {
+function IndexCvReview(props) {
     const { auth, flash, templates, pagination, filters } = usePage().props;
     const user = auth.user;
     const isCounselor = user?.role === 'konselor';
@@ -665,4 +665,4 @@ function CvReview(props) {
     );
 }
 
-export default CvReview;
+export default IndexCvReview;

@@ -63,7 +63,7 @@ class TipsDanTrikController extends Controller
             ->distinct()
             ->pluck('category');
 
-        return Inertia::render('TipsDanTrik/IndexTipsDanTrik', [
+        return Inertia::render('Program/TipsDanTrik/IndexTipsDanTrik', [
             'tips' => $tips,
             'filters' => $request->only(['search', 'category', 'per_page']),
             'isGuest' => $isGuest,
@@ -97,7 +97,7 @@ class TipsDanTrikController extends Controller
                 : null,
         ];
 
-        return Inertia::render('TipsDanTrik/DetailTipsDanTrik', [
+        return Inertia::render('Program/TipsDanTrik/DetailTipsDanTrik', [
             'tip' => $data,
         ]);
     }

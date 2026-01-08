@@ -71,9 +71,9 @@ const teamMembers = [
 
 // Mengganti nama file foto di sini
 const photos = [
-    { id: 1, image_path: '/images/nona1.jpeg', title: 'Pengembangan Website' },
-    { id: 2, image_path: '/images/nona2.jpeg', title: 'Diskusi Tim' },
-    { id: 3, image_path: '/images/nona3.jpeg', title: 'Desain Antarmuka' },
+    { id: 1, image_path: '/images/nona1.jpeg', title: 'Kontrak Klien' },
+    { id: 2, image_path: '/images/nona2.jpeg', title: 'Persetujuan Kontrak' },
+    { id: 3, image_path: '/images/nona3.jpeg', title: 'Bimbingan Project' },
 ];
 
 // Komponen utama
@@ -141,7 +141,7 @@ export default function Developer() {
                                         <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-1">Angkatan</div>
                                     </div>
                                     <div className="border-l border-gray-200 pl-4">
-                                        <div className="text-xl font-bold font-kaisei text-yarsi-green mt-1">Informatika</div>
+                                        <div className="text-xl font-bold font-kaisei text-yarsi-green mt-1">Teknik Informatika</div>
                                         <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-2">Jurusan</div>
                                     </div>
                                 </div>

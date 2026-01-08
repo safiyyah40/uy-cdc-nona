@@ -18,7 +18,7 @@ class RiasecTestController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Layanan/TesMinatBakat');
+        return Inertia::render('Layanan/TesMinatBakatRiasec/IndexTesMinatBakatRiasec');
     }
 
     /**
@@ -155,7 +155,7 @@ class RiasecTestController extends Controller
 
     public function quiz()
     {
-        return Inertia::render('Layanan/TesRiasec');
+        return Inertia::render('Layanan/TesMinatBakatRiasec/TesRiasec');
     }
 
     /**

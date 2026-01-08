@@ -15,6 +15,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilKonselorController;
 use App\Http\Controllers\ProfilPuskakaController;
 use App\Http\Controllers\RiasecTestController;
+use App\Http\Controllers\OrientasiDuniaKerjaController;
 use App\Http\Controllers\SeminarController;
 use App\Http\Controllers\SertifikasiController;
 use App\Http\Controllers\TipsDanTrikController;
@@ -222,11 +223,9 @@ Route::get('/profil/developer', function () {
     return Inertia::render('Profil/Developer');
 })->name('profil.developer');
 
-Route::get('/program/orientasi-dunia-kerja', function () {
-    return Inertia::render('Program/OrientasiDuniaKerja');
-})->name('program.orientasi.kerja');
-
 Route::prefix('program')->name('program.')->group(function () {
+    Route::get('/orientasi-dunia-kerja', [OrientasiDuniaKerjaController::class, 'index'])->name('odk.index');
+    Route::get('/orientasi-dunia-kerja/{id}/{slug}', [OrientasiDuniaKerjaController::class, 'show'])->name('odk.show');
 
     // Seminar
     Route::get('/seminar', [SeminarController::class, 'index'])->name('seminar');

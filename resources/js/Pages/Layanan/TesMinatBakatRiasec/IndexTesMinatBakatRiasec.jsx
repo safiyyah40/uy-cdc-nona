@@ -116,7 +116,7 @@ const HeroSection = ({ user, scrollToContent }) => {
                             </div>
 
                             {/* Stats Grid */}
-                            <div className="grid grid-cols-3 gap-4 border-t border-gray-200 pt-8 max-w-md mx-auto lg:mx-0">
+                            <div className="grid grid-cols-3 gap-4 border-gray-200 pt-10 max-w-md mx-auto lg:mx-0">
                                 <div>
                                     <div className="text-3xl font-bold font-kaisei text-yarsi-green">30</div>
                                     <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-1">Pertanyaan</div>
@@ -126,7 +126,7 @@ const HeroSection = ({ user, scrollToContent }) => {
                                     <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-1">Menit</div>
                                 </div>
                                 <div className="border-l border-gray-200 pl-4">
-                                    <div className="text-xl font-bold font-kaisei text-yarsi-green mt-1">6</div>
+                                    <div className="text-3xl font-bold font-kaisei text-yarsi-green mt-1">6</div>
                                     <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-2">Tipe RIASEC</div>
                                 </div>
                             </div>
@@ -154,7 +154,7 @@ const HeroSection = ({ user, scrollToContent }) => {
 };
 
 // MAIN COMPONENT
-function TesMinatBakat() {
+function IndexTesMinatBakatRiasec() {
     const { auth } = usePage().props;
     const user = auth.user;
 
@@ -394,4 +394,4 @@ function TesMinatBakat() {
     );
 }
 
-export default TesMinatBakat;
+export default IndexTesMinatBakatRiasec;

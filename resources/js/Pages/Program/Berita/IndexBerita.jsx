@@ -58,7 +58,7 @@ const CardBerita = ({ item }) => {
 };
 
 // --- KOMPONEN UTAMA ---
-export default function BeritaIndex({ berita, auth, filters, isGuest, total }) {
+export default function IndexBerita({ berita, auth, filters, isGuest, total }) {
     
     // State Management (Default 8)
     const [searchTerm, setSearchTerm] = useState(filters?.search || '');

@@ -82,7 +82,7 @@ class SeminarController extends Controller
         $totalAll = Seminar::active()->count();
 
         
-        return Inertia::render('Seminar/IndexSeminar', [
+        return Inertia::render('Program/Seminar/IndexSeminar', [
             'seminars' => $seminarsData,
             'pagination' => $pagination ?? null,
             'filters' => $request->only(['search', 'per_page']),
@@ -118,7 +118,7 @@ class SeminarController extends Controller
             'image_url' => $seminarData->image ? Storage::url($seminarData->image) : null,
             'images' => $seminarData->image ? [Storage::url($seminarData->image)] : [],
         ];
-        return Inertia::render('Seminar/DetailSeminar', [
+        return Inertia::render('Program/Seminar/DetailSeminar', [
             'seminar' => $seminar,
         ]);
     }

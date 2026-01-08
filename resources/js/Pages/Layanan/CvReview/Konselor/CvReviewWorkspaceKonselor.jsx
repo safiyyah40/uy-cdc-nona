@@ -69,7 +69,6 @@ export default function CvReviewWorkspaceKonselor() {
             alert("Beberapa file diabaikan karena format tidak didukung (Excel/PPT tidak boleh). Hanya PDF, Word, dan Gambar.");
         }
 
-        // Gabungkan file lama + baru, limit max 5
         const updatedFiles = [...data.feedback_files, ...validFiles].slice(0, 5);
         setData('feedback_files', updatedFiles);
     };

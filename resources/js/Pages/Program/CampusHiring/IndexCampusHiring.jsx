@@ -76,7 +76,7 @@ const ProgramCard = ({ program, isGuest }) => {
 };
 
 // --- HALAMAN UTAMA ---
-export default function CampusHiring({ auth, programs, pagination, filters, isGuest, total }) {
+export default function IndexCampusHiring({ auth, programs, pagination, filters, isGuest, total }) {
 
     // State Management
     const [searchTerm, setSearchTerm] = useState(filters?.search || '');

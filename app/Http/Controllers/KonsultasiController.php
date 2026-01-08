@@ -55,7 +55,7 @@ class KonsultasiController extends Controller
                 ];
             });
 
-        return Inertia::render('KonsultasiMahasiswa/Konsultasi', [
+        return Inertia::render('Layanan/Konsultasi/Mahasiswa/Konsultasi', [
             'counselors' => $counselors,
             'auth' => ['user' => $user],
         ]);
@@ -93,7 +93,7 @@ class KonsultasiController extends Controller
             }
         }
 
-        return Inertia::render('KonsultasiMahasiswa/BookingForm', [
+        return Inertia::render('Layanan/Konsultasi/Mahasiswa/BookingForm', [
             'counselor_id' => $slot->counselor_id,
 
             'counselor_name' => $slot->counselor->name,
@@ -157,7 +157,7 @@ class KonsultasiController extends Controller
                 ];
             });
 
-        return Inertia::render('KonsultasiMahasiswa/UserCounselingList', [
+        return Inertia::render('Layanan/Konsultasi/Mahasiswa/UserCounselingList', [
             'bookings' => $bookings, // Mengirim object LengthAwarePaginator
             'filters' => $request->only(['search', 'status']), // Mengirim state filter ke frontend
         ]);
@@ -269,7 +269,7 @@ class KonsultasiController extends Controller
 
         $timeString = "$startTime - $endTime WIB";
 
-        return Inertia::render('KonsultasiMahasiswa/DetailKonsultasi', [
+        return Inertia::render('Layanan/Konsultasi/Mahasiswa/DetailKonsultasi', [
             'consultation' => [
                 'id' => $booking->id,
                 'topic' => $booking->topic,

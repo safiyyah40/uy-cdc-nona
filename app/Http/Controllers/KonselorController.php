@@ -74,7 +74,7 @@ class KonselorController extends Controller
         ];
     }
 
-    return Inertia::render('KonsultasiKonselor/KonsultasiKonselor', [
+    return Inertia::render('Layanan/Konsultasi/Konselor/KonsultasiKonselor', [
         'user' => $user,
         'counselor' => $counselorData,
     ]);
@@ -151,7 +151,7 @@ class KonselorController extends Controller
             'completed' => CounselingBooking::where('counselor_id', $counselor->id)->where('status', 'completed')->count(),
         ];
 
-        return Inertia::render('KonsultasiKonselor/TableKonsultasiKonselor', [
+        return Inertia::render('Layanan/Konsultasi/Konselor/TableKonsultasiKonselor', [
             'consultations' => $mappedBookings->items(), // Data array
             'pagination' => [
                 'links' => $mappedBookings->linkCollection()->toArray(),
@@ -207,7 +207,7 @@ class KonselorController extends Controller
             ];
         }
 
-        return Inertia::render('KonsultasiKonselor/FormulirDetailMahasiswa', [
+        return Inertia::render('Layanan/Konsultasi/Konselor/FormulirDetailMahasiswa', [
             'consultation' => [
                 'id' => $consultation->id,
                 'student_name' => $consultation->student_name,
@@ -348,7 +348,7 @@ class KonselorController extends Controller
             ->with(['user'])
             ->findOrFail($bookingId);
 
-        return Inertia::render('KonsultasiKonselor/UploadReportForm', [
+        return Inertia::render('Layanan/Konsultasi/Konselor/UploadReportForm', [
             'booking' => [
                 'id' => $booking->id,
                 'student_name' => $booking->student_name,

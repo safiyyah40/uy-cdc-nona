@@ -60,7 +60,7 @@ class BeritaController extends Controller
             $perPage = 4;
         }
 
-        return Inertia::render('Berita/BeritaIndex', [
+        return Inertia::render('Program/Berita/IndexBerita', [
             'berita' => $berita,
             'filters' => [
                 'search' => $search,
@@ -95,7 +95,7 @@ class BeritaController extends Controller
         }
         $berita->increment('views');
 
-        return Inertia::render('Berita/DetailBerita', [
+        return Inertia::render('Program/Berita/DetailBerita', [
             'berita' => [
                 'id' => $berita->id,
                 'title' => $berita->title,

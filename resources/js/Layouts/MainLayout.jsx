@@ -185,7 +185,7 @@ export default function MainLayout({ children }) {
                             </NavDropdown>
 
                             <NavDropdown title="PROGRAM" basePath="/program">
-                                <DropdownLink href={route('program.orientasi.kerja')}>ORIENTASI DUNIA KERJA</DropdownLink>
+                                <DropdownLink href={route('program.odk.index')}>ORIENTASI DUNIA KERJA</DropdownLink>
                                 <DropdownLink href={route('program.campus.hiring')}>CAMPUS HIRING</DropdownLink>
                                 <DropdownLink href={route('program.seminar')}>SEMINAR</DropdownLink>
                                 <DropdownLink href={route('program.tips-dan-trik')}>TIPS DAN TRIK</DropdownLink>
@@ -193,7 +193,7 @@ export default function MainLayout({ children }) {
                             </NavDropdown>
 
                             <NavDropdown title="LAYANAN" basePath="/layanan">
-                                <DropdownLink href="/layanan/konsultasi">KONSULTASI</DropdownLink>
+                                <DropdownLink href={route('layanan.konsultasi')}>KONSULTASI</DropdownLink>
                                 <DropdownLink href={route('layanan.cv.review')}>REVIEW CV</DropdownLink>
                                 <DropdownLink href={route('layanan.tes.minat.bakat')}>TES MINAT & BAKAT RIASEC</DropdownLink>
                             </NavDropdown>
@@ -273,7 +273,7 @@ export default function MainLayout({ children }) {
                                 <DropdownLink href={route('profil.developer')}>PENGEMBANG</DropdownLink>
                             </MobileDropdown>
                             <MobileDropdown title="PROGRAM">
-                                <DropdownLink href={route('program.orientasi.kerja')}>ORIENTASI DUNIA KERJA</DropdownLink>
+                                <DropdownLink href={route('program.odk.index')}>ORIENTASI DUNIA KERJA</DropdownLink>
                                 <DropdownLink href={route('program.campus.hiring')}>CAMPUS HIRING</DropdownLink>
                                 <DropdownLink href={route('program.seminar')}>SEMINAR</DropdownLink>
                                 <DropdownLink href={route('program.tips-dan-trik')}>TIPS DAN TRIK</DropdownLink>

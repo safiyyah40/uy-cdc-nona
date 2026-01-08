@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainLayout from "@/Layouts/MainLayout";
 import Footer from "@/Components/Footer";
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
@@ -244,6 +244,19 @@ const Konsultasi = ({ counselors = [] }) => {
     const [scheduleSearch, setScheduleSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
+
+    useEffect(() => {
+        // Cek apakah URL memiliki hash #list-konselor
+        if (window.location.hash === '#list-konselor') {
+            const element = document.getElementById('list-konselor');
+            if (element) {
+                // Beri sedikit delay agar rendering selesai
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
+        }
+    }, []);
 
     // FILTER DENGAN JADWAL
     const filteredCounselors = counselors.filter(c => {

@@ -54,7 +54,7 @@ class CampusHiringController extends Controller
             // GUEST: Ambil 4 data terbaru saja
             $programs = $query->take(4)->get()->map(fn($p) => $this->formatProgram($p));
 
-            return Inertia::render('Program/CampusHiring', [
+            return Inertia::render('Program/CampusHiring/IndexCampusHiring', [
                 'programs' => $programs,
                 'isGuest' => true,
                 'total' => CampusHiring::active()->count(),
@@ -68,7 +68,7 @@ class CampusHiringController extends Controller
                 // Tampilkan Semua
                 $programs = $query->get()->map(fn($p) => $this->formatProgram($p));
                 
-                return Inertia::render('Program/CampusHiring', [
+                return Inertia::render('Program/CampusHiring/IndexCampusHiring', [
                     'programs' => $programs,
                     'isGuest' => false,
                     'total' => $programs->count(),
@@ -85,7 +85,7 @@ class CampusHiringController extends Controller
                 // Transform data di dalam collection pagination
                 $programsData = $programsRaw->getCollection()->map(fn($p) => $this->formatProgram($p));
 
-                return Inertia::render('Program/CampusHiring', [
+                return Inertia::render('Program/CampusHiring/IndexCampusHiring', [
                     'programs' => $programsData,
                     'isGuest' => false,
                     'total' => $programsRaw->total(),
@@ -119,7 +119,7 @@ class CampusHiringController extends Controller
             ->where('is_active', true)
             ->firstOrFail();
 
-        return Inertia::render('Program/DetailCampusHiring', [
+        return Inertia::render('Program/CampusHiring/DetailCampusHiring', [
             'campusHiring' => $this->formatProgram($program),
         ]);
     }

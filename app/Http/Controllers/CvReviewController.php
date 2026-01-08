@@ -61,7 +61,7 @@ class CvReviewController extends Controller
                 ];
             });
 
-            return Inertia::render('Layanan/CvReview', [
+            return Inertia::render('Layanan/CvReview/IndexCvReview', [
                 'auth' => ['user' => $user],
                 'templates' => $mappedTemplates->items(), // Data array
                 'pagination' => [ // Data pagination untuk frontend
@@ -77,7 +77,7 @@ class CvReviewController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Error loading templates: '.$e->getMessage());
-            return Inertia::render('Layanan/CvReview', [
+            return Inertia::render('Layanan/CvReview/IndexCvReview', [
                 'auth' => ['user' => $user],
                 'templates' => [],
                 'pagination' => null,
@@ -174,7 +174,7 @@ class CvReviewController extends Controller
             ];
         });
 
-        return Inertia::render('Layanan/TabelCvReview', [
+        return Inertia::render('Layanan/CvReview/TabelCvReview', [
             'reviews' => $mappedReviews->items(),
             'pagination' => [
                 'links' => $mappedReviews->linkCollection()->toArray(),
@@ -295,7 +295,7 @@ class CvReviewController extends Controller
                 ->count(),
         ];
 
-        return Inertia::render('Layanan/TabelCvReview', [
+        return Inertia::render('Layanan/CvReview/TabelCvReview', [
             'reviews' => $mappedReviews->items(),
             'pagination' => [
                 'links' => $mappedReviews->linkCollection()->toArray(),
@@ -317,7 +317,7 @@ class CvReviewController extends Controller
     {
         $user = Auth::user();
 
-        return Inertia::render('Layanan/FormUnggahCv', [
+        return Inertia::render('Layanan/CvReview/Mahasiswa/FormUnggahCv', [
             'auth' => ['user' => $user],
         ]);
     }
@@ -437,7 +437,7 @@ class CvReviewController extends Controller
             'priority' => ucfirst($review->priority),
         ];
 
-        return Inertia::render('Layanan/DetailSubmission', [
+        return Inertia::render('Layanan/CvReview/DetailSubmission', [
             'reviewData' => $data,
             'auth' => ['user' => $user],
         ]);
@@ -467,7 +467,7 @@ class CvReviewController extends Controller
             $review->markAsInReview();
         }
 
-        return Inertia::render('Layanan/CvReviewWorkspaceKonselor', [
+        return Inertia::render('Layanan/CvReview/Konselor/CvReviewWorkspaceKonselor', [
             'review' => [
                 'id' => $review->id,
                 'nama' => $review->student_name,

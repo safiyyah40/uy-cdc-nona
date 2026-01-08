@@ -98,7 +98,7 @@ const UserCounselingList = ({ bookings, filters }) => {
     // ACTIONS 
     const handleChatAdmin = (booking) => {
         const adminPhone = "6289529127621";
-         const fakultas = user.faculty || '-';
+        const fakultas = user.faculty || '-';
         const prodi = user.study_program || '-';
         const idNumber = user.id_number || '-';
         const message =
@@ -165,7 +165,7 @@ const UserCounselingList = ({ bookings, filters }) => {
                             <p className="text-gray-600 text-lg">Pantau status pengajuan dan jadwal konsultasi Anda.</p>
                         </div>
                         <Link
-                            href={route('layanan.konsultasi')}
+                            href={`${route('layanan.konsultasi')}#list-konselor`}
                             className="inline-flex items-center px-6 py-4 bg-[#004d40] text-white rounded-2xl font-bold shadow-lg hover:bg-[#00382e] hover:shadow-xl transition transform hover:-translate-y-1"
                         >
                             <Calendar className="w-5 h-5 mr-2" /> Buat Sesi Baru
