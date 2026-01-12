@@ -29,7 +29,7 @@ class CvReviewPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return false;
     }
 
     /**

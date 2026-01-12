@@ -258,7 +258,7 @@ export default function IndexLoker({ auth, lokers, pagination, filters, isGuest,
                     {lokerList && lokerList.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {lokerList.map((item) => {
-                                const detailUrl = isGuest ? route('login') : route('loker.show', { slug: item.slug });
+                                const detailUrl = route('loker.show', { slug: item.slug });
                                 const deadline = new Date(item.deadline);
                                 const diffDays = Math.ceil((deadline - new Date()) / (1000 * 60 * 60 * 24));
                                 const isUrgent = diffDays <= 7 && diffDays > 0;

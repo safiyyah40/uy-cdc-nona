@@ -301,7 +301,7 @@ export default function IndexSertifikasi({ auth, sertifikasis, pagination, filte
                         {sertifikasiList && sertifikasiList.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                                 {sertifikasiList.map((item) => {
-                                    const detailUrl = isGuest ? route('login') : route('sertifikasi.show', item.slug || item.id);
+                                    const detailUrl = route('sertifikasi.show', item.slug || item.id);
 
                                     // Check deadline urgency
                                     const registrationDeadline = item.registration_deadline ? new Date(item.registration_deadline) : null;

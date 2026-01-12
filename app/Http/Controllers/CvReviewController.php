@@ -77,6 +77,7 @@ class CvReviewController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Error loading templates: '.$e->getMessage());
+
             return Inertia::render('Layanan/CvReview/IndexCvReview', [
                 'auth' => ['user' => $user],
                 'templates' => [],
@@ -84,6 +85,14 @@ class CvReviewController extends Controller
                 'filters' => $request->only(['search', 'kategori', 'sumber']),
             ]);
         }
+    }
+
+    public function redirectLogin()
+    {
+        session()->put('url.intended', route('layanan.cv.review'));
+
+        // Lempar ke login
+        return redirect()->route('login');
     }
 
     /**
@@ -131,7 +140,6 @@ class CvReviewController extends Controller
                 'assigned' => 'assigned',
                 'in_review' => 'in_review',
                 'completed' => 'completed',
-                'revision_needed' => 'revision_needed',
                 'cancelled' => 'cancelled',
             ];
 
@@ -149,7 +157,7 @@ class CvReviewController extends Controller
                 $query->orderBy('created_at', 'desc');
             }
         } else {
-            $query->orderByRaw("FIELD(status, 'submitted', 'assigned', 'in_review', 'revision_needed', 'completed', 'cancelled')")
+            $query->orderByRaw("FIELD(status, 'submitted', 'assigned', 'in_review', 'completed', 'cancelled')")
                 ->orderBy('created_at', 'desc');
         }
 
@@ -223,7 +231,6 @@ class CvReviewController extends Controller
                 'assigned' => 'assigned',
                 'in_review' => 'in_review',
                 'completed' => 'completed',
-                'revision_needed' => 'revision_needed',
                 'cancelled' => 'cancelled',
             ];
 
@@ -257,7 +264,7 @@ class CvReviewController extends Controller
                 $query->orderBy('submitted_at', 'desc');
             }
         } else {
-            $query->orderByRaw("FIELD(status, 'assigned', 'in_review', 'submitted', 'revision_needed', 'completed', 'cancelled')");
+            $query->orderByRaw("FIELD(status, 'assigned', 'in_review', 'submitted', 'completed', 'cancelled')");
             $query->orderByRaw("FIELD(priority, 'mendesak', 'tinggi', 'normal')");
             $query->orderBy('submitted_at', 'asc');
         }
@@ -281,7 +288,7 @@ class CvReviewController extends Controller
             ];
         });
 
-        // STATISTICS untuk Konselor 
+        // STATISTICS untuk Konselor
         $stats = [
             'total' => CvReview::where('counselor_id', $counselor->id)->count(),
             'pending' => CvReview::where('counselor_id', $counselor->id)
@@ -656,7 +663,6 @@ class CvReviewController extends Controller
             'assigned' => 'Ditugaskan',
             'in_review' => 'Sedang Direview',
             'completed' => 'Selesai',
-            'revision_needed' => 'Perlu Revisi',
             'cancelled' => 'Dibatalkan',
         ];
 

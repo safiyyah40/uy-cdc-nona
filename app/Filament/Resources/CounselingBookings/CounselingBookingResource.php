@@ -26,7 +26,7 @@ class CounselingBookingResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Layanan';
+    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Layanan Konsultasi';
 
     protected static ?string $recordTitleAttribute = 'topic';
 

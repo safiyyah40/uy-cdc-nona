@@ -76,6 +76,9 @@ class LokerController extends Controller
 
     public function show($slug)
     {
+        if (!Auth::check()) {
+             return redirect()->guest(route('login'));
+        }
         $loker = Loker::where('slug', $slug)->where('is_active', true)->firstOrFail();
         if (is_string($loker->categories)) {
             $loker->categories = json_decode($loker->categories, true) ?? [];

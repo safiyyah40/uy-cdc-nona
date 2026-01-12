@@ -36,7 +36,7 @@ class OrientasiDuniaKerjasTable
                 DeleteAction::make(),
             ])
             ->bulkActions([
-                BulkActionGroup::make([
+                    BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
             ])

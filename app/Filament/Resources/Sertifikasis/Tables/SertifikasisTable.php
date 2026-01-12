@@ -12,6 +12,7 @@ use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ViewAction;
 
 class SertifikasisTable
 {
@@ -117,6 +118,7 @@ class SertifikasisTable
                     ->falseLabel('Berbayar'),
             ])
             ->actions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

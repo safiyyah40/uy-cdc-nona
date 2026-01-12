@@ -25,7 +25,7 @@ class RiasecCategoryResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Tes Minat & Bakat';
+    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Layanan Tes Minat & Bakat';
 
     public static function getModelLabel(): string
     {

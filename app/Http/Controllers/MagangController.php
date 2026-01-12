@@ -125,6 +125,10 @@ class MagangController extends Controller
 
     public function show($slug)
     {
+        if (!Auth::check()) {
+             return redirect()->guest(route('login'));
+        }
+        
         $magang = Magang::where('slug', $slug)
             ->where('is_active', true)
             ->firstOrFail();

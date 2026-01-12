@@ -4,6 +4,7 @@ namespace App\Filament\Resources\TipsDanTriks\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -61,6 +62,7 @@ class TipsDanTriksTable
                 ]),
         ])
         ->actions([
+            ViewAction::make(),
             EditAction::make(),
             DeleteAction::make(),
         ])

@@ -145,6 +145,10 @@ class SertifikasiController extends Controller
 
     public function show($id)
     {
+        if (!Auth::check()) {
+             return redirect()->guest(route('login'));
+        }
+        
         // Find sertifikasi by id or slug
         $sertifikasi = Sertifikasi::where('id', $id)
             ->orWhere('slug', $id)

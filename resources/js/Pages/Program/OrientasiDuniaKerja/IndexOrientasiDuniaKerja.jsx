@@ -6,9 +6,7 @@ import { Search, Filter, BookOpen, MapPin, Calendar, ChevronLeft, ChevronRight, 
 
 // --- KOMPONEN CARD ---
 const ProgramCard = ({ program, isGuest }) => {
-    const detailUrl = isGuest
-        ? route('login')
-        : route('program.odk.show', { id: program.id, slug: program.slug });
+    const detailUrl = route('program.odk.show', { id: program.id, slug: program.slug });
 
     // Handle categories yang mungkin berupa string atau array
     const categories = Array.isArray(program.categories) ? program.categories : [];

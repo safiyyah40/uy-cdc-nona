@@ -37,7 +37,6 @@ return new class extends Migration
                 'assigned',       // Sudah ditugaskan ke konselor
                 'in_review',      // Sedang direview
                 'completed',      // Selesai
-                'revision_needed', // Butuh revisi
                 'cancelled' // Dibatalkan 
             ])->default('submitted');
             

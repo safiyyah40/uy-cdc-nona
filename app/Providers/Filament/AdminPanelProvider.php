@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Providers\Filament;
-use App\Filament\Resources\PuskakaTeamResource;
+
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -17,7 +17,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\View\Middleware\ShareErrorsFromSession;   
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -28,25 +28,31 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-                
-            ->resources([
-                PuskakaTeamResource::class, 
+
+            ->navigationGroups([
+                'Manajemen Konten Beranda',
+                'Manajemen Halaman Profil',
+                'Manajemen Program',
+                'Manajemen Layanan Konsultasi',
+                'Manajemen Layanan Review CV',
+                'Manajemen Layanan Tes Minat & Bakat',
+                'Manajemen Peluang Karir',
             ])
             ->colors([
-                'danger'=> Color::Rose,
+                'danger' => Color::Rose,
                 'gray' => Color::Gray,
                 'info' => Color::Blue,
                 'primary' => Color::Green,
                 'success' => Color::Emerald,
                 'warning' => Color::Orange,
-
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
+            // Fungsi ini otomatis mencari semua Resource di folder app/Filament/Resources
+            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
+            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,

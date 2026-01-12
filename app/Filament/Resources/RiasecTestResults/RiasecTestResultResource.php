@@ -16,6 +16,8 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use UnitEnum;
+use Illuminate\Database\Eloquent\Builder; 
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RiasecTestResultResource extends Resource
 {
@@ -23,7 +25,8 @@ class RiasecTestResultResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Tes Minat & Bakat';
+    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Layanan Tes Minat & Bakat';
+    
 
     public static function getModelLabel(): string
     {
@@ -65,5 +68,23 @@ class RiasecTestResultResource extends Resource
             'view' => ViewRiasecTestResult::route('/{record}'),
             'edit' => EditRiasecTestResult::route('/{record}/edit'),
         ];
+    }
+
+    public static function getRecordRouteBindingEloquentQuery(): Builder
+    {
+        return parent::getRecordRouteBindingEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
+
+     public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
     }
 }

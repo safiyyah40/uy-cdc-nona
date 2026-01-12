@@ -5,6 +5,7 @@ namespace App\Filament\Resources\BerandaSlides\Tables;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -54,6 +55,7 @@ class BerandaSlidesTable
                     ->falseLabel('Tidak aktif saja'),
             ])
             ->actions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

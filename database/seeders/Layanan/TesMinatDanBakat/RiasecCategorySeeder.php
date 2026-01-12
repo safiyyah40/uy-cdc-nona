@@ -1,14 +1,18 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Layanan\TesMinatDanBakat;
 
 use App\Models\RiasecCategory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 class RiasecCategorySeeder extends Seeder
 {
     public function run(): void
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        RiasecCategory::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $categories = [
             [
                 'code' => 'R',

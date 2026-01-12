@@ -56,7 +56,6 @@ class CvReviewsTable
                         'info' => 'assigned',
                         'primary' => 'in_review',
                         'success' => 'completed',
-                        'danger' => 'revision_needed',
                         'danger' => 'cancelled',
                     ])
                     ->formatStateUsing(fn (string $state): string => match ($state) {
@@ -64,7 +63,6 @@ class CvReviewsTable
                         'assigned' => 'Ditugaskan',
                         'in_review' => 'Sedang Review',
                         'completed' => 'Selesai',
-                        'revision_needed' => 'Butuh Revisi',
                         'cancelled' => 'Dibatalkan',
                         default => $state,
                     })
@@ -107,7 +105,6 @@ class CvReviewsTable
                         'assigned' => 'Ditugaskan',
                         'in_review' => 'Sedang Review',
                         'completed' => 'Selesai',
-                        'revision_needed' => 'Butuh Revisi',
                         'cancelled' => 'Dibatalkan',
                     ])
                     ->multiple(),

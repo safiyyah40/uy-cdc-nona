@@ -6,10 +6,12 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Table;
 use Filament\Actions\DeleteAction;
+use Illuminate\Support\Facades\View;
 
 class CounselorsTable
 {
@@ -40,6 +42,7 @@ class CounselorsTable
             ])
 
             ->actions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

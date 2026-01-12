@@ -1,15 +1,19 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Layanan\TesMinatDanBakat;
 
 use App\Models\RiasecCategory;
 use App\Models\RiasecQuestion;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 class RiasecQuestionSeeder extends Seeder
 {
     public function run(): void
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        RiasecQuestion::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $questions = [
             // Realistic (R)
             ['code' => 'R', 'text' => 'Saya suka merakit atau memperbaiki alat elektronik/mesin.', 'order' => 1],

@@ -29,6 +29,7 @@ class CounselingBookingForm
                             ->preload()
                             ->required()
                             ->live()
+                            ->disabled(fn ($operation) => $operation === 'edit')
                             ->afterStateUpdated(function ($state, callable $set) {
                                 if (blank($state)) {
                                     $set('student_name', null);
@@ -55,13 +56,14 @@ class CounselingBookingForm
                                 TextInput::make('student_name')
                                     ->label('Nama Mahasiswa')
                                     ->required()
-                                    ->readOnly()
+                                    ->disabled()
+                                    ->dehydrated()
                                     ->maxLength(255),
 
                                 TextInput::make('student_npm')
                                     ->label('NIM')
                                     ->required()
-                                    ->readOnly()
+                                    ->disabled()
                                     ->maxLength(255),
                             ]),
 
@@ -71,14 +73,14 @@ class CounselingBookingForm
                                     ->label('No. WhatsApp')
                                     ->tel()
                                     ->required()
-                                    ->readOnly()
+                                    ->disabled()
                                     ->maxLength(255),
 
                                 TextInput::make('student_email')
                                     ->label('Email')
                                     ->email()
                                     ->required()
-                                    ->readOnly()
+                                    ->disabled()
                                     ->maxLength(255),
                             ]),
                     ])
@@ -178,11 +180,13 @@ class CounselingBookingForm
                         TextInput::make('topic')
                             ->label('Topik Konsultasi')
                             ->required()
+                            ->disabled()
                             ->maxLength(255),
 
                         Textarea::make('notes')
                             ->label('Catatan / Keluhan Mahasiswa')
                             ->required()
+                            ->disabled()
                             ->rows(4)
                             ->columnSpanFull(),
                     ])

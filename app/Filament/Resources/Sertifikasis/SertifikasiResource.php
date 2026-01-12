@@ -25,6 +25,8 @@ class SertifikasiResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    protected static ?int $navigationSort = 3;
+
     protected static ?string $recordTitleAttribute = 'title';
 
     protected static string|UnitEnum|null $navigationGroup = 'Manajemen Peluang Karir';
@@ -32,12 +34,12 @@ class SertifikasiResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Seritifikasi';
+        return 'Program Sertifikasi';
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Seritifikasi';
+        return 'Program Sertifikasi';
     }
     public static function form(Schema $schema): Schema
     {

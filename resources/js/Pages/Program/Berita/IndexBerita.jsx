@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import Footer from '@/Components/Footer';
 import { Head, Link, router } from '@inertiajs/react';
-import { 
-    Newspaper, Search, Filter, LogIn, 
-    ChevronLeft, ChevronRight, ArrowRight 
+import {
+    Newspaper, Search, Filter, LogIn,
+    ChevronLeft, ChevronRight, ArrowRight
 } from 'lucide-react';
 
 const MAIN_GREEN = "text-emerald-700";
@@ -22,7 +22,7 @@ const CardBerita = ({ item }) => {
                         src={item.image_url}
                         alt={item.title}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/600x400/e2e8f0/1e293b?text=No+Image"; }}
+                        onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/600x400/e2e8f0/1e293b?text=No+Image"; }}
                     />
                 ) : (
                     <div className="flex items-center justify-center h-full text-gray-400 bg-gray-100">No Image</div>
@@ -33,7 +33,7 @@ const CardBerita = ({ item }) => {
                     {item.formatted_date}
                 </div>
             </div>
-            
+
             <div className="p-6 flex flex-col flex-grow">
                 {/* Judul */}
                 <h3 className={`text-xl font-bold ${MAIN_GREEN} mb-3 line-clamp-2 group-hover:text-emerald-600 transition-colors leading-tight`}>
@@ -59,7 +59,7 @@ const CardBerita = ({ item }) => {
 
 // --- KOMPONEN UTAMA ---
 export default function IndexBerita({ berita, auth, filters, isGuest, total }) {
-    
+
     // State Management (Default 8)
     const [searchTerm, setSearchTerm] = useState(filters?.search || '');
     const [perPage, setPerPage] = useState(filters?.per_page || '8');
@@ -137,7 +137,7 @@ export default function IndexBerita({ berita, auth, filters, isGuest, total }) {
                         <div className="mb-12 space-y-6">
                             <div className="bg-white p-5 rounded-2xl shadow-lg border border-gray-100">
                                 <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                                    
+
                                     {/* Search Input */}
                                     <div className="md:col-span-8">
                                         <form onSubmit={handleSearch} className="flex gap-2">
@@ -151,8 +151,8 @@ export default function IndexBerita({ berita, auth, filters, isGuest, total }) {
                                                     className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all outline-none"
                                                 />
                                             </div>
-                                            <button 
-                                                type="submit" 
+                                            <button
+                                                type="submit"
                                                 className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2"
                                             >
                                                 <Search className="w-4 h-4" />
@@ -195,7 +195,7 @@ export default function IndexBerita({ berita, auth, filters, isGuest, total }) {
                                                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                             </button>
                                         </span>
-                                        <button 
+                                        <button
                                             onClick={handleReset}
                                             className="text-sm text-gray-400 hover:text-emerald-600 underline underline-offset-4 decoration-dashed transition-colors"
                                         >
@@ -237,8 +237,8 @@ export default function IndexBerita({ berita, auth, filters, isGuest, total }) {
                                                         disabled={!link.url || link.active}
                                                         className={`
                                                             min-w-[40px] h-10 px-3 flex items-center justify-center rounded-xl text-sm font-bold transition-all duration-200
-                                                            ${link.active 
-                                                                ? 'bg-emerald-600 text-white shadow-md scale-105' 
+                                                            ${link.active
+                                                                ? 'bg-emerald-600 text-white shadow-md scale-105'
                                                                 : 'bg-transparent text-gray-600 hover:bg-emerald-50 hover:text-emerald-700'
                                                             }
                                                             ${!link.url && 'opacity-40 cursor-not-allowed hover:bg-transparent'}
@@ -269,7 +269,7 @@ export default function IndexBerita({ berita, auth, filters, isGuest, total }) {
                                 Coba ubah kata kunci pencarian Anda atau periksa kembali filter yang digunakan.
                             </p>
                             {!isGuest && (
-                                <button 
+                                <button
                                     onClick={handleReset}
                                     className="mt-6 px-6 py-2 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
                                 >
@@ -279,12 +279,16 @@ export default function IndexBerita({ berita, auth, filters, isGuest, total }) {
                         </div>
                     )}
 
-                    {/* --- GUEST VIEW (LIMITED ACCESS) - Tampilan Sesuai Request --- */}
+                    {/* Guest CTA (Jika Guest) */}
                     {isGuest && (
                         <div className="mt-16 flex justify-center">
                             <div className="text-center bg-emerald-50 p-8 rounded-2xl shadow-xl border border-emerald-100 max-w-2xl w-full">
-                                <h3 className="text-xl font-bold text-gray-800 mb-2">Ingin melihat lebih banyak berita?</h3>
-                                <p className="text-gray-600 mb-6">Silakan masuk menggunakan akun Anda untuk mengakses arsip berita lengkap, melakukan pencarian, dan fitur lainnya.</p>
+                                <h3 className="text-xl font-bold text-gray-800 mb-2">
+                                    Ingin melihat lebih banyak Berita?
+                                </h3>
+                                <p className="text-gray-600 mb-6">
+                                    Saat ini tersedia total <strong>{total} berita</strong>. Silakan masuk menggunakan akun Anda untuk mengakses arsip berita lengkap, melakukan pencarian, dan fitur lainnya.
+                                </p>
                                 <Link
                                     href={route('login')}
                                     className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white font-bold rounded-full hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-emerald-500/30"

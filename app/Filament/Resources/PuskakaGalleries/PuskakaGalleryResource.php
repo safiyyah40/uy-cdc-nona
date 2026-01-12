@@ -25,6 +25,8 @@ class PuskakaGalleryResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Manajemen Halaman Profil';
 
+    protected static ?int $navigationSort = 4;
+
     public static function getModelLabel(): string
     {
         return 'Foto Galeri';

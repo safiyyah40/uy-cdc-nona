@@ -17,6 +17,7 @@ use App\Http\Controllers\ProfilPuskakaController;
 use App\Http\Controllers\RiasecTestController;
 use App\Http\Controllers\OrientasiDuniaKerjaController;
 use App\Http\Controllers\SeminarController;
+use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\SertifikasiController;
 use App\Http\Controllers\TipsDanTrikController;
 use App\Models\BerandaSlide;
@@ -212,6 +213,7 @@ Route::middleware(['auth', 'verified'])->prefix('konselor')->name('konselor.')->
 
 // AREA MAHASISWA (Booking Konsultasi)
 Route::get('/layanan/konsultasi', [KonsultasiController::class, 'index'])->name('layanan.konsultasi');
+Route::get('/layanan/konsultasi/auth', [KonsultasiController::class, 'redirectLogin'])->name('layanan.konsultasi.auth');
 
 // Profil
 Route::get('/profil/puskaka', [ProfilPuskakaController::class, 'index'])->name('profil.puskaka');
@@ -219,9 +221,8 @@ Route::get('/profil/puskaka', [ProfilPuskakaController::class, 'index'])->name('
 Route::get('/profil-konselor', [ProfilKonselorController::class, 'index'])
     ->name('profil.konselor');
 
-Route::get('/profil/developer', function () {
-    return Inertia::render('Profil/Developer');
-})->name('profil.developer');
+// YANG BARU (Pakai Controller)
+Route::get('/profil/developer', [DeveloperController::class, 'index'])->name('profil.developer');
 
 Route::prefix('program')->name('program.')->group(function () {
     Route::get('/orientasi-dunia-kerja', [OrientasiDuniaKerjaController::class, 'index'])->name('odk.index');
@@ -248,6 +249,8 @@ Route::prefix('layanan')->name('layanan.')->group(function () {
     // Landing Page CV Review (Public)
     Route::get('/cv-review', [CvReviewController::class, 'index'])
         ->name('cv.review');
+    Route::get('/cv-review/auth', [CvReviewController::class, 'redirectLogin'])
+        ->name('cv.review.auth');
 
     // AUTH REQUIRED ROUTES
     Route::middleware(['auth', 'verified'])->group(function () {
@@ -284,9 +287,7 @@ Route::get('/layanan/tes-minat-bakat', [RiasecTestController::class, 'index'])
     ->name('layanan.tes.minat.bakat');
 
 // --- 2. BAGIAN PRIVATE (Harus Login) ---
-// Taruh di DALAM middleware auth
-Route::middleware(['auth'])->group(function () {
-
+Route::middleware(['auth', 'verified'])->group(function () {
     // Halaman Kuis (Saat klik "Mulai Tes")
     Route::get('/layanan/tes-riasec', [RiasecTestController::class, 'quiz'])
         ->name('riasec.quiz');

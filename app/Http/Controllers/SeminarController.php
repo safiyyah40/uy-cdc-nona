@@ -16,12 +16,12 @@ class SeminarController extends Controller
         Carbon::setLocale('id');
         $isGuest = !Auth::check();
 
-        // Base Query
+        // Base Query (Scope Active & Latest)
         $query = Seminar::active()->latest('date');
 
-        // --- LOGIKA FILTER ---
+        // --- LOGIKA FILTER (Hanya untuk User Login) ---
         if (!$isGuest) {
-            if ($request->has('search')) {
+            if ($request->filled('search')) {
                 $search = $request->input('search');
                 $query->where(function($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
@@ -39,7 +39,7 @@ class SeminarController extends Controller
         } else {
             // User: Gunakan Pagination
             $perPage = $request->input('per_page', 12);
-            // Jika 'all', ambil angka besar
+            // Jika 'all', ambil angka besar (misal 1000)
             $limit = $perPage === 'all' ? 1000 : $perPage;
             
             $seminarsRaw = $query->paginate($limit)->withQueryString();
@@ -80,7 +80,6 @@ class SeminarController extends Controller
 
         // Hitung total seluruh data untuk info ke Guest
         $totalAll = Seminar::active()->count();
-
         
         return Inertia::render('Program/Seminar/IndexSeminar', [
             'seminars' => $seminarsData,
@@ -95,10 +94,13 @@ class SeminarController extends Controller
     {
         Carbon::setLocale('id');
         if (!Auth::check()) {
-             return redirect()->route('login');
+             return redirect()->guest(route('login'));
         }
 
-        $seminarData = Seminar::where('id', $id)->where('slug', $slug)->firstOrFail();
+        $seminarData = Seminar::where('id', $id)
+            ->where('slug', $slug)
+            ->active()
+            ->firstOrFail();
 
         $seminar = [
             'id' => $seminarData->id,
@@ -118,6 +120,7 @@ class SeminarController extends Controller
             'image_url' => $seminarData->image ? Storage::url($seminarData->image) : null,
             'images' => $seminarData->image ? [Storage::url($seminarData->image)] : [],
         ];
+
         return Inertia::render('Program/Seminar/DetailSeminar', [
             'seminar' => $seminar,
         ]);

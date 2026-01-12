@@ -180,7 +180,7 @@ const HeroSection = ({ user, isCounselor, scrollToContent }) => {
 
                                 {!user && (
                                     <Link
-                                        href="/login?redirect_to=/layanan/tabel-cv-review"
+                                        href="/layanan/cv-review/auth"
                                         className="px-8 py-4 bg-[#004d40] text-white font-bold rounded-xl hover:bg-[#00382e] shadow-lg transition-all flex items-center justify-center gap-2"
                                     >
                                         <Upload className="w-5 h-5" />
@@ -648,7 +648,7 @@ function IndexCvReview(props) {
                                     Akses penuh ke fitur upload CV dan konsultasi karir hanya tersedia untuk mahasiswa terdaftar.
                                 </p>
                                 <Link
-                                    href="/login?redirect_to=/layanan/tabel-cv-review"
+                                    href="/layanan/cv-review/auth"
                                     className="px-10 py-4 bg-[#004d40] hover:bg-[#00382e] text-white font-bold rounded-xl shadow-lg transition-all inline-flex items-center gap-2"
                                 >
                                     Masuk ke Akunmu

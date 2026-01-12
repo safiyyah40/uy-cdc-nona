@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import Footer from '@/Components/Footer';
 import { Head, Link, router } from '@inertiajs/react';
-import { Lightbulb, Search, Filter, ChevronLeft, ChevronRight, ArrowRight, Clock, Tag} from 'lucide-react';
+import { Lightbulb, Search, Filter, ChevronLeft, ChevronRight, ArrowRight, Clock, Tag } from 'lucide-react';
+
 const MAIN_EMERALD = "text-emerald-700";
+
 // --- KOMPONEN KARTU TIPS ---
 const CardTips = ({ item }) => {
+    const detailUrl = route('program.tips-dan-trik.show', { id: item.id, slug: item.slug });
+
     return (
         <Link
-            href={route('program.tips-dan-trik.show', { id: item.id, slug: item.slug })}
+            href={detailUrl}
             className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-2xl hover:border-emerald-200 hover:-translate-y-1 h-full"
         >
             <div className="relative w-full h-52 overflow-hidden bg-gray-200">
@@ -17,7 +21,7 @@ const CardTips = ({ item }) => {
                         src={item.image_url}
                         alt={item.title}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/600x400/e2e8f0/1e293b?text=No+Image"; }}
+                        onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/600x400/e2e8f0/1e293b?text=No+Image"; }}
                     />
                 ) : (
                     <div className="flex items-center justify-center h-full text-gray-400 bg-gray-100">No Image</div>
@@ -27,7 +31,7 @@ const CardTips = ({ item }) => {
                     {item.category}
                 </div>
             </div>
-            
+
             <div className="p-6 flex flex-col flex-grow">
                 <h3 className={`text-xl font-bold ${MAIN_EMERALD} mb-3 line-clamp-2 group-hover:text-emerald-600 transition-colors leading-tight font-serif`}>
                     {item.title}
@@ -53,7 +57,7 @@ const CardTips = ({ item }) => {
 export default function TipsIndex({ tips, auth, filters, isGuest, total, categories }) {
     // State Management (Default '12' sesuai request)
     const [searchTerm, setSearchTerm] = useState(filters?.search || '');
-    const [perPage, setPerPage] = useState(filters?.per_page || '12'); 
+    const [perPage, setPerPage] = useState(filters?.per_page || '12');
     const [categoryFilter, setCategoryFilter] = useState(filters?.category || '');
 
     // --- HANDLERS ---
@@ -125,7 +129,7 @@ export default function TipsIndex({ tips, auth, filters, isGuest, total, categor
                         <div className="mb-12 space-y-6">
                             <div className="bg-white p-5 rounded-2xl shadow-lg border border-gray-100">
                                 <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                                    
+
                                     {/* Search Input */}
                                     <div className="md:col-span-6 lg:col-span-6">
                                         <form onSubmit={handleSearch} className="flex gap-2">
@@ -148,7 +152,7 @@ export default function TipsIndex({ tips, auth, filters, isGuest, total, categor
 
                                     {/* Filters Group (Kategori & Per Page) */}
                                     <div className="md:col-span-6 lg:col-span-6 flex flex-col sm:flex-row gap-3">
-                                        
+
                                         {/* Kategori Filter */}
                                         <div className="relative flex-1">
                                             <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -164,7 +168,7 @@ export default function TipsIndex({ tips, auth, filters, isGuest, total, categor
                                             </select>
                                         </div>
 
-                                        {/* Filter Per Page (Ditambahkan Sesuai Request) */}
+                                        {/* Filter Per Page */}
                                         <div className="relative w-full sm:w-48">
                                             <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                                             <select
@@ -239,13 +243,20 @@ export default function TipsIndex({ tips, auth, filters, isGuest, total, categor
                                 </div>
                             )}
 
-                            {/* GUEST CTA */}
+                            {/* Guest CTA (Jika Guest) */}
                             {isGuest && (
                                 <div className="mt-16 flex justify-center">
                                     <div className="text-center bg-emerald-50 p-8 rounded-2xl shadow-xl border border-emerald-100 max-w-2xl w-full">
-                                        <h3 className="text-xl font-bold text-gray-800 mb-2">Ingin akses lengkap ke semua Tips & Trik?</h3>
-                                        <p className="text-gray-600 mb-6">Silakan masuk menggunakan akun Anda untuk mengakses ratusan tips karir, panduan sukses, dan fitur pencarian lengkap.</p>
-                                        <Link href={route('login')} className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white font-bold rounded-full hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-emerald-500/30">
+                                        <h3 className="text-xl font-bold text-gray-800 mb-2">
+                                            Ingin melihat lebih banyak Tips dan Trik?
+                                        </h3>
+                                        <p className="text-gray-600 mb-6">
+                                            Saat ini tersedia total <strong>{total} Tips dan Trik</strong>. Silakan masuk menggunakan akun Anda untuk mengakses ratusan tips karir, panduan sukses, dan fitur pencarian lengkap.
+                                        </p>
+                                        <Link
+                                            href={route('login')}
+                                            className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white font-bold rounded-full hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-emerald-500/30"
+                                        >
                                             Masuk Sekarang
                                         </Link>
                                     </div>

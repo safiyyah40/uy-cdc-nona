@@ -115,7 +115,6 @@ class CvReviewForm
                                 'assigned' => 'Ditugaskan',
                                 'in_review' => 'Sedang Review',
                                 'completed' => 'Selesai',
-                                'revision_needed' => 'Butuh Revisi',
                                 'cancelled' => 'Dibatalkan',
                             ])
                             ->required()
@@ -149,7 +148,7 @@ class CvReviewForm
                             ->columnSpanFull()
                             ->downloadable(),
                     ])
-                    ->visible(fn ($get) => in_array($get('status'), ['in_review', 'completed', 'revision_needed']))
+                    ->visible(fn ($get) => in_array($get('status'), ['in_review', 'completed']))
                     ->collapsible(),
             ]);
     }

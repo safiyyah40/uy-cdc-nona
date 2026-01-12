@@ -340,7 +340,7 @@ const UserCounselingList = ({ bookings, filters }) => {
                                                     </p>
 
                                                     {!(searchTerm || filterStatus !== 'all') && (
-                                                        <Link href={route('layanan.konsultasi')} className="mt-6 inline-flex items-center px-5 py-2.5 bg-[#004d40] text-white text-sm font-bold rounded-xl hover:bg-[#00382e] transition">
+                                                        <Link href={`${route('layanan.konsultasi')}#list-konselor`} className="mt-6 inline-flex items-center px-5 py-2.5 bg-[#004d40] text-white text-sm font-bold rounded-xl hover:bg-[#00382e] transition">
                                                             Ajukan Jadwal Sekarang
                                                         </Link>
                                                     )}

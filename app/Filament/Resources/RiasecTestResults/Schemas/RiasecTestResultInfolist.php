@@ -3,128 +3,126 @@
 namespace App\Filament\Resources\RiasecTestResults\Schemas;
 
 use App\Models\RiasecCategory;
-use Filament\Schemas\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
-use Filament\Support\Enums\FontWeight;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\FontWeight;
 
 class RiasecTestResultInfolist
 {
     public static function configure(Schema $schema): Schema
     {
-        // Helper Ambil Data Kategori dari DB
-        $getCategory = fn ($code) => RiasecCategory::where('code', $code)->first();
+        // Helper: Ambil Objek Kategori berdasarkan Index Ranking (0 - 5)
+        $getCategoryFromRank = function ($record, $index) {
+            // Mengambil kode dari array JSON 'rankings'
+            $code = $record->rankings[$index] ?? null;
+            if (! $code) {
+                return null;
+            }
 
-        // Helper Section Detail per Tipe Dominan
-        $makeDominantSection = function ($rank, $iconColor) use ($getCategory) {
-            $column = "dominant_type_{$rank}"; 
+            return RiasecCategory::where('code', $code)->first();
+        };
+
+        // Helper: Membuat Section Detail per Tipe
+        $makeRankSection = function ($rankNumber, $color) use ($getCategoryFromRank) {
+            $arrayIndex = $rankNumber - 1; 
             
-            return Section::make(fn ($record) => "Dominan #{$rank}: " . ($getCategory($record->$column)?->title ?? '-'))
-                ->description(fn ($record) => $getCategory($record->$column)?->nickname ?? '')
-                ->icon(fn ($record) => match($rank) {
+            return Section::make(function ($record) use ($getCategoryFromRank, $arrayIndex, $rankNumber) {
+                $category = $getCategoryFromRank($record, $arrayIndex);
+                return "Peringkat #{$rankNumber}: " . ($category?->title ?? '-') . " ({$category?->code})";
+            })
+                ->description(fn ($record) => $getCategoryFromRank($record, $arrayIndex)?->nickname ?? '')
+                ->icon(match($rankNumber) {
                     1 => 'heroicon-m-trophy',
                     2 => 'heroicon-m-star',
                     3 => 'heroicon-m-sparkles',
+                    default => 'heroicon-m-hashtag', 
                 })
-                ->iconColor($iconColor)
+                ->iconColor($color)
                 ->schema([
                     Grid::make(3)->schema([
-                        // 1. KARAKTERISTIK
-                        TextEntry::make("traits_{$rank}")
+                        // KARAKTERISTIK
+                        TextEntry::make("traits_{$rankNumber}")
                             ->label('Karakteristik')
-                            ->state(fn ($record) => $getCategory($record->$column)?->traits)
+                            ->state(fn ($record) => $getCategoryFromRank($record, $arrayIndex)?->traits)
                             ->bulleted()
                             ->color('gray'),
 
-                        // 2. PERSONAL BRANDING
-                        TextEntry::make("branding_{$rank}")
+                        // PERSONAL BRANDING
+                        TextEntry::make("branding_{$rankNumber}")
                             ->label('Strategi Branding')
-                            ->state(fn ($record) => $getCategory($record->$column)?->branding_strategies)
+                            ->state(fn ($record) => $getCategoryFromRank($record, $arrayIndex)?->branding_strategies)
                             ->bulleted()
                             ->color('primary'),
 
-                        // 3. REKOMENDASI KARIR
-                        TextEntry::make("careers_{$rank}")
+                        // REKOMENDASI KARIR
+                        TextEntry::make("careers_{$rankNumber}")
                             ->label('Rekomendasi Karir')
-                            ->state(fn ($record) => $getCategory($record->$column)?->career_recommendations)
+                            ->state(fn ($record) => $getCategoryFromRank($record, $arrayIndex)?->career_recommendations)
                             ->badge()
-                            ->color('success'),
+                            ->color($rankNumber <= 3 ? 'success' : 'gray'),
                     ]),
-                    
+
                     // Deskripsi
-                    TextEntry::make("desc_{$rank}")
+                    TextEntry::make("desc_{$rankNumber}")
                         ->label('Deskripsi')
-                        ->state(fn ($record) => $getCategory($record->$column)?->description)
+                        ->state(fn ($record) => $getCategoryFromRank($record, $arrayIndex)?->description)
                         ->prose()
                         ->columnSpanFull()
                         ->markdown(),
                 ])
-                ->collapsible(); 
+                ->collapsible()
+                ->collapsed($rankNumber > 3); // Otomatis tutup (collapse) utk peringkat 4-6 biar ga panjang banget
         };
 
         return $schema
             ->schema([
+                // SECTION 1: PROFIL
                 Section::make('Profil Mahasiswa')
                     ->icon('heroicon-m-identification')
                     ->schema([
                         Grid::make(3)->schema([
-                            TextEntry::make('user.name')
-                                ->label('Nama Lengkap')
-                                ->weight(FontWeight::Bold),
-                            
-                            TextEntry::make('user.id_number')
-                                ->label('NIM')
-                                ->copyable(),
-                            
-                            TextEntry::make('user.email')
-                                ->label('Email')
-                                ->icon('heroicon-m-envelope'),
-
-                            TextEntry::make('user.faculty')
-                                ->label('Fakultas')
-                                ->weight(FontWeight::Bold),
-                            
-                            TextEntry::make('user.study_program')
-                                ->label('Program Studi'),
-
-                            TextEntry::make('user.phone')
-                                ->label('No. Telepon')
-                                ->icon('heroicon-m-phone')
-                                ->placeholder('-'),
-
-                            TextEntry::make('completed_at')
-                                ->label('Tanggal Tes')
-                                ->dateTime('d F Y, H:i')
-                                ->icon('heroicon-m-calendar-days'),
-                                
-                            TextEntry::make('time_taken_seconds')
-                                ->label('Durasi Pengerjaan')
-                                ->formatStateUsing(fn ($state) => gmdate('i', $state) . ' menit ' . gmdate('s', $state) . ' detik'),
-
-                            TextEntry::make('total_questions_answered')
-                                ->label('Total Soal Dijawab'),
+                            TextEntry::make('user.name')->label('Nama Lengkap')->weight(FontWeight::Bold),
+                            TextEntry::make('user.id_number')->label('NIM')->copyable(),
+                            TextEntry::make('user.email')->label('Email')->icon('heroicon-m-envelope'),
+                            TextEntry::make('user.faculty')->label('Fakultas')->weight(FontWeight::Bold)->placeholder('-'),
+                            TextEntry::make('user.study_program')->label('Program Studi')->placeholder('-'),
+                            TextEntry::make('user.phone')->label('No. Telepon')->placeholder('-'),
+                            TextEntry::make('completed_at')->label('Tanggal Tes')->dateTime('d F Y, H:i'),
+                            TextEntry::make('time_taken_seconds')->label('Durasi')->formatStateUsing(fn ($state) => gmdate('i', $state).'m '.gmdate('s', $state).'s'),
+                            TextEntry::make('total_questions_answered')->label('Soal Dijawab'),
                         ]),
                     ]),
 
-                Section::make('Rincian Skor Kuantitatif')
+                // SECTION 2: SKOR KUANTITATIF (ANGKA)
+                Section::make('Rincian Skor (Kuantitatif)')
                     ->compact()
                     ->schema([
                         Grid::make(6)->schema([
-                            TextEntry::make('score_r')->label('Realistic')->badge()->color('success')->alignCenter(),
-                            TextEntry::make('score_i')->label('Investigative')->badge()->color('info')->alignCenter(),
-                            TextEntry::make('score_a')->label('Artistic')->badge()->color('warning')->alignCenter(),
-                            TextEntry::make('score_s')->label('Social')->badge()->color('danger')->alignCenter(),
-                            TextEntry::make('score_e')->label('Enterprising')->badge()->color('primary')->alignCenter(),
-                            TextEntry::make('score_c')->label('Conventional')->badge()->color('gray')->alignCenter(),
+                            TextEntry::make('scores.R')->label('Realistic (R)')->badge()->color('gray')->alignCenter()->size('lg'),
+                            TextEntry::make('scores.I')->label('Investigative (I)')->badge()->color('gray')->alignCenter()->size('lg'),
+                            TextEntry::make('scores.A')->label('Artistic (A)')->badge()->color('gray')->alignCenter()->size('lg'),
+                            TextEntry::make('scores.S')->label('Social (S)')->badge()->color('gray')->alignCenter()->size('lg'),
+                            TextEntry::make('scores.E')->label('Enterprising (E)')->badge()->color('gray')->alignCenter()->size('lg'),
+                            TextEntry::make('scores.C')->label('Conventional (C)')->badge()->color('gray')->alignCenter()->size('lg'),
                         ]),
                     ]),
 
+                // SECTION 3: ANALISIS LENGKAP (1-6)
                 Group::make([
-                    $makeDominantSection(1, 'success'), // Dominan 1
-                    $makeDominantSection(2, 'warning'), // Dominan 2
-                    $makeDominantSection(3, 'info'),    // Dominan 3
+                    Section::make('Analisis Urutan Minat (Ranking 1 - 6)')
+                        ->heading('Analisis Lengkap Profil Kepribadian')
+                        ->description('Diurutkan dari minat paling dominan hingga paling rendah.')
+                        ->schema([
+                            $makeRankSection(1, 'success'), // Peringkat 1 (Hijau)
+                            $makeRankSection(2, 'warning'), // Peringkat 2 (Kuning)
+                            $makeRankSection(3, 'info'),    // Peringkat 3 (Biru)
+                            $makeRankSection(4, 'gray'),    // Peringkat 4 (Abu)
+                            $makeRankSection(5, 'gray'),    // Peringkat 5 (Abu)
+                            $makeRankSection(6, 'gray'),    // Peringkat 6 (Abu)
+                        ]),
                 ]),
             ]);
     }

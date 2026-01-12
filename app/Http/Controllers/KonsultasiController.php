@@ -290,6 +290,12 @@ class KonsultasiController extends Controller
         ]);
     }
 
+    public function redirectLogin()
+    {
+        session()->put('url.intended', route('layanan.konsultasi') . '#list-konselor');
+        return redirect()->route('login');
+    }
+
     public function cancel($id)
     {
         $booking = CounselingBooking::where('user_id', Auth::id())->findOrFail($id);

@@ -171,10 +171,7 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
                         {seminarList && seminarList.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                                 {seminarList.map((item) => {
-                                    // Logic URL: Jika Guest arahkan ke Login, Jika User arahkan ke Detail
-                                    const detailUrl = isGuest
-                                        ? route('login')
-                                        : route('program.seminar.show', { id: item.id, slug: item.slug });
+                                    const detailUrl = route('program.seminar.show', { id: item.id, slug: item.slug });
 
                                     const isOnline = item.type === 'Online';
                                     const TypeIcon = isOnline ? Wifi : MapPin;
@@ -298,12 +295,16 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
                             </div>
                         )}
 
-                        {/* GUEST VIEW (LIMITED ACCESS - CTA DI BAWAH) */}
+                        {/* Guest CTA (Jika Guest) */}
                         {isGuest && (
                             <div className="mt-16 flex justify-center">
                                 <div className="text-center bg-emerald-50 p-8 rounded-2xl shadow-xl border border-emerald-100 max-w-2xl w-full">
-                                    <h3 className="text-xl font-bold text-gray-800 mb-2">Ingin melihat lebih banyak seminar?</h3>
-                                    <p className="text-gray-600 mb-6">Silakan masuk menggunakan akun Anda untuk mengakses arsip seminar lengkap, melakukan pencarian, dan mendaftar acara.</p>
+                                    <h3 className="text-xl font-bold text-gray-800 mb-2">
+                                        Ingin melihat lebih banyak Seminar?
+                                    </h3>
+                                    <p className="text-gray-600 mb-6">
+                                        Saat ini tersedia total <strong>{total} Seminar</strong>. Silakan masuk menggunakan akun Anda untuk mengakses arsip seminar lengkap, melakukan pencarian, dan mendaftar acara.
+                                    </p>
                                     <Link
                                         href={route('login')}
                                         className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white font-bold rounded-full hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-emerald-500/30"

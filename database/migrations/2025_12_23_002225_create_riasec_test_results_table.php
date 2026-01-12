@@ -16,17 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             
             // Skor per kategori
-            $table->integer('score_r')->default(0); // Realistic
-            $table->integer('score_i')->default(0); // Investigative
-            $table->integer('score_a')->default(0); // Artistic
-            $table->integer('score_s')->default(0); // Social
-            $table->integer('score_e')->default(0); // Enterprising
-            $table->integer('score_c')->default(0); // Conventional
-            
-            // Top 3 Dominant Types (disimpan sebagai string: "R-I-A")
-            $table->string('dominant_type_1', 1);
-            $table->string('dominant_type_2', 1);
-            $table->string('dominant_type_3', 1);
+            $table->json('scores');
+            // Urutan dominansi
+            $table->json('rankings');
             
             // Metadata
             $table->integer('time_taken_seconds');

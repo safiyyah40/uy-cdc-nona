@@ -115,7 +115,6 @@ const TabelCvReview = ({ reviews, stats }) => {
                 'assigned': ['assigned'],
                 'in_review': ['in_review'],
                 'completed': ['completed'],
-                'revision_needed': ['revision_needed'],
                 'cancelled': ['cancelled']
             };
             const allowedStatuses = statusMap[filterStatus] || [];
@@ -243,7 +242,6 @@ const TabelCvReview = ({ reviews, stats }) => {
         { value: 'assigned', label: 'Ditugaskan' },
         { value: 'in_review', label: 'Sedang Direview' },
         { value: 'completed', label: 'Selesai' },
-        { value: 'revision_needed', label: 'Perlu Revisi' },
         { value: 'cancelled', label: 'Dibatalkan' }
     ];
 

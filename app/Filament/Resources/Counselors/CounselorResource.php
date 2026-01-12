@@ -23,15 +23,17 @@ class CounselorResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
     protected static string|UnitEnum|null $navigationGroup = 'Manajemen Halaman Profil';
+    
+    protected static ?int $navigationSort = 2;
 
     public static function getModelLabel(): string
     {
-        return 'Konselor';
+        return 'Anggota Tim Konselor';
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Konselor';
+        return 'Tim Konselor';
     }
 
     public static function form(Schema $schema): Schema

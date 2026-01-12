@@ -24,6 +24,8 @@ class PuskakaTeamResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Manajemen Halaman Profil';
 
+    protected static ?int $navigationSort = 2;
+
     public static function getModelLabel(): string
     {
         return 'Anggota Tim Puskaka';

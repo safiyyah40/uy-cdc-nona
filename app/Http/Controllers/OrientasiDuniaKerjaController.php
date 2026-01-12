@@ -25,7 +25,6 @@ class OrientasiDuniaKerjaController extends Controller
 
         // Filter Category (JSON Search)
         if ($request->filled('category') && $request->category !== 'all') {
-            // Mencari apakah array JSON categories mengandung nilai yang dipilih
             $query->whereJsonContains('categories', $request->category);
         }
 
@@ -48,7 +47,7 @@ class OrientasiDuniaKerjaController extends Controller
                 'id' => $item->id,
                 'slug' => $item->slug,
                 'title' => $item->title,
-                'categories' => $item->categories, // Kirim array kategori
+                'categories' => $item->categories,
                 'description' => $item->description,
                 'imageSrc' => $item->image ? asset('storage/' . $item->image) : '/images/odk.jpg',
                 'formatted_date' => $item->date ? Carbon::parse($item->date)->translatedFormat('d F Y') : 'Jadwal Menyusul',
@@ -75,6 +74,10 @@ class OrientasiDuniaKerjaController extends Controller
 
     public function show($id, $slug)
     {
+        if (!Auth::check()) {
+            return redirect()->guest(route('login'));
+        }
+
         $program = OrientasiDuniaKerja::where('id', $id)
             ->where('slug', $slug)
             ->active()

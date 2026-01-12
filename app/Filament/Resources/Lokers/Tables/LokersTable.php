@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Lokers\Tables;
 
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -29,6 +30,7 @@ class LokersTable
                 SelectFilter::make('work_model'),
             ])
             ->actions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ]);

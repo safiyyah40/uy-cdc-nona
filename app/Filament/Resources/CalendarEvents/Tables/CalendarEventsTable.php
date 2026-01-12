@@ -4,6 +4,7 @@ namespace App\Filament\Resources\CalendarEvents\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Filters\SelectFilter;
@@ -73,6 +74,7 @@ class CalendarEventsTable
                     ->label('Status Aktif'),
             ])
             ->actions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\CampusHiring;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class CampusHiringController extends Controller
 {
@@ -18,15 +19,19 @@ class CampusHiringController extends Controller
             'id' => $program->id,
             'slug' => $program->slug,
             'title' => $program->title,
-            'company_name' => $program->company_name, 
-            'subtitle' => $program->company_name, 
+            'company_name' => $program->company_name,
+            'subtitle' => $program->company_name,
             'location' => $program->location,
             'date' => $program->date ? $program->date->format('Y-m-d') : null,
             'formatted_date' => $program->date ? Carbon::parse($program->date)->translatedFormat('d F Y') : '-',
             'time' => $program->time,
             'description' => $program->description,
             'content' => $program->content,
-            'imageSrc' => $program->image ? asset('storage/' . $program->image) : asset('images/campushiring.jpg'),
+            'imageSrc' => $program->image
+            ? (str_starts_with($program->image, 'http')
+                ? $program->image
+                : asset('storage/'.$program->image))
+            : asset('images/campushiring.jpg'),
             'registration_link' => $program->registration_link ?? '#',
         ];
     }
@@ -34,25 +39,25 @@ class CampusHiringController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        
+
         // --- BASE QUERY ---
         $query = CampusHiring::active()->latest('date');
 
         // --- FILTER SEARCH ---
-        if ($request->has('search') && !empty($request->search)) {
+        if ($request->has('search') && ! empty($request->search)) {
             $searchTerm = $request->search;
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('title', 'like', "%{$searchTerm}%")
-                  ->orWhere('company_name', 'like', "%{$searchTerm}%")
-                  ->orWhere('description', 'like', "%{$searchTerm}%")
-                  ->orWhere('location', 'like', "%{$searchTerm}%");
+                    ->orWhere('company_name', 'like', "%{$searchTerm}%")
+                    ->orWhere('description', 'like', "%{$searchTerm}%")
+                    ->orWhere('location', 'like', "%{$searchTerm}%");
             });
         }
 
         // --- LOGIC GUEST vs USER ---
-        if (!$user) {
+        if (! $user) {
             // GUEST: Ambil 4 data terbaru saja
-            $programs = $query->take(4)->get()->map(fn($p) => $this->formatProgram($p));
+            $programs = $query->take(4)->get()->map(fn ($p) => $this->formatProgram($p));
 
             return Inertia::render('Program/CampusHiring/IndexCampusHiring', [
                 'programs' => $programs,
@@ -66,8 +71,8 @@ class CampusHiringController extends Controller
             $perPage = $request->input('per_page', 8);
             if ($perPage === 'all') {
                 // Tampilkan Semua
-                $programs = $query->get()->map(fn($p) => $this->formatProgram($p));
-                
+                $programs = $query->get()->map(fn ($p) => $this->formatProgram($p));
+
                 return Inertia::render('Program/CampusHiring/IndexCampusHiring', [
                     'programs' => $programs,
                     'isGuest' => false,
@@ -81,9 +86,9 @@ class CampusHiringController extends Controller
             } else {
                 // Pagination Normal
                 $programsRaw = $query->paginate((int) $perPage)->withQueryString();
-                
+
                 // Transform data di dalam collection pagination
-                $programsData = $programsRaw->getCollection()->map(fn($p) => $this->formatProgram($p));
+                $programsData = $programsRaw->getCollection()->map(fn ($p) => $this->formatProgram($p));
 
                 return Inertia::render('Program/CampusHiring/IndexCampusHiring', [
                     'programs' => $programsData,
@@ -110,8 +115,8 @@ class CampusHiringController extends Controller
 
     public function show(Request $request, $id, $slug)
     {
-        if (!$request->user()) {
-            return redirect()->route('login')->with('message', 'Silakan login terlebih dahulu.');
+        if (! Auth::check()) {
+            return redirect()->guest(route('login'))->with('message', 'Silakan login terlebih dahulu.');
         }
 
         $program = CampusHiring::where('id', $id)

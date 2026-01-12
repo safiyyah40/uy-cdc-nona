@@ -327,7 +327,7 @@ export default function IndexMagang({ auth, magangs, pagination, filters, isGues
                         {magangList && magangList.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {magangList.map((item) => {
-                                    const detailUrl = isGuest ? route('login') : route('magang.show', { slug: item.slug });
+                                    const detailUrl = route('magang.show', { slug: item.slug });
 
                                     const deadline = new Date(item.deadline);
                                     const today = new Date();

@@ -96,8 +96,8 @@ const CounselorCard = ({ counselor, user }) => {
                                         }
                                     }}
                                     className={`flex items-center justify-between p-2 rounded border transition-all text-left w-full ${selectedSlot?.id === slot.id
-                                            ? 'border-emerald-600 bg-emerald-50 ring-1 ring-emerald-600'
-                                            : 'border-gray-200 hover:border-emerald-400 hover:bg-gray-50'
+                                        ? 'border-emerald-600 bg-emerald-50 ring-1 ring-emerald-600'
+                                        : 'border-gray-200 hover:border-emerald-400 hover:bg-gray-50'
                                         }`}
                                 >
                                     <div>
@@ -124,14 +124,17 @@ const CounselorCard = ({ counselor, user }) => {
                             onClick={handleBooking}
                             disabled={!selectedSlot}
                             className={`w-full py-2 text-white text-xs font-bold uppercase tracking-wider rounded shadow-md transition-all flex items-center justify-center gap-1 ${!selectedSlot
-                                    ? 'bg-gray-300 cursor-not-allowed'
-                                    : 'bg-[#004d40] hover:bg-[#00382e] cursor-pointer hover:shadow-lg hover:-translate-y-0.5'
+                                ? 'bg-gray-300 cursor-not-allowed'
+                                : 'bg-[#004d40] hover:bg-[#00382e] cursor-pointer hover:shadow-lg hover:-translate-y-0.5'
                                 }`}
                         >
                             {selectedSlot ? 'Lanjut Reservasi Sesi' : 'Pilih Jadwal Dulu'} <ArrowRight className="w-4 h-4" />
                         </button>
                     ) : (
-                        <Link href="/login" className="w-full py-2 bg-[#004d40] text-white text-xs font-bold uppercase tracking-wider rounded shadow-md hover:bg-[#00382e] flex items-center justify-center hover:shadow-lg transition-all">
+                        <Link
+                            href={`${route('layanan.konsultasi.auth')}#list-konselor`}
+                            className="w-full py-2 bg-[#004d40] text-white text-xs font-bold uppercase tracking-wider rounded shadow-md hover:bg-[#00382e] flex items-center justify-center hover:shadow-lg transition-all"
+                        >
                             Masuk untuk Reservasi Sesi
                         </Link>
                     )}
@@ -210,7 +213,7 @@ const HeroSection = ({ user, scrollToList, isCounselorView = false }) => {
                                 )}
 
                                 {!user && !isCounselorView && (
-                                    <Link href="/login" className="px-8 py-4 bg-white text-[#004d40] border border-[#004d40] font-bold rounded-xl hover:bg-gray-50 transition-all">
+                                    <Link href={`${route('layanan.konsultasi.auth')}#list-konselor`} className="px-8 py-4 bg-white text-[#004d40] border border-[#004d40] font-bold rounded-xl hover:bg-gray-50 transition-all">
                                         Masuk ke Akunmu
                                     </Link>
                                 )}
@@ -246,16 +249,28 @@ const Konsultasi = ({ counselors = [] }) => {
     const itemsPerPage = 8;
 
     useEffect(() => {
-        // Cek apakah URL memiliki hash #list-konselor
-        if (window.location.hash === '#list-konselor') {
-            const element = document.getElementById('list-konselor');
-            if (element) {
-                // Beri sedikit delay agar rendering selesai
-                setTimeout(() => {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                }, 100);
+
+        const handleScrollToElement = () => {
+            const hash = window.location.hash;
+
+            if (hash === '#list-konselor') {
+                const element = document.getElementById('list-konselor');
+
+                if (element) {
+                    // Scroll dengan smooth
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             }
-        }
+        };
+        handleScrollToElement();
+
+        // Jalankan lagi dengan sedikit delay (fallback) 
+        // Ini penting karena kadang DOM belum siap 100% saat mount pertama
+        const timer = setTimeout(() => {
+            handleScrollToElement();
+        }, 500); // Delay 0.5 detik
+
+        return () => clearTimeout(timer);
     }, []);
 
     // FILTER DENGAN JADWAL
@@ -391,7 +406,12 @@ const Konsultasi = ({ counselors = [] }) => {
                                     <div className="bg-[#004d40] p-5 rounded-full shadow-xl mb-6 ring-4 ring-green-100"><div className="text-white"><Lock className="w-12 h-12" /></div></div>
                                     <h3 className="text-2xl font-bold text-gray-900 mb-2 font-serif">Akses Reservasi Terbatas</h3>
                                     <p className="text-gray-600 max-w-lg mb-8">Silakan masuk menggunakan Akun Portal / SSO Anda untuk melakukan reservasi sesi.</p>
-                                    <Link href="/login" className="px-8 py-3 bg-[#004d40] hover:bg-[#00382e] text-white font-bold rounded-lg shadow-lg transition-all">Masuk Sekarang</Link>
+                                    <Link
+                                        href={`${route('layanan.konsultasi.auth')}#list-konselor`}
+                                        className="px-8 py-3 bg-[#004d40] hover:bg-[#00382e] text-white font-bold rounded-lg shadow-lg transition-all"
+                                    >
+                                        Masuk dan Reservasi Sekarang
+                                    </Link>
                                 </div>
                             )}
                         </div>

@@ -25,6 +25,8 @@ class TipsDanTrikResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Manajemen Program';
 
+    protected static ?int $navigationSort = 4;
+
     protected static ?string $recordTitleAttribute = 'title';
 
     public static function getModelLabel(): string

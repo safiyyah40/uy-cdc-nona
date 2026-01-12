@@ -71,7 +71,7 @@ class ProfilKonselorController extends Controller
             ? $this->getCounselorsData()
             : $this->getPublicCounselors();
 
-        return Inertia::render('Layanan/Konsultasi', [
+        return Inertia::render('Layanan/Konsultasi/Mahasiswa/Konsultasi', [
             'auth' => ['user' => Auth::user()],
             'counselors' => $counselors,
         ]);

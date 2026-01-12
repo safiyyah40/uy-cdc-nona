@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\TipsDanTrik;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class TipsDanTrikController extends Controller
 {
@@ -21,8 +21,8 @@ class TipsDanTrikController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('summary', 'like', "%{$search}%")
-                  ->orWhere('category', 'like', "%{$search}%");
+                    ->orWhere('summary', 'like', "%{$search}%")
+                    ->orWhere('category', 'like', "%{$search}%");
             });
         }
 
@@ -32,14 +32,14 @@ class TipsDanTrikController extends Controller
         }
 
         // --- LOGIC GUEST VS USER ---
-        $isGuest = !Auth::check();
-        
+        $isGuest = ! Auth::check();
+
         // Jika Tamu: Limit 4. Jika User: Default 12 (atau sesuai input)
         $limit = $isGuest ? 4 : ($request->input('per_page', 12));
 
         $tips = $query->orderBy('published_at', 'desc')
-                      ->paginate($limit)
-                      ->withQueryString();
+            ->paginate($limit)
+            ->withQueryString();
 
         // --- TRANSFORM DATA (Format Gambar & Tanggal) ---
         $tips->getCollection()->transform(function ($item) {
@@ -49,7 +49,7 @@ class TipsDanTrikController extends Controller
                 'slug' => $item->slug,
                 'summary' => $item->summary,
                 'category' => $item->category,
-                'reading_time' => $item->reading_time . ' menit',
+                'reading_time' => $item->reading_time.' menit',
                 'image_url' => $item->thumbnail ? Storage::url($item->thumbnail) : null,
                 'published_at' => $item->published_at
                     ? $item->published_at->format('d M Y')
@@ -74,8 +74,8 @@ class TipsDanTrikController extends Controller
 
     public function show($id, $slug)
     {
-        if (!Auth::check()) {
-             return redirect()->route('login');
+        if (! Auth::check()) {
+            return redirect()->guest(route('login'));
         }
 
         $tip = TipsDanTrik::where('id', $id)
@@ -90,10 +90,10 @@ class TipsDanTrikController extends Controller
             'description' => $tip->summary,
             'content' => $tip->content,
             'category' => $tip->category,
-            'reading_time' => $tip->reading_time . ' menit',
+            'reading_time' => $tip->reading_time.' menit',
             'image_url' => $tip->thumbnail ? Storage::url($tip->thumbnail) : null,
-            'formatted_date' => $tip->published_at 
-                ? $tip->published_at->format('d F Y') 
+            'formatted_date' => $tip->published_at
+                ? $tip->published_at->format('d F Y')
                 : null,
         ];
 

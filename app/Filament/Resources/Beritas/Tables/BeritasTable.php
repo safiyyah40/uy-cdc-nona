@@ -78,6 +78,7 @@ class BeritasTable
                     }),
             ])
             ->actions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

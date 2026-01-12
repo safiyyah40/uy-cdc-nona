@@ -7,11 +7,12 @@ import { Navigation, Pagination, Mousewheel, Autoplay, Parallax, A11y } from 'sw
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Users, Code, ArrowRight } from 'lucide-react';
+// Saya tambahkan import icon sosmed
+import { Users, Code, ArrowRight, Github, Linkedin, Instagram, Mail } from 'lucide-react';
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 
-// KOMPONEN KARTU TIM YANG SAMA DENGAN ProfilPuskaka
-function PuskakaTeamCard({ name, title, photoUrl, npm }) {
+// KOMPONEN KARTU TIM (Diupdate untuk terima sosmed)
+function PuskakaTeamCard({ name, title, photoUrl, npm, email, linkedin, github, instagram }) {
     const { ref, style } = useScrollFadeIn(0.1);
 
     return (
@@ -30,7 +31,6 @@ function PuskakaTeamCard({ name, title, photoUrl, npm }) {
                     className="relative z-10 w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-110"
                     onError={(e) => {
                         e.target.src = '/images/placeholder-avatar.png';
-                        // Menghapus animasi loading placeholder jika terjadi error
                         e.target.previousSibling.classList.remove('animate-pulse');
                     }}
                 />
@@ -50,34 +50,28 @@ function PuskakaTeamCard({ name, title, photoUrl, npm }) {
                     </p>
                 )}
 
-                <div className="mt-4 flex justify-center">
+                <div className="mt-3 flex justify-center">
                     <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-emerald-100/80 text-yarsi-green-dark border border-emerald-200/50 group-hover:bg-yarsi-green group-hover:text-white group-hover:border-transparent transition-all duration-300">
                         <p className="text-[11px] font-bold uppercase tracking-wider leading-none">
                             {title}
                         </p>
                     </div>
                 </div>
+
+                {/* ICON SOSMED (Ditambahkan dengan styling minimalis) */}
+                <div className="flex justify-center gap-3 mt-4 pt-3 border-t border-gray-100/50 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
+                    {email && <a href={`mailto:${email}`} className="text-gray-400 hover:text-yarsi-green transition-colors hover:scale-110"><Mail size={16} /></a>}
+                    {linkedin && <a href={linkedin} target="_blank" className="text-gray-400 hover:text-blue-600 transition-colors hover:scale-110"><Linkedin size={16} /></a>}
+                    {github && <a href={github} target="_blank" className="text-gray-400 hover:text-gray-900 transition-colors hover:scale-110"><Github size={16} /></a>}
+                    {instagram && <a href={instagram} target="_blank" className="text-gray-400 hover:text-pink-600 transition-colors hover:scale-110"><Instagram size={16} /></a>}
+                </div>
             </div>
         </div>
     );
 }
 
-// Data lokal
-const teamMembers = [
-    { id: 1, name: 'Citra Fatika', npm: '1402023014', title: 'Frontend Developer', photo_url: '/images/citra.jpeg' },
-    { id: 2, name: 'Safiyyah Yahya', npm: '1402023065', title: 'Backend Developer', photo_url: '/images/safiyyah.jpeg' },
-    { id: 3, name: 'Felicia Advi Syabani', npm: '1402023027', title: 'UI/UX Developer', photo_url: '/images/felicia.jpeg' },
-];
-
-// Mengganti nama file foto di sini
-const photos = [
-    { id: 1, image_path: '/images/nona1.jpeg', title: 'Kontrak Klien' },
-    { id: 2, image_path: '/images/nona2.jpeg', title: 'Persetujuan Kontrak' },
-    { id: 3, image_path: '/images/nona3.jpeg', title: 'Bimbingan Project' },
-];
-
-// Komponen utama
-export default function Developer() {
+// Komponen utama (Menerima Props dari Backend)
+export default function Developer({ teamMembers, photos }) {
     const heroTitle = useScrollFadeIn(0.2);
     const heroText = useScrollFadeIn(0.3);
     const heroImage = useScrollFadeIn(0.4);
@@ -85,6 +79,10 @@ export default function Developer() {
     const ctaRef = useScrollFadeIn(0.5);
 
     const targetUrl = '/';
+
+    // Gunakan props dari database, atau array kosong jika belum ada data
+    const memberList = teamMembers || [];
+    const photoList = photos || [];
 
     return (
         <>
@@ -130,10 +128,10 @@ export default function Developer() {
                                     Tiga mahasiswi Teknik Informatika, Universitas YARSI, angkatan 2023. Proyek ini dibuat sebagai tugas mata kuliah Pengembangan Aplikasi Multi Platform.
                                 </p>
 
-                                {/* Ganti Stats Grid dengan info tim yang relevan */}
+                                {/* Stats Grid Dinamis */}
                                 <div className="grid grid-cols-3 gap-4 border-t border-gray-200 pt-8 max-w-md mx-auto lg:mx-0">
                                     <div>
-                                        <div className="text-3xl font-bold font-kaisei text-yarsi-green">3</div>
+                                        <div className="text-3xl font-bold font-kaisei text-yarsi-green">{memberList.length || 3}</div>
                                         <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-1">Anggota Tim</div>
                                     </div>
                                     <div className="border-l border-gray-200 pl-4">
@@ -148,7 +146,7 @@ export default function Developer() {
                             </div>
 
                             <div className="lg:w-1/2 relative w-full" ref={heroImage.ref} style={heroImage.style}>
-                                {/* Swiper Slider untuk Gambar Proyek */}
+                                {/* Swiper Slider dengan Data Dinamis */}
                                 <Swiper
                                     modules={[Navigation, Pagination, Mousewheel, Autoplay, Parallax, A11y]}
                                     spaceBetween={0}
@@ -162,19 +160,19 @@ export default function Developer() {
                                     }}
                                     mousewheel={true}
                                     grabCursor={true}
-                                    loop={true}
+                                    loop={photoList.length > 1}
                                     autoplay={{
                                         delay: 5000,
                                         disableOnInteraction: false,
                                     }}
-                                    // Menggunakan class aesthetic-pagination untuk styling pagination yang sama
                                     className="aspect-[4/3] relative rounded-[2rem] overflow-hidden border-4 border-white/80 ring-1 ring-gray-100/50 transform rotate-1 hover:rotate-0 transition-all duration-700 ease-out shadow-xl shadow-emerald-900/20 group aesthetic-pagination"
                                 >
                                     <div slot="container-start" className="parallax-bg absolute inset-0 bg-cover bg-center" data-swiper-parallax="-23%"></div>
-                                    {photos.map((photo) => (
+
+                                    {/* MAPPING DATA SLIDE DARI BACKEND */}
+                                    {photoList.length > 0 ? photoList.map((photo) => (
                                         <SwiperSlide key={photo.id} className="overflow-hidden rounded-[2rem]">
                                             <div
-                                                // Menggunakan path gambar yang ada di folder public
                                                 className="w-full h-full bg-cover bg-center transform scale-110 group-hover:scale-100 transition-transform duration-[2s] ease-out"
                                                 style={{ backgroundImage: `url(${photo.image_path})` }}
                                                 data-swiper-parallax="-20%"
@@ -196,7 +194,15 @@ export default function Developer() {
                                                 </div>
                                             </div>
                                         </SwiperSlide>
-                                    ))}
+                                    )) : (
+                                        // Fallback jika belum ada data slide di DB
+                                        <SwiperSlide className="overflow-hidden rounded-[2rem]">
+                                            <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center text-gray-400">
+                                                <Code className="w-12 h-12 mb-2 opacity-20" />
+                                                <span className="text-sm">Belum ada slide dokumentasi</span>
+                                            </div>
+                                        </SwiperSlide>
+                                    )}
                                 </Swiper>
                                 <div className="absolute -z-10 top-10 -right-10 w-full h-full border-2 border-yarsi-green/20 rounded-[2rem] transform rotate-6"></div>
                             </div>
@@ -206,7 +212,6 @@ export default function Developer() {
 
                 {/* SEKSI ANGGOTA TIM */}
                 <div className="py-20 md:py-28 bg-slate-50 relative overflow-hidden">
-                    {/* Pattern Dot Halus */}
                     <div className="absolute inset-0 opacity-[0.4]"
                         style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
                     </div>
@@ -224,34 +229,36 @@ export default function Developer() {
                             <p className="text-gray-600 mt-3">Peran dan tanggung jawab dalam pengembangan aplikasi ini.</p>
                         </div>
 
-                        {/* Menggunakan PuskakaTeamCard untuk menampilkan data tim */}
-                        {teamMembers && teamMembers.length > 0 ? (
+                        {/* MAPPING DATA TIM DARI BACKEND */}
+                        {memberList && memberList.length > 0 ? (
                             <div className="flex flex-wrap justify-center gap-8 max-w-screen-xl mx-auto">
-                                {teamMembers.map((member) => (
+                                {memberList.map((member) => (
                                     <PuskakaTeamCard
                                         key={member.id}
                                         name={member.name}
                                         title={member.title}
                                         photoUrl={member.photo_url}
                                         npm={member.npm}
+                                        // Props Sosmed
+                                        email={member.email}
+                                        linkedin={member.linkedin_url}
+                                        github={member.github_url}
+                                        instagram={member.instagram_url}
                                     />
                                 ))}
                             </div>
                         ) : (
                             <div className="text-center text-xl font-bold text-gray-600 p-10 bg-white/50 rounded-3xl border border-dashed border-gray-300">
-                                Belum ada data anggota tim yang tersedia.
+                                Belum ada data anggota tim yang tersedia di Database.
                             </div>
                         )}
                     </div>
                 </div>
 
-                {/* CTA SECTION */}
+                {/* CTA SECTION (TETAP SAMA) */}
                 <section className="py-24 bg-gradient-to-br from-[#006241] to-[#004d33] relative overflow-hidden" ref={ctaRef.ref} style={ctaRef.style}>
-                    {/* Ornamen Lingkaran Abstrak */}
                     <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full border-[20px] border-white/5 blur-sm"></div>
                     <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full border-[30px] border-white/5 blur-sm"></div>
-
-                    {/* Noise Texture Overlay */}
                     <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
 
                     <div className="container mx-auto px-4 lg:px-6 relative z-10">

@@ -25,7 +25,7 @@ class CvReviewResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Layanan';
+    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Layanan Review CV';
 
     protected static ?string $recordTitleAttribute = 'target_position';
     protected static ?int $navigationSort = 2;
