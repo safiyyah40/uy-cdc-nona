@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\StatistikLayananController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CampusHiringController;
@@ -137,6 +138,9 @@ Route::get('/', function () {
         'latestTips' => $latestTips,
     ]);
 })->name('welcome');
+
+Route::get('/api/statistik-layanan', [StatistikLayananController::class, 'index'])
+    ->name('api.statistik.layanan');
 
 // GROUP AUTH
 Route::middleware(['auth', 'verified'])->group(function () {

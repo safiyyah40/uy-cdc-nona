@@ -21,10 +21,15 @@ class UserSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         User::factory()->create([
             'name' => 'Admin Puskaka',
+            'username' => 'admin.puskaka',
             'email' => 'adminpuskaka@yarsi.ac.id',
+            'phone' => '08123456789',
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+            'is_profile_complete' => true
         ]);
         
-        // --- BUAT 1 AKUN MAHASISWA UNTUK TEST ---
+        // --- AKUN MAHASISWA UNTUK TEST ---
         User::create([
             'name' => 'Mahasiswa Test',
             'username' => 'mahasiswa',

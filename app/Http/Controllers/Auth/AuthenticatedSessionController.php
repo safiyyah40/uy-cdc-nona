@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Filament\Facades\Filament;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -38,6 +39,11 @@ class AuthenticatedSessionController extends Controller
         if ($user->needsProfileCompletion()) {
             return redirect()->route('profile.complete');
         }
+
+        if (in_array($user->role, ['admin'])) {
+        return redirect()->intended(Filament::getUrl()); 
+        // Atau manual: return redirect()->intended('/admin');
+    }
 
        return redirect()->intended(route('dashboard'));
     }
