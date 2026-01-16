@@ -30,11 +30,11 @@ const CardMagang = ({ item, isGuest }) => {
                 <div className="absolute -bottom-6 left-6">
                     <div className="w-16 h-16 p-2 bg-white rounded-xl shadow-md border border-gray-100 flex items-center justify-center group-hover:scale-105 transition-transform">
                         {item.logo ? (
-                            <img 
-                                src={`/storage/${item.logo}`} 
-                                alt={item.company} 
+                            <img
+                                src={`/storage/${item.logo}`}
+                                alt={item.company}
                                 className="w-full h-full object-contain"
-                                onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }} 
+                                onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}
                             />
                         ) : null}
                         <Building2 className={`w-8 h-8 text-emerald-600 ${item.logo ? 'hidden' : 'block'}`} />
@@ -85,7 +85,7 @@ const CardMagang = ({ item, isGuest }) => {
                         <MapPin className="w-3.5 h-3.5" />
                         <span className="truncate max-w-[100px]">{item.location}</span>
                     </div>
-                    
+
                     {/* Indikator untuk Guest */}
                     {isGuest ? (
                         <div className="flex items-center gap-1 text-emerald-600 font-bold bg-emerald-50 px-2 py-1 rounded">
@@ -111,14 +111,14 @@ const InfoMagang = ({ latestMagang = [] }) => {
     const isGuest = !auth.user;
 
     return (
-        <section className="py-16 md:py-24 bg-white border-t border-gray-200 relative overflow-hidden">
+        <section className="pt-8 pb-16 md:pt-12 md:pb-24 bg-white relative overflow-hidden">
             {/* Background */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute -top-24 -right-24 w-96 h-96 bg-emerald-50/50 rounded-full blur-3xl"></div>
             </div>
 
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
-                
+
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
                     <div>
@@ -135,8 +135,8 @@ const InfoMagang = ({ latestMagang = [] }) => {
                     </div>
 
                     {/* Tombol Lihat Semua */}
-                    <Link 
-                        href={route('magang.index')} 
+                    <Link
+                        href={route('magang.index')}
                         className="hidden md:inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-700 font-bold rounded-xl hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all shadow-sm group"
                     >
                         Lihat Semua Lowongan
