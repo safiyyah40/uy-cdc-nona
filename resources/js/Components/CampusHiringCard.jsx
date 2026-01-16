@@ -26,15 +26,15 @@ const CampusHiringCard = () => {
     return (
         <section id="campus-hiring-section" className="py-20 bg-white">
             <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
-                
+
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
                     <div>
-                        <span className="inline-block py-1 px-3 rounded-lg bg-emerald-50 text-emerald-600 text-xs font-bold tracking-widest uppercase mb-4 border border-emerald-100">
-                            Partner Industri
+                        <span className="inline-block py-1.5 px-3 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold tracking-wider uppercase mb-4">
+                            Program Pembekalan
                         </span>
                         <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
-                            Campus <span className="text-emerald-600">Hiring.</span>
+                            Campus <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-500">Hiring.</span>
                         </h2>
                     </div>
                     <a href="/program/campus-hiring" className="group flex items-center gap-2 text-emerald-600 font-bold hover:text-emerald-700 transition-colors">
@@ -46,14 +46,14 @@ const CampusHiringCard = () => {
                 {/* Grid List (Horizontal Style) */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {DUMMY_HIRING.map((item) => (
-                        <div 
+                        <div
                             key={item.id}
                             className="group bg-white rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col sm:flex-row"
                         >
                             {/* Image Section */}
                             <div className="sm:w-2/5 h-48 sm:h-auto relative overflow-hidden">
-                                <img 
-                                    src={item.imageUrl} 
+                                <img
+                                    src={item.imageUrl}
                                     alt={item.perusahaan}
                                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                     onError={(e) => { e.target.src = 'https://placehold.co/600x400/059669/ffffff?text=Campus+Hiring'; }}
@@ -69,7 +69,7 @@ const CampusHiringCard = () => {
                                 <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-emerald-600 transition-colors leading-tight">
                                     {item.posisi}
                                 </h3>
-                                
+
                                 <div className="flex flex-col gap-2 mb-6">
                                     <div className="flex items-center text-gray-500 text-sm font-medium">
                                         <Calendar className="w-4 h-4 mr-2 text-emerald-500" />

@@ -20,13 +20,12 @@ const TipsCard = ({ tips = [] }) => {
                 {/* Header Section - Mengikuti gaya SeminarCard */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                     <div className="max-w-3xl">
-                        <span className="inline-flex items-center gap-2 py-1.5 px-3 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold tracking-wider uppercase mb-4 border border-emerald-100">
-                            <Lightbulb className="w-3.5 h-3.5" />
-                            Insight & Career Advice
+                        <span className="inline-block py-1.5 px-3 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold tracking-wider uppercase mb-4">
+                            Program Pembekalan
                         </span>
                         <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-[1.15]">
                             Kembangkan Dirimu dengan <br/>
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-blue-500">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-500">
                                 Tips & Trik Pilihan.
                             </span>
                         </h2>

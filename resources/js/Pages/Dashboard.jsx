@@ -18,9 +18,14 @@ import CvReviewComp from '@/Components/CvReviewComp';
 export default function Dashboard({ auth, slides, latestNews, latestMagang, latestLoker, latestSeminar = [], latestTips = [] }) {
     return (
         <MainLayout>
+            {/* Slideshow */}
+            <Slideshow slides={slides} />
+
             <Head title="Dashboard - CDC YARSI" />
 
             <div className="bg-white min-h-screen text-gray-800 font-sans">
+
+                {/* Hero Section */}
                 <section className="relative w-full pt-12 pb-10 md:pt-24 md:pb-12 px-6 overflow-hidden">
                     <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-green-100 rounded-full blur-3xl opacity-50 z-0"></div>
                     <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 bg-teal-50 rounded-full blur-3xl opacity-50 z-0"></div>
@@ -44,20 +49,15 @@ export default function Dashboard({ auth, slides, latestNews, latestMagang, late
                     </div>
                 </section>
 
-                {/* --- 2. SLIDESHOW --- */}
-                <Slideshow slides={slides} />
-                <div className="space-y-24 pb-20 mt-16">
-
+                {/* Layanan & Program */}
+                <div className="space-y-0 pb-20 mt-12">
                     <KonsultasiComp />
                     <CvReviewComp />
                     <TesMinatBakat />
 
                     {/* Info Magang */}
                     <div className="w-full">
-                        <div className="max-w-7xl mx-auto px-6 mb-8"></div>
-                        <div className="w-full">
-                            <InfoMagang latestMagang={latestMagang} />
-                        </div>
+                        <InfoMagang latestMagang={latestMagang} />
                     </div>
 
                     {/* Lowongan Pekerjaan */}

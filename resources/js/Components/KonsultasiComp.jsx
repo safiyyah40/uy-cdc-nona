@@ -7,7 +7,10 @@ const KonsultasiComp = () => {
     const user = auth?.user;
 
     return (
-        <section id="layanan-konsultasi" className="relative py-20 bg-gray-50 overflow-hidden">
+        <section
+            id="layanan-konsultasi"
+            className="relative pt-20 pb-12 overflow-hidden"
+        >
             {/* Background Decorative Elements */}
             <div className="absolute top-0 inset-x-0 h-full w-full pointer-events-none overflow-hidden">
                 <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-emerald-50 rounded-full blur-[100px] opacity-60 mix-blend-multiply"></div>
@@ -16,18 +19,19 @@ const KonsultasiComp = () => {
 
             <div className="container mx-auto px-6 lg:px-12 relative z-10 max-w-7xl">
                 {/* Header Section */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-6">
                     <div className="max-w-3xl">
                         <span className="inline-block py-1.5 px-3 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold tracking-wider uppercase mb-4">
                             Layanan Persiapan Karir
                         </span>
                         <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-[1.15] font-serif">
-                            Layanan <br/>
+                            Layanan <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#004d40] to-emerald-500">
                                 Konsultasi.
                             </span>
                         </h2>
                     </div>
+
                     <p className="text-gray-500 max-w-sm text-base md:text-lg leading-relaxed text-left md:text-right font-medium">
                         Sarana bagi mahasiswa untuk berbagi cerita, mendapatkan arahan, serta menemukan solusi akademik maupun personal.
                     </p>
@@ -35,7 +39,7 @@ const KonsultasiComp = () => {
 
                 {/* Main Preview Card */}
                 <div className="relative group">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-[#004d40] rounded-[2rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                    <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-[#004d40] rounded-[2rem] blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
 
                     <div className="relative bg-white rounded-[2rem] p-8 md:p-12 shadow-xl border border-gray-100 flex flex-col lg:flex-row items-center gap-12">
                         {/* Image Side */}
@@ -47,7 +51,9 @@ const KonsultasiComp = () => {
                                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#004d40]/60 to-transparent flex items-end p-6">
-                                    <p className="text-white font-serif italic text-lg">"Kenali dirimu, raih masa depanmu."</p>
+                                    <p className="text-white font-serif italic text-lg">
+                                        "Kenali dirimu, raih masa depanmu."
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -60,8 +66,12 @@ const KonsultasiComp = () => {
                                         <UserCheck className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-gray-900 text-lg">Konselor Profesional</h4>
-                                        <p className="text-gray-500 text-sm">Dibimbing langsung oleh para ahli di bidang pengembangan karir dan psikologi.</p>
+                                        <h4 className="font-bold text-gray-900 text-lg">
+                                            Konselor Profesional
+                                        </h4>
+                                        <p className="text-gray-500 text-sm">
+                                            Dibimbing langsung oleh para ahli di bidang pengembangan karir dan psikologi.
+                                        </p>
                                     </div>
                                 </div>
 
@@ -70,8 +80,12 @@ const KonsultasiComp = () => {
                                         <Calendar className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-gray-900 text-lg">Jadwal Fleksibel</h4>
-                                        <p className="text-gray-500 text-sm">Pilih waktu sesi yang paling sesuai dengan jadwal perkuliahan Anda.</p>
+                                        <h4 className="font-bold text-gray-900 text-lg">
+                                            Jadwal Fleksibel
+                                        </h4>
+                                        <p className="text-gray-500 text-sm">
+                                            Pilih waktu sesi yang paling sesuai dengan jadwal perkuliahan Anda.
+                                        </p>
                                     </div>
                                 </div>
 
@@ -80,8 +94,12 @@ const KonsultasiComp = () => {
                                         <Clock className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-gray-900 text-lg">Sesi Tatap Muka</h4>
-                                        <p className="text-gray-500 text-sm">Ruang konsultasi yang nyaman untuk mendukung privasi dan kenyamanan diskusi.</p>
+                                        <h4 className="font-bold text-gray-900 text-lg">
+                                            Sesi Tatap Muka
+                                        </h4>
+                                        <p className="text-gray-500 text-sm">
+                                            Ruang konsultasi yang nyaman untuk mendukung privasi dan kenyamanan diskusi.
+                                        </p>
                                     </div>
                                 </div>
                             </div>

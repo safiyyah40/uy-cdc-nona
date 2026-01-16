@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Link } from '@inertiajs/react';
+import { ArrowRight, Briefcase } from 'lucide-react'; // Tambahkan icon untuk konsistensi
 
 // Gambar Placeholder jika logo kosong/error
 const PLACEHOLDER_IMG = "https://placehold.co/400x400/044732/ffffff?text=YARSI";
@@ -72,17 +73,15 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
     const [isPaused, setIsPaused] = useState(false);
     const [cardWidth, setCardWidth] = useState(320);
 
-    // Safety check: Pastikan jobs adalah array valid
     const jobList = Array.isArray(jobs) ? jobs : [];
     const totalJobs = jobList.length;
 
-    // Handle Responsive Card Width
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 640) {
-                setCardWidth(280); // Mobile
+                setCardWidth(280);
             } else {
-                setCardWidth(380); // Desktop
+                setCardWidth(380);
             }
         };
         handleResize();
@@ -102,59 +101,79 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
         }
     }, [totalJobs]);
 
-    // Auto play
     useEffect(() => {
         if (isPaused || totalJobs <= 1) return;
         const interval = setInterval(nextSlide, 4000);
         return () => clearInterval(interval);
     }, [nextSlide, isPaused, totalJobs]);
 
-    // Jika tidak ada data, jangan render section ini
     if (totalJobs === 0) return null;
 
     return (
-        <section className="py-20 relative bg-gradient-to-b from-green-500 to-white font-inter overflow-hidden">
+        /* Konsistensi Padding dan Background dengan InfoMagang */
+        <section className="pt-8 pb-16 md:pt-12 md:pb-24 bg-white relative overflow-hidden font-inter">
 
-            <div className="container mx-auto px-4 md:px-8 relative z-10">
+            {/* Background Blur Decoration (Sama dengan InfoMagang) */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                <div className="absolute -top-24 -right-24 w-96 h-96 bg-emerald-50/50 rounded-full blur-3xl"></div>
+            </div>
 
-                <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-16 tracking-wide font-serif">
-                    LOWONGAN PEKERJAAN
-                </h2>
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
 
+                {/* Header Section (Konsisten dengan layout InfoMagang) */}
+                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+                    <div>
+                        <span className="inline-flex items-center text-sm font-bold text-emerald-600 uppercase tracking-widest mb-2">
+                            <Briefcase className="w-4 h-4 mr-2" />
+                            Peluang Karir
+                        </span>
+                        <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 leading-tight">
+                            Lowongan Pekerjaan <span className="text-emerald-700">Terbaru</span>
+                        </h2>
+                        <p className="text-gray-600 mt-3 max-w-2xl text-lg">
+                            Temukan peluang karir profesional yang sesuai dengan keahlian Anda.
+                        </p>
+                    </div>
+
+                    {/* Tombol Lihat Semua (Samping Kanan) */}
+                    <Link
+                        href={route('loker.index')}
+                        className="hidden md:inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-700 font-bold rounded-xl hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all shadow-sm group"
+                    >
+                        Lihat Semua Lowongan
+                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                </div>
+
+                {/* Slider Container (Logika Tidak Berubah) */}
                 <div
                     className="relative flex justify-center items-center h-[550px]"
                     onMouseEnter={() => setIsPaused(true)}
                     onMouseLeave={() => setIsPaused(false)}
                 >
-
-                    {/* Navigation Buttons (Hanya muncul jika lebih dari 1 job) */}
                     {totalJobs > 1 && (
                         <>
                             <button
                                 onClick={prevSlide}
-                                className="absolute left-0 top-1/2 -translate-y-1/2 z-30 p-3 ml-4 rounded-full bg-white/30 hover:bg-white/50 transition-colors focus:outline-none shadow-lg"
+                                className="absolute left-0 top-1/2 -translate-y-1/2 z-30 p-3 ml-4 rounded-full bg-emerald-100/50 hover:bg-emerald-200 transition-colors focus:outline-none shadow-lg group"
                                 aria-label="Previous"
                             >
-                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" /></svg>
+                                <svg className="w-6 h-6 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" /></svg>
                             </button>
 
                             <button
                                 onClick={nextSlide}
-                                className="absolute right-0 top-1/2 -translate-y-1/2 z-30 p-3 mr-4 rounded-full bg-white/30 hover:bg-white/50 transition-colors focus:outline-none shadow-lg"
+                                className="absolute right-0 top-1/2 -translate-y-1/2 z-30 p-3 mr-4 rounded-full bg-emerald-100/50 hover:bg-emerald-200 transition-colors focus:outline-none shadow-lg group"
                                 aria-label="Next"
                             >
-                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" /></svg>
+                                <svg className="w-6 h-6 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" /></svg>
                             </button>
                         </>
                     )}
 
-                    {/* Cards Container */}
                     <div className="relative w-full h-[500px]">
                         {jobList.map((job, index) => {
-                            // --- LOGIKA TRANSFORMASI KARTU ---
                             let offset = (index - activeIndex);
-
-                            // Koreksi offset untuk circular loop
                             if (offset > totalJobs / 2) offset -= totalJobs;
                             if (offset < -totalJobs / 2) offset += totalJobs;
 
@@ -170,14 +189,11 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
                                 scale = 1;
                                 opacity = 1;
                             } else {
-                                const sign = Math.sign(offset);
-                                // Logic geser kartu samping (seperti contoh Anda sebelumnya)
                                 if (offset > 0) {
                                     translateX = cardWidth * 0.5 + (offset - 1) * cardWidth * 0.7;
                                 } else {
                                     translateX = -cardWidth * 0.5 + (offset + 1) * cardWidth * 0.7;
                                 }
-
                                 scale = 1 - (Math.min(Math.abs(offset), 2) * 0.15);
                                 opacity = 1 - (Math.min(Math.abs(offset), 2) * 0.3);
                             }
@@ -207,15 +223,15 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
 
                 {/* Pagination Dots */}
                 {totalJobs > 1 && (
-                    <div className="flex justify-center space-x-3 mt-10">
+                    <div className="flex justify-center space-x-3 mt-4">
                         {jobList.map((_, index) => (
                             <button
                                 key={index}
                                 onClick={() => setActiveIndex(index)}
                                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
                                     activeIndex === index
-                                    ? 'bg-green-700 scale-110 shadow-md'
-                                    : 'bg-gray-400 hover:bg-green-300'
+                                    ? 'bg-emerald-600 scale-110 shadow-md'
+                                    : 'bg-gray-300 hover:bg-emerald-300'
                                 }`}
                                 aria-label={`Go to slide ${index + 1}`}
                             />
@@ -223,13 +239,13 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
                     </div>
                 )}
 
-                {/* Footer Button */}
-                <div className="text-center mt-16">
+                {/* Tombol Lihat Semua (Mobile Only) */}
+                <div className="mt-10 text-center md:hidden">
                     <Link
                         href={route('loker.index')}
-                        className="inline-block px-12 py-3 text-lg font-bold rounded-full text-white shadow-xl hover:bg-teal-400 transition-all transform hover:scale-[1.05] bg-gradient-to-r from-teal-300 to-green-700/80"
+                        className="inline-flex items-center justify-center w-full px-6 py-3 bg-white border border-gray-200 text-gray-700 font-bold rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition-all shadow-sm"
                     >
-                        SELENGKAPNYA
+                        Lihat Semua Lowongan
                     </Link>
                 </div>
             </div>

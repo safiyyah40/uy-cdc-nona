@@ -27,7 +27,7 @@ const LAYANAN_TES = [
 
 const TesMinatBakatComp = () => {
     return (
-        <section id="layanan-tes" className="relative py-20 bg-white overflow-hidden">
+        <section id="layanan-tes" className="relative py-14 pb-8 bg-white overflow-hidden">
 
             <div className="absolute top-0 inset-x-0 h-full w-full pointer-events-none overflow-hidden">
                 <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-green-50 rounded-full blur-[100px] opacity-60 mix-blend-multiply"></div>
@@ -36,7 +36,7 @@ const TesMinatBakatComp = () => {
 
             <div className="container mx-auto px-6 lg:px-12 relative z-10 max-w-7xl">
 
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
                     <div className="max-w-3xl">
                         <span className="inline-block py-1.5 px-3 rounded-full bg-green-100 text-green-700 text-xs font-bold tracking-wider uppercase mb-4">
                             Layanan Persiapan Karir

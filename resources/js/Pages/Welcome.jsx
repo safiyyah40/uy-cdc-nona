@@ -18,6 +18,9 @@ import TipsCard from '@/Components/TipsCard';
 export default function Welcome({ auth, slides, latestNews, latestMagang, latestLoker, latestSeminar = [], latestTips = [] }) {
     return (
         <MainLayout>
+            {/* --- 2. SLIDESHOW --- */}
+                <Slideshow slides={slides} />
+
             <Head title="Selamat Datang di CDC YARSI" />
 
             <div className="bg-white min-h-screen text-gray-800 font-sans">
@@ -46,24 +49,17 @@ export default function Welcome({ auth, slides, latestNews, latestMagang, latest
                     </div>
                 </section>
 
-                {/* --- 2. SLIDESHOW --- */}
-                <Slideshow slides={slides} />
-
                 {/* --- 3. LAYANAN & PROGRAM --- */}
-                <div className="space-y-24 pb-20 mt-16">
+                <div className="space-y-0 pb-20 mt-12">
 
                     <KonsultasiComp />
                     <CvReviewComp />
                     <TesMinatBakat />
 
                     {/* --- Info Magang --- */}
-                    <div className="w-full">
-                        <div className="max-w-7xl mx-auto px-6 mb-8">
-                        </div>
                         <div className="w-full">
                             <InfoMagang latestMagang={latestMagang} />
                         </div>
-                    </div>
 
                     {/* Lowongan Pekerjaan */}
                     <div className="w-full">

@@ -2,10 +2,10 @@ import React, { useState, useRef } from 'react';
 import { useForm, router, usePage, Link } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
 import Footer from '@/Components/Footer';
-import { 
-    Upload, Trash2, Info, CheckCircle, ArrowLeft, 
-    FileText, User, Phone, Mail, Building, 
-    GraduationCap, BookOpen, AlertCircle 
+import {
+    Upload, Trash2, Info, CheckCircle, ArrowLeft,
+    FileText, User, Phone, Mail, Building,
+    GraduationCap, BookOpen, AlertCircle
 } from 'lucide-react';
 
 // Komponen Kecil
@@ -46,10 +46,10 @@ const FormUnggahCv = () => {
         setFileError('');
 
         // 10MB limit
-        const maxSize = 10 * 1024 * 1024; 
+        const maxSize = 10 * 1024 * 1024;
         const allowedTypes = [
-            'application/pdf', 
-            'application/msword', 
+            'application/pdf',
+            'application/msword',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         ];
 
@@ -101,18 +101,28 @@ const FormUnggahCv = () => {
     };
 
     return (
-        <MainLayout user={user}>
-            <div className="fixed inset-0 -z-10 bg-gray-50"></div>
+    <MainLayout user={user}>
+        <div className="fixed inset-0 -z-10 bg-gray-50"></div>
 
-            <div className="min-h-screen pt-12 pb-20">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+        <div className="min-h-screen pt-12 pb-20">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
 
-                    <Link href={route('layanan.cv.review')} className="inline-flex items-center text-sm sm:text-base text-gray-500 hover:text-emerald-800 font-medium mb-6 transition-colors">
-                        <ArrowLeft className="w-4 h-4 mr-2" /> Kembali
+                <div className="mb-8 pt-4">
+                    <Link
+                        href={route('layanan.cv.review')}
+                        className="inline-flex items-center gap-2 text-gray-500 hover:text-emerald-800 transition-all font-medium text-sm group"
+                    >
+                        <div className="p-1 rounded-full bg-white border border-gray-200 group-hover:border-emerald-800 transition-colors">
+                            <ArrowLeft className="w-4 h-4" />
+                        </div>
+                        <span className="uppercase tracking-wider text-xs">
+                            Kembali ke Layanan Review CV
+                        </span>
                     </Link>
+                </div>
 
                     <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                        
+
                         {/* Header Form */}
                         <div className="w-full max-w-5xl bg-white rounded-xl shadow-2xl p-6 sm:p-10 lg:p-12 border border-gray-200">
 
@@ -144,7 +154,7 @@ const FormUnggahCv = () => {
                                     <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
                                         <FileText className="w-5 h-5 mr-2 text-emerald-600"/> Dokumen & Informasi
                                     </h3>
-                                    
+
                                     <div className="space-y-6">
                                         {/* Posisi Target */}
                                         <div>
@@ -268,7 +278,7 @@ const FormUnggahCv = () => {
                     </div>
                 </div>
             )}
-            
+
             <Footer />
         </MainLayout>
     );

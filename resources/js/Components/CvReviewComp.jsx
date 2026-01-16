@@ -148,7 +148,12 @@ const CvReviewComp = () => {
     ];
 
     return (
-        <section id="layanan-cv-review" className="relative py-20 bg-gray-50 overflow-hidden">
+        <section
+  id="layanan-cv-review"
+  className={`relative overflow-hidden ${
+    safeTemplates.length === 0 ? 'py-10' : 'py-14'
+  }`}
+>
             {/* Background Decorative Elements - Identik dengan KonsultasiComp */}
             <div className="absolute top-0 inset-x-0 h-full w-full pointer-events-none overflow-hidden">
                 <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-emerald-50 rounded-full blur-[100px] opacity-60 mix-blend-multiply"></div>
@@ -209,7 +214,7 @@ const CvReviewComp = () => {
                             />
                         </div>
                         <div className="relative">
-                            <button 
+                            <button
                                 onClick={() => setShowKategoriDropdown(!showKategoriDropdown)}
                                 className="w-full md:w-auto px-6 py-4 bg-white border border-gray-100 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-emerald-500 shadow-sm transition-all"
                             >
@@ -219,9 +224,9 @@ const CvReviewComp = () => {
                             {showKategoriDropdown && (
                                 <div className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl z-50 py-3 border border-gray-50 animate-in fade-in slide-in-from-top-2">
                                     {kategoriOptions.map((opt) => (
-                                        <button 
-                                            key={opt.value} 
-                                            onClick={() => handleKategoriChange(opt.value)} 
+                                        <button
+                                            key={opt.value}
+                                            onClick={() => handleKategoriChange(opt.value)}
                                             className="w-full text-left px-5 py-3 hover:bg-emerald-50 flex items-center gap-3 text-sm font-semibold text-gray-700 hover:text-emerald-700 transition-colors"
                                         >
                                             <opt.icon className="w-4 h-4" /> {opt.label}
@@ -244,9 +249,9 @@ const CvReviewComp = () => {
 
                 {/* Empty State */}
                 {!isCounselor && safeTemplates.length === 0 && (
-                    <div className="relative group mt-12">
+                    <div className="relative group">
                          <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-[#004d40] rounded-[2rem] blur opacity-10"></div>
-                         <div className="relative text-center py-20 bg-white rounded-[2rem] border border-gray-100 shadow-sm">
+                         <div className="relative text-center py-12 bg-white rounded-[2rem] border border-gray-100 shadow-sm">
                             <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Search className="w-8 h-8 text-[#004d40]" />
                             </div>
@@ -265,8 +270,8 @@ const CvReviewComp = () => {
                                 onClick={() => link.url && router.get(link.url)}
                                 disabled={!link.url || link.active}
                                 className={`min-w-[48px] h-[48px] flex items-center justify-center rounded-xl font-bold transition-all ${
-                                    link.active 
-                                    ? 'bg-[#004d40] text-white shadow-lg shadow-[#004d40]/30' 
+                                    link.active
+                                    ? 'bg-[#004d40] text-white shadow-lg shadow-[#004d40]/30'
                                     : 'bg-white border border-gray-200 text-gray-500 hover:border-emerald-500 hover:text-emerald-600'
                                 } ${!link.url ? 'opacity-30 cursor-not-allowed' : ''}`}
                                 dangerouslySetInnerHTML={{ __html: link.label }}
