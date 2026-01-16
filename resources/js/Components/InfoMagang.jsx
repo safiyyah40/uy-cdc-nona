@@ -17,8 +17,8 @@ const CardMagang = ({ item, isGuest }) => {
     const diffDays = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
     const isUrgent = diffDays <= 7 && diffDays > 0;
 
-    // LOGIKA LINK: Guest ke Login, User ke Detail
-    const cardLink = isGuest ? route('login') : route('magang.show', { slug: item.slug });
+    // Guest ke Login, User ke Detail
+    const cardLink = route('magang.show', { slug: item.slug });
 
     return (
         <Link
@@ -93,7 +93,7 @@ const CardMagang = ({ item, isGuest }) => {
                             <span>Masuk Detail</span>
                         </div>
                     ) : (
-                         <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1.5">
                             <Calendar className="w-3.5 h-3.5" />
                             <span>{deadlineDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</span>
                         </div>

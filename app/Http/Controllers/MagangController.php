@@ -151,9 +151,10 @@ class MagangController extends Controller
             'salary_min' => $magang->salary_min,
             'salary_max' => $magang->salary_max,
         ];
-
+        $user = Auth::user();
         return Inertia::render('PeluangKarir/Magang/DetailMagang', [
             'magang' => $magangData,
+            'auth' => ['user' => $user]
         ]);
     }
 }

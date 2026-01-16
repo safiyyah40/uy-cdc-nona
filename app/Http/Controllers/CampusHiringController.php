@@ -116,7 +116,9 @@ class CampusHiringController extends Controller
     public function show(Request $request, $id, $slug)
     {
         if (! Auth::check()) {
-            return redirect()->guest(route('login'))->with('message', 'Silakan login terlebih dahulu.');
+           session()->put('url.intended', url()->current());
+            
+            return redirect()->route('login')->with('message', 'Silakan login untuk melihat detail program.');
         }
 
         $program = CampusHiring::where('id', $id)

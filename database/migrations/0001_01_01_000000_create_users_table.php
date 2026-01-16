@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->boolean('is_profile_complete')->default(false);
             $table->string('password')->nullable();
-            $table->enum('role', ['mahasiswa', 'konselor', 'admin', 'super_admin'])->default('mahasiswa');
+            $table->enum('role', ['mahasiswa', 'konselor', 'admin'])->default('mahasiswa');
             $table->string('photo_url')->nullable();
             $table->rememberToken();
             $table->timestamps();

@@ -1,35 +1,39 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\StatistikLayananController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CampusHiringController;
 use App\Http\Controllers\CvReviewController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\KonselorController;
 use App\Http\Controllers\KonsultasiController;
 use App\Http\Controllers\LokerController;
 use App\Http\Controllers\MagangController;
+use App\Http\Controllers\OrientasiDuniaKerjaController;
 use App\Http\Controllers\ProfileCompletionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilKonselorController;
 use App\Http\Controllers\ProfilPuskakaController;
 use App\Http\Controllers\RiasecTestController;
-use App\Http\Controllers\OrientasiDuniaKerjaController;
 use App\Http\Controllers\SeminarController;
-use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\SertifikasiController;
+use App\Http\Controllers\StatistikLayananController;
 use App\Http\Controllers\TipsDanTrikController;
 use App\Models\BerandaSlide;
 use App\Models\Berita;
+use App\Models\CvTemplate;
+use App\Models\CampusHiring;
 use App\Models\Loker;
 use App\Models\Magang;
+use App\Models\OrientasiDuniaKerja;
 use App\Models\Seminar;
 use App\Models\TipsDanTrik;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Illuminate\Support\Carbon;
 
 Route::get('/', function () {
     $slides = BerandaSlide::where('is_active', true)
@@ -40,6 +44,23 @@ Route::get('/', function () {
                 'id' => $slide->id,
                 'photo_url' => $slide->photo_url,
                 'alt_text' => $slide->alt_text ?? 'Slideshow Beranda',
+            ];
+        });
+
+    $latestODK = OrientasiDuniaKerja::active()
+        ->latest('date')
+        ->take(3)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'slug' => $item->slug,
+                'judul' => $item->title,
+                'kategori' => is_array($item->categories) ? $item->categories[0] ?? 'General' : $item->categories,
+                'deskripsi' => $item->description,
+                'imageUrl' => $item->image ? Storage::url($item->image) : '/images/odk.jpg',
+                'date' => $item->date ? $item->date->format('d M Y') : null,
+                'location' => $item->location,
             ];
         });
 
@@ -97,6 +118,29 @@ Route::get('/', function () {
                 'logo' => $item->logo,
             ];
         });
+        
+   $latestHiring = CampusHiring::where('is_active', true)
+    ->whereDate('date', '>=', now())
+    ->orderBy('date', 'asc')
+    ->take(4)
+    ->get()
+    ->map(function ($item) {
+        return [
+            'id' => $item->id,
+            'slug' => $item->slug,
+            'title' => $item->title,
+            'company_name' => $item->company_name,
+            'location' => $item->location,
+            'formatted_date' => $item->date
+                ? Carbon::parse($item->date)->translatedFormat('d M Y')
+                : '-',
+            'imageSrc' => $item->image
+                ? (str_starts_with($item->image, 'http') 
+                    ? $item->image 
+                    : Storage::url($item->image))
+                : null,
+        ];
+    });
 
     $latestSeminar = Seminar::where('is_active', true)
         ->orderBy('date', 'desc')
@@ -123,24 +167,51 @@ Route::get('/', function () {
                 'slug' => $item->slug,
                 'summary' => $item->summary,
                 'category' => $item->category,
-                'reading_time' => $item->reading_time, // Misalnya '5 Menit'
-                'image_url' => $item->image ? Storage::url($item->image) : null,
+                'reading_time' => $item->reading_time,
+                'image_url' => $item->thumbnail ? Storage::url($item->thumbnail) : null,
+            ];
+        });
+
+    $latestTemplates = CvTemplate::where('is_active', true)
+        ->orderBy('is_unggulan', 'desc')
+        ->latest()
+        ->take(4)
+        ->get()
+        ->map(function ($tpl) {
+            return [
+                'id' => $tpl->id,
+                'judul' => $tpl->judul_template,
+                'deskripsi' => $tpl->deskripsi,
+                'kategori' => $tpl->kategori,
+                'sumber' => $tpl->sumber,
+                'preview_url' => $tpl->preview_url,
+                'url_template' => $tpl->url_template,
+                'tags' => $tpl->tags,
+                'is_unggulan' => $tpl->is_unggulan,
+                'jumlah_view' => $tpl->jumlah_view,
+                'jumlah_klik' => $tpl->jumlah_klik,
             ];
         });
 
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'slides' => $slides,
+        'latestODK' => $latestODK,
+        'latestCampusHiring' => $latestHiring,
         'latestNews' => $latestNews,
         'latestMagang' => $latestMagang,
         'latestLoker' => $latestLoker,
         'latestSeminar' => $latestSeminar,
         'latestTips' => $latestTips,
+        'templates' => $latestTemplates,
     ]);
 })->name('welcome');
 
 Route::get('/api/statistik-layanan', [StatistikLayananController::class, 'index'])
     ->name('api.statistik.layanan');
+
+Route::get('/layanan/cv-template/{id}/download', [CvReviewController::class, 'downloadTemplate'])
+    ->name('layanan.cv.template.download');
 
 // GROUP AUTH
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -153,21 +224,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/akun/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-   // GET - Ambil semua events
+    // GET - Ambil semua events
     Route::get('/api/calendar/events', [CalendarController::class, 'getEvents']);
-    
+
     // GET - Ambil events by date
     Route::get('/api/calendar/events/{date}', [CalendarController::class, 'getEventsByDate']);
-    
+
     // POST - Tambah event baru
     Route::post('/api/calendar/events', [CalendarController::class, 'store']);
-    
+
     // PUT - Update event
     Route::put('/api/calendar/events/{id}', [CalendarController::class, 'update']);
-    
+
     // DELETE - Hapus event
     Route::delete('/api/calendar/events/{id}', [CalendarController::class, 'destroy']);
-    
+
     // AREA MAHASISWA (Booking Konsultasi)
     Route::get('/layanan/konsultasi/booking', [KonsultasiController::class, 'showBookingForm'])->name('konsultasi.booking');
     Route::post('/layanan/konsultasi/submit', [KonsultasiController::class, 'store'])->name('konsultasi.submit');

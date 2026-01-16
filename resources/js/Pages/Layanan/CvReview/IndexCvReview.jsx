@@ -14,19 +14,22 @@ import {
 // TEMPLATE CARD COMPONENT
 const TemplateCard = ({ template, onKlik }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
+    const [hasError, setHasError] = useState(false);
 
-    const handleKlik = () => {
-        if (onKlik) {
-            onKlik(template.id, template.url_template);
-        } else {
-            window.open(template.url_template, '_blank');
-        }
+    // Placeholder Image
+    const placeholderImage = "https://placehold.co/600x800/f1f5f9/94a3b8?text=No+Preview&font=roboto";
+
+    // Helper untuk mendapatkan URL gambar yang valid
+    const getImageUrl = () => {
+        if (hasError) return placeholderImage;
+        const rawUrl = template.preview_url || template.url_preview;
+        if (!rawUrl) return placeholderImage;
+        if (rawUrl.startsWith('http')) return rawUrl;
+        return `/storage/${rawUrl}`;
     };
 
     return (
         <div className="group relative bg-white rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-[#00CA65] transform hover:-translate-y-1">
-
-            {/* Badge Unggulan */}
             {template.is_unggulan && (
                 <div className="absolute top-3 right-3 z-20 bg-gradient-to-r from-amber-400 to-orange-500 text-white px-2.5 py-1 rounded-full text-[10px] font-bold shadow-lg flex items-center gap-1 animate-pulse">
                     <Sparkles className="w-3 h-3" />
@@ -34,32 +37,36 @@ const TemplateCard = ({ template, onKlik }) => {
                 </div>
             )}
 
-            {/* Image Preview */}
             <div className="aspect-[3/4] overflow-hidden bg-gray-100 relative">
-                {!imageLoaded && (
-                    <div className="absolute inset-0 flex items-center justify-center">
+                {!imageLoaded && !hasError && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-50 z-10">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#004d40]"></div>
                     </div>
                 )}
 
                 <img
-                    src={template.preview_url}
+                    src={getImageUrl()}
                     alt={template.judul}
                     onLoad={() => setImageLoaded(true)}
+                    onError={(e) => {
+                        if (!hasError) {
+                            setHasError(true);
+                            setImageLoaded(true);
+                            e.target.src = placeholderImage;
+                        }
+                    }}
                     className={`w-full h-full object-cover transition-transform duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'} group-hover:scale-105`}
                 />
 
-                {/* Overlay saat hover */}
-                <div className="absolute inset-0 bg-[#004d40]/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4 gap-3 backdrop-blur-sm">
+                <div className="absolute inset-0 bg-[#004d40]/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4 gap-3 backdrop-blur-sm z-20">
                     <button
-                        onClick={handleKlik}
+                        onClick={() => onKlik(template)}
                         className="px-6 py-3 bg-white text-[#004d40] font-bold rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-2 hover:bg-emerald-50 w-full justify-center shadow-lg"
                     >
                         {template.sumber === 'canva' ? <Palette className="w-4 h-4" /> : <Download className="w-4 h-4" />}
-                        Gunakan Template
+                        {template.sumber === 'manual' ? 'Download File' : 'Gunakan Template'}
                     </button>
 
-                    {/* Stats Mini */}
                     <div className="flex items-center gap-4 text-white/90 text-xs translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-75">
                         <span className="flex items-center gap-1 bg-white/10 px-2 py-1 rounded-full">
                             <Eye className="w-3 h-3" /> {template.jumlah_view || 0}
@@ -70,32 +77,25 @@ const TemplateCard = ({ template, onKlik }) => {
                     </div>
                 </div>
 
-                {/* Badge Kategori */}
-                <div className="absolute top-3 left-3 bg-white/95 backdrop-blur px-3 py-1 rounded-lg text-xs font-bold text-[#004d40] shadow-sm border border-emerald-100/50">
+                <div className="absolute top-3 left-3 bg-white/95 backdrop-blur px-3 py-1 rounded-lg text-xs font-bold text-[#004d40] shadow-sm border border-emerald-100/50 z-20">
                     {template.kategori}
                 </div>
             </div>
 
-            {/* Info Template */}
             <div className="p-4 border-t border-gray-100">
                 <div className="flex justify-between items-start mb-1">
                     <h4 className="font-bold text-gray-800 line-clamp-1 text-sm group-hover:text-[#00CA65] transition-colors" title={template.judul}>
                         {template.judul}
                     </h4>
-                    {/* Badge Sumber Mini */}
-                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${template.sumber === 'canva' ? 'bg-blue-100 text-blue-700' :
-                        template.sumber === 'google_slides' ? 'bg-yellow-100 text-yellow-700' :
-                            'bg-gray-100 text-gray-700'
-                        }`}>
-                        {template.sumber === 'canva' ? 'Canva' : template.sumber === 'google_slides' ? 'Slides' : 'File'}
+                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${template.sumber === 'canva' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>
+                        {template.sumber === 'canva' ? 'Canva' : 'File'}
                     </span>
                 </div>
                 <p className="text-xs text-gray-500 line-clamp-2 mt-1">
                     {template.deskripsi || 'Template profesional siap pakai & mudah diedit.'}
                 </p>
 
-                {/* Tags */}
-                {template.tags && template.tags.length > 0 && (
+                {template.tags && Array.isArray(template.tags) && (
                     <div className="flex flex-wrap gap-1 mt-3">
                         {template.tags.slice(0, 2).map((tag, idx) => (
                             <span key={idx} className="text-[9px] bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-medium">
@@ -213,7 +213,7 @@ const HeroSection = ({ user, isCounselor, scrollToContent }) => {
 
 // MAIN PAGE COMPONENT
 function IndexCvReview(props) {
-    const { auth, flash, templates, pagination, filters } = usePage().props;
+    const { auth, templates, pagination, filters } = usePage().props;
     const user = auth.user;
     const isCounselor = user?.role === 'konselor';
 
@@ -280,6 +280,28 @@ function IndexCvReview(props) {
         }
     };
 
+    const handleTemplateAction = (template) => {
+        if (template.sumber === 'manual') {
+            // JIKA MANUAL -> DOWNLOAD FILE
+            window.location.href = route('layanan.cv.template.download', { id: template.id });
+        } else {
+            // JIKA CANVA/SLIDES -> BUKA TAB BARU
+            if (template.url_template && template.url_template.startsWith('http')) {
+                window.open(template.url_template, '_blank');
+            } else {
+                alert("Link template tidak valid.");
+            }
+        }
+    };
+
+    const handleReset = () => {
+        setSearchTerm('');
+        setFilterKategori('semua');
+        setFilterSumber('semua');
+        router.get(route('layanan.cv.review'));
+    };
+
+
     const handleTemplateKlik = (templateId, urlTemplate) => {
         // Cek apakah ini URL eksternal (Canva/Google Slides)
         const isExternal = urlTemplate && (urlTemplate.startsWith('http') || urlTemplate.startsWith('https'));
@@ -299,13 +321,6 @@ function IndexCvReview(props) {
         }
     };
 
-    const handleReset = () => {
-        setSearchTerm('');
-        setFilterKategori('semua');
-        setFilterSumber('semua');
-        router.get(route('layanan.cv.review'));
-    };
-
     const scrollToContent = () => {
         document.getElementById('template-gallery')?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -322,7 +337,7 @@ function IndexCvReview(props) {
     const sumberOptions = [
         { value: 'semua', label: 'Semua Sumber' },
         { value: 'canva', label: '🎨 Canva' },
-        { value: 'google_slides', label: '📊 Google Slides' },
+        { value: 'slides_go', label: '📊 Slides Go' },
         { value: 'manual', label: '📄 File Download' },
     ];
 
@@ -470,7 +485,7 @@ function IndexCvReview(props) {
                                 </div>
                             </div>
 
-                            {/* TEMPLATE GRID */}
+                            {/* GRID TEMPLATE */}
                             {safeTemplates.length > 0 ? (
                                 <>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
@@ -478,11 +493,11 @@ function IndexCvReview(props) {
                                             <TemplateCard
                                                 key={tpl.id}
                                                 template={tpl}
-                                                onKlik={handleTemplateKlik}
+                                                // INI YANG PENTING: Passing fungsi handleTemplateAction ke child
+                                                onKlik={handleTemplateAction}
                                             />
                                         ))}
                                     </div>
-
                                     {/* PAGINATION */}
                                     {safePagination.links && safePagination.links.length > 3 && (
                                         <div className="flex justify-center mt-12">

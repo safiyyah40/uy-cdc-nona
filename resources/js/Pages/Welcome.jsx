@@ -15,17 +15,17 @@ import CvReviewComp from '@/Components/CvReviewComp';
 import SeminarCard from '@/Components/SeminarCard';
 import TipsCard from '@/Components/TipsCard';
 
-export default function Welcome({ auth, slides, latestNews, latestMagang, latestLoker, latestSeminar = [], latestTips = [] }) {
+export default function Welcome({ auth, slides, latestNews, latestCampusHiring,latestMagang, latestLoker, latestSeminar = [], latestTips = [], latestODK 
+}) {
     return (
         <MainLayout>
-            {/* --- 2. SLIDESHOW --- */}
-                <Slideshow slides={slides} />
+            <Slideshow slides={slides} />
 
             <Head title="Selamat Datang di CDC YARSI" />
 
             <div className="bg-white min-h-screen text-gray-800 font-sans">
 
-                {/* --- 1. HERO SECTION --- */}
+                {/* HERO SECTION */}
                 <section className="relative w-full pt-12 pb-10 md:pt-24 md:pb-12 px-6 overflow-hidden">
                     <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-green-100 rounded-full blur-3xl opacity-50 z-0"></div>
                     <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 bg-teal-50 rounded-full blur-3xl opacity-50 z-0"></div>
@@ -49,17 +49,18 @@ export default function Welcome({ auth, slides, latestNews, latestMagang, latest
                     </div>
                 </section>
 
-                {/* --- 3. LAYANAN & PROGRAM --- */}
+                {/* LAYANAN & PROGRAM */}
                 <div className="space-y-0 pb-20 mt-12">
 
                     <KonsultasiComp />
                     <CvReviewComp />
                     <TesMinatBakat />
+                    {auth.user && <KalenderSection />}
 
-                    {/* --- Info Magang --- */}
-                        <div className="w-full">
-                            <InfoMagang latestMagang={latestMagang} />
-                        </div>
+                    {/* Info Magang */}
+                    <div className="w-full">
+                        <InfoMagang latestMagang={latestMagang} />
+                    </div>
 
                     {/* Lowongan Pekerjaan */}
                     <div className="w-full">
@@ -68,21 +69,12 @@ export default function Welcome({ auth, slides, latestNews, latestMagang, latest
                         <LowonganPekerjaan jobs={latestLoker} />
                     </div>
 
-                    <section className="w-full">
-                        <ODKCard />
-                    </section>
+                    <ODKCard latestODK={latestODK} />
 
-                    <section className="w-full">
-                        <CampusHiringCard />
-                    </section>
-
-                    <section className="w-full">
-                        <SeminarCard seminars={latestSeminar} />
-                    </section>
-
+                    <CampusHiringCard latestCampusHiring={latestCampusHiring} />
+                    
+                    <SeminarCard seminars={latestSeminar} />
                     <TipsCard tips={latestTips} />
-
-                    {/* Berita */}
                     <div className="w-full">
                         <div className="max-w-7xl mx-auto px-6 mb-8">
                         </div>
@@ -90,8 +82,6 @@ export default function Welcome({ auth, slides, latestNews, latestMagang, latest
                             <BeritaSection latestNews={latestNews} />
                         </div>
                     </div>
-
-                    {auth.user && <KalenderSection />}
                 </div>
                 <StatistikLayanan />
 

@@ -34,6 +34,10 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         $user = Auth::user();
+
+        if (session()->has('url.intended')) {
+        return redirect()->intended();
+    }
         
         // Cek apakah user perlu melengkapi profil?
         if ($user->needsProfileCompletion()) {

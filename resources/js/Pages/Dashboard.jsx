@@ -15,7 +15,7 @@ import TipsCard from '@/Components/TipsCard';
 import KonsultasiComp from '@/Components/KonsultasiComp';
 import CvReviewComp from '@/Components/CvReviewComp';
 
-export default function Dashboard({ auth, slides, latestNews, latestMagang, latestLoker, latestSeminar = [], latestTips = [] }) {
+export default function Dashboard({ auth, slides, latestNews, latestCampusHiring, latestMagang, latestLoker, latestSeminar = [], latestTips = [], latestODK = [] }) {
     return (
         <MainLayout>
             {/* Slideshow */}
@@ -54,6 +54,7 @@ export default function Dashboard({ auth, slides, latestNews, latestMagang, late
                     <KonsultasiComp />
                     <CvReviewComp />
                     <TesMinatBakat />
+                    {auth.user && <KalenderSection />}
 
                     {/* Info Magang */}
                     <div className="w-full">
@@ -67,11 +68,11 @@ export default function Dashboard({ auth, slides, latestNews, latestMagang, late
                     </div>
 
                     <section className="w-full">
-                        <ODKCard />
+                        <ODKCard latestODK={latestODK} />
                     </section>
 
                     <section className="w-full">
-                        <CampusHiringCard />
+                        <CampusHiringCard latestCampusHiring={latestCampusHiring} />
                     </section>
 
                     <section className="w-full">
@@ -87,8 +88,6 @@ export default function Dashboard({ auth, slides, latestNews, latestMagang, late
                             <BeritaSection latestNews={latestNews} />
                         </div>
                     </div>
-
-                    <KalenderSection />
                 </div>
 
                 <StatistikLayanan />

@@ -96,6 +96,39 @@ class CvReviewController extends Controller
     }
 
     /**
+     * DOWNLOAD TEMPLATE FILE (Untuk User/Guest)
+     */
+    public function downloadTemplate($id)
+    {
+        try {
+            $template = CvTemplate::where('is_active', true)->findOrFail($id);
+
+            // Jika sumbernya bukan manual atau file tidak ada, abort
+            if ($template->sumber !== 'manual' || empty($template->file_path)) {
+                return back()->with('error', 'File template tidak tersedia.');
+            }
+
+            if (! Storage::disk('public')->exists($template->file_path)) {
+                return back()->with('error', 'File fisik tidak ditemukan di server.');
+            }
+
+            // Hitung jumlah download
+            $template->increment('jumlah_download');
+            $template->increment('jumlah_klik');
+
+            return Storage::disk('public')->download(
+                $template->file_path,
+                $template->judul_template.'.'.pathinfo($template->file_path, PATHINFO_EXTENSION)
+            );
+
+        } catch (\Exception $e) {
+            Log::error('Template Download Error: '.$e->getMessage());
+
+            return back()->with('error', 'Gagal mendownload template.');
+        }
+    }
+
+    /**
      * TABEL LIST CV REVIEW
      * - Mahasiswa: Lihat riwayat submission sendiri
      * - Konselor: Lihat CV yang ditugaskan kepadanya
