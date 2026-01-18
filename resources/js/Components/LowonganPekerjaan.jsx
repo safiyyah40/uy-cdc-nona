@@ -123,10 +123,7 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
 
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
 
-<<<<<<< HEAD
-=======
                 {/* Header Section  */}
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
                 <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
                     <div>
                         <span className="inline-flex items-center text-sm font-bold text-emerald-600 uppercase tracking-widest mb-2">

@@ -2,43 +2,12 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import { Calendar, MapPin, ArrowRight, Building2 } from 'lucide-react';
 
-<<<<<<< HEAD
-// Lokasi path gambar buat banner campus hiring
-const CAMPUS_HIRING_IMAGE = "/images/campushiring.jpg";
-
-// Data dummy buat keperluan testing tampilan sebelum ditarik dari database
-const DUMMY_HIRING = [
-    {
-        id: 1,
-        perusahaan: "PT. Teknologi Bangsa",
-        posisi: "Software Engineer Development Program",
-        lokasi: "Jakarta Pusat",
-        tanggal: "24 Des 2025",
-        imageUrl: CAMPUS_HIRING_IMAGE,
-    },
-    {
-        id: 2,
-        perusahaan: "Bank Syariah Mandiri",
-        posisi: "Officer Development Program (ODP)",
-        lokasi: "Surabaya",
-        tanggal: "28 Des 2025",
-        imageUrl: CAMPUS_HIRING_IMAGE,
-    },
-];
-
-/**
- * Komponen Section Campus Hiring
- * Nampilin list info lowongan kerja kampus dengan gaya grid horizontal (2 kolom di layar gede).
- */
-const CampusHiringCard = () => {
-=======
 const CampusHiringCard = ({ latestCampusHiring = [] }) => {
     // Jika tidak ada data, jangan tampilkan section ini
     if (!latestCampusHiring || latestCampusHiring.length === 0) return null;
 
     const DEFAULT_IMAGE = '/images/campushiring.jpg'; 
 
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
     return (
         <section id="campus-hiring-section" className="py-20 bg-white relative overflow-hidden">
              {/* Background Decor */}
@@ -46,12 +15,8 @@ const CampusHiringCard = ({ latestCampusHiring = [] }) => {
                 <div className="absolute top-[10%] left-[-5%] w-[300px] h-[300px] bg-green-50 rounded-full blur-[80px] opacity-40"></div>
             </div>
 
-<<<<<<< HEAD
-                {/* Header: Judul section dan link buat liat semua jadwal */}
-=======
             <div className="container mx-auto px-6 lg:px-12 max-w-7xl relative z-10">
                 {/* Header */}
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
                     <div>
                         <span className="inline-block py-1.5 px-3 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold tracking-wider uppercase mb-4">
@@ -71,24 +36,15 @@ const CampusHiringCard = ({ latestCampusHiring = [] }) => {
                     </Link>
                 </div>
 
-<<<<<<< HEAD
-                {/* Bagian List Kartu: Looping data dari array DUMMY_HIRING */}
-=======
                 {/* Grid List */}
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {latestCampusHiring.map((item) => (
                         <div
                             key={item.id}
                             className="group bg-white rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col sm:flex-row h-full hover:-translate-y-1"
                         >
-<<<<<<< HEAD
-                            {/* Gambar di sisi kiri (sm:w-2/5) dengan efek zoom pas hover */}
-                            <div className="sm:w-2/5 h-48 sm:h-auto relative overflow-hidden">
-=======
                             {/* Image Section */}
                             <div className="sm:w-2/5 h-48 sm:h-auto relative overflow-hidden bg-gray-100">
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
                                 <img
                                     // Cek apakah imageSrc ada? Kalau null/kosong, langsung pakai Default.
                                     src={item.imageSrc ? item.imageSrc : DEFAULT_IMAGE}
@@ -112,12 +68,6 @@ const CampusHiringCard = ({ latestCampusHiring = [] }) => {
                                 </div>
                             </div>
 
-<<<<<<< HEAD
-                            {/* Info detail lowongan: Nama perusahaan, posisi, tanggal, dan lokasi */}
-                            <div className="p-8 sm:w-3/5 flex flex-col justify-center">
-                                <div className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-2">
-                                    {item.perusahaan}
-=======
                             {/* Info Section */}
                             <div className="p-6 sm:p-8 sm:w-3/5 flex flex-col justify-center relative">
                                 <div className="flex items-center gap-2 mb-2">
@@ -125,7 +75,6 @@ const CampusHiringCard = ({ latestCampusHiring = [] }) => {
                                     <span className="text-xs font-bold text-emerald-600 uppercase tracking-widest line-clamp-1">
                                         {item.company_name}
                                     </span>
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
                                 </div>
 
                                 <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-emerald-600 transition-colors leading-tight line-clamp-2">
@@ -143,15 +92,10 @@ const CampusHiringCard = ({ latestCampusHiring = [] }) => {
                                     </div>
                                 </div>
 
-<<<<<<< HEAD
-                                {/* Tombol interaktif buat liat detail program */}
-                                <button className="w-fit text-sm font-bold text-gray-900 flex items-center gap-2 group/btn transition-all">
-=======
                                 <Link 
                                     href={route('program.campus.hiring.show', { id: item.id, slug: item.slug })}
                                     className="w-fit text-sm font-bold text-gray-900 flex items-center gap-2 group/btn transition-all"
                                 >
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
                                     Detail Program
                                     <div className="w-8 h-8 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center group-hover/btn:bg-emerald-600 group-hover/btn:border-emerald-600 group-hover/btn:text-white transition-all">
                                         <ArrowRight className="w-4 h-4" />

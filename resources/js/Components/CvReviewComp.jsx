@@ -8,13 +8,7 @@ import {
     MousePointerClick, Eye, ArrowRight, LayoutGrid
 } from "lucide-react";
 
-<<<<<<< HEAD
-/* --- KOMPONEN KARTU TEMPLATE ---
-   Nampilin preview CV, kategori, dan tombol buat pake template-nya.
-*/
-=======
 // TEMPLATE CARD COMPONENT
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
 const TemplateCard = ({ template, onKlik }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);
@@ -89,16 +83,9 @@ const TemplateCard = ({ template, onKlik }) => {
                     {template.deskripsi || 'Template profesional siap pakai & mudah diedit.'}
                 </p>
 
-<<<<<<< HEAD
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
-                    <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-widest ${
-                        template.sumber === 'canva' ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'
-                    }`}>
-=======
                 <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50">
                     <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-widest ${template.sumber === 'canva' ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'
                         }`}>
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
                         {template.sumber === 'canva' ? 'Canva' : 'File'}
                     </span>
                     <div className="flex gap-1">
@@ -121,59 +108,15 @@ const CvReviewComp = () => {
     const user = auth?.user;
     const isCounselor = user?.role === 'konselor';
     const scrollFade = useScrollFadeIn(0.2);
-<<<<<<< HEAD
-
-    // State buat handle pencarian dan filter kategori
-=======
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
     const safeTemplates = templates || [];
 
     // Cek apakah pagination ada isinya sebelum akses .links
     const safePagination = pagination || { links: [] };
 
-<<<<<<< HEAD
-    const isFirstRender = useRef(true);
-
-    // Efek buat delay pencarian (debouncing) biar gak terlalu berat ke server
-    useEffect(() => {
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
-            return;
-        }
-        const delayDebounceFn = setTimeout(() => {
-            fetchData({ search: searchTerm });
-        }, 500);
-        return () => clearTimeout(delayDebounceFn);
-    }, [searchTerm]);
-
-    // Fungsi buat narik data pake router Inertia
-    const fetchData = (params = {}) => {
-        router.get(route('layanan.cv.review'), {
-            search: searchTerm,
-            kategori: filterKategori,
-            ...params
-        }, {
-            preserveState: true,
-            preserveScroll: true,
-            only: ['templates', 'pagination', 'filters']
-        });
-    };
-
-    const handleKategoriChange = (value) => {
-        setFilterKategori(value);
-        setShowKategoriDropdown(false);
-        fetchData({ kategori: value });
-    };
-
-    const handleTemplateKlik = (id, url) => {
-        if (url?.startsWith('http')) {
-            window.open(url, '_blank');
-=======
     const handleTemplateKlik = (template) => {
         if (template.sumber === 'manual') {
             // Jika Manual -> Download File
             window.location.href = route('layanan.cv.template.download', { id: template.id });
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
         } else {
             // Jika Canva/Slides -> Buka Tab Baru
             if (template.url_template?.startsWith('http')) {
@@ -187,30 +130,17 @@ const CvReviewComp = () => {
 
     return (
         <section
-<<<<<<< HEAD
-  id="layanan-cv-review"
-  className={`relative overflow-hidden ${
-    safeTemplates.length === 0 ? 'py-10' : 'py-14'
-  }`}
->
-            {/* Dekorasi background (lingkaran gradasi blur) */}
-=======
             id="layanan-cv-review"
             className={`relative overflow-hidden ${safeTemplates.length === 0 ? 'py-10' : 'py-14'
                 }`}
         >
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
             <div className="absolute top-0 inset-x-0 h-full w-full pointer-events-none overflow-hidden">
                 <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-emerald-50 rounded-full blur-[100px] opacity-60 mix-blend-multiply"></div>
                 <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-green-50 rounded-full blur-[100px] opacity-60 mix-blend-multiply"></div>
             </div>
 
             <div className="container mx-auto px-6 lg:px-12 relative z-10 max-w-7xl">
-<<<<<<< HEAD
-                {/* Header halaman */}
-=======
                 {/* Header Section */}
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6" ref={scrollFade.ref} style={scrollFade.style}>
                     <div className="max-w-3xl">
                         <span className="inline-block py-1.5 px-3 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold tracking-wider uppercase mb-4">
@@ -252,65 +182,6 @@ const CvReviewComp = () => {
                     </button>
                 </div>
 
-<<<<<<< HEAD
-                {/* Input cari dan dropdown filter kategori */}
-                {!isCounselor && (
-                    <div className="flex flex-col md:flex-row gap-4 mb-12">
-                        <div className="flex-grow relative group">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                            <input
-                                type="text"
-                                placeholder="Cari desain template..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-12 pr-4 py-4 bg-white border border-gray-100 rounded-2xl shadow-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-medium transition-all"
-                            />
-                        </div>
-                        <div className="relative">
-                            <button
-                                onClick={() => setShowKategoriDropdown(!showKategoriDropdown)}
-                                className="w-full md:w-auto px-6 py-4 bg-white border border-gray-100 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-emerald-500 shadow-sm transition-all"
-                            >
-                                <Filter className="w-4 h-4 text-emerald-600" />
-                                {filterKategori === 'semua' ? 'Pilih Kategori' : filterKategori}
-                            </button>
-                            {showKategoriDropdown && (
-                                <div className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl z-50 py-3 border border-gray-50 animate-in fade-in slide-in-from-top-2">
-                                    {kategoriOptions.map((opt) => (
-                                        <button
-                                            key={opt.value}
-                                            onClick={() => handleKategoriChange(opt.value)}
-                                            className="w-full text-left px-5 py-3 hover:bg-emerald-50 flex items-center gap-3 text-sm font-semibold text-gray-700 hover:text-emerald-700 transition-colors"
-                                        >
-                                            <opt.icon className="w-4 h-4" /> {opt.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                )}
-
-                {/* Grid buat nampilin kartu-kartu template */}
-                {!isCounselor && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {safeTemplates.map((tpl) => (
-                            <TemplateCard key={tpl.id} template={tpl} onKlik={handleTemplateKlik} />
-                        ))}
-                    </div>
-                )}
-
-                {/* Tampilan kalau template yang dicari nggak ada */}
-                {!isCounselor && safeTemplates.length === 0 && (
-                    <div className="relative group">
-                         <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-[#004d40] rounded-[2rem] blur opacity-10"></div>
-                         <div className="relative text-center py-12 bg-white rounded-[2rem] border border-gray-100 shadow-sm">
-                            <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Search className="w-8 h-8 text-[#004d40]" />
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900">Template tidak ditemukan</h3>
-                            <p className="text-gray-500">Coba gunakan kata kunci atau kategori lain.</p>
-=======
                 {/* Grid Template */}
                 {!isCounselor && (
                     <>
@@ -318,7 +189,6 @@ const CvReviewComp = () => {
                             {safeTemplates.slice(0, 4).map((tpl) => (
                                 <TemplateCard key={tpl.id} template={tpl} onKlik={handleTemplateKlik} />
                             ))}
->>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
                         </div>
 
                         {/* TOMBOL LIHAT SEMUA */}
