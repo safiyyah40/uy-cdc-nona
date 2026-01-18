@@ -17,15 +17,13 @@ return new class extends Migration
             $table->string('id_number')->nullable();
             $table->string('faculty')->nullable();
             $table->string('study_program')->nullable();
-            $table->string('gender', 10)->nullable();
             $table->string('phone')->nullable();
             $table->boolean('is_profile_complete')->default(false);
             $table->string('password')->nullable();
-            $table->enum('role', ['mahasiswa', 'konselor', 'admin'])->default('mahasiswa');
+            $table->enum('role', ['mahasiswa', 'konselor', 'admin', 'dosen_staf'])->default('mahasiswa');
             $table->string('photo_url')->nullable();
             $table->rememberToken();
             $table->timestamps();
-            
             // Indexes untuk performa
             $table->index('username');
             $table->index('id_number');

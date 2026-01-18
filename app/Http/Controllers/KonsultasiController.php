@@ -278,6 +278,12 @@ class KonsultasiController extends Controller
                 'status' => $booking->status,
                 'date_formatted' => Carbon::parse($booking->scheduled_date)->locale('id')->isoFormat('dddd, D MMMM YYYY'),
                 'time_formatted' => $timeString,
+                'date_only' => Carbon::parse($booking->scheduled_date)->locale('id')->isoFormat('dddd, D MMMM YYYY'),
+                    'time_range' => "$startTime - $endTime",
+                'submitted_at' => $booking->created_at
+                        ->timezone('Asia/Jakarta')
+                        ->locale('id')
+                        ->isoFormat('dddd, D MMMM YYYY [pukul] HH:mm [WIB]'),
                 'created_at' => $booking->created_at
                     ->timezone('Asia/Jakarta') // Tambahkan ini
                     ->locale('id')

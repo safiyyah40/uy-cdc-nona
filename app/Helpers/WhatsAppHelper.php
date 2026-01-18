@@ -24,7 +24,7 @@ class WhatsAppHelper
 
     public static function generateAdminNotify($studentName, $topic)
     {
-        $adminPhone = env('ADMIN_WHATSAPP', '6281295986204'); 
+        $adminPhone = config('services.admin.whatsapp');
         
         // Ambil waktu WIB
         $waktu = Carbon::now()->timezone('Asia/Jakarta')->locale('id')->isoFormat('HH:mm');

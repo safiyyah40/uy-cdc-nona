@@ -26,34 +26,41 @@ class CounselorsTable
                 ImageColumn::make('photo_path')
                     ->label('Foto')
                     ->disk('public')
-                    ->circular(),
+                    ->circular()
+                    ->size(40),
 
                 TextColumn::make('name')
-                    ->label('Nama')
+                    ->label('Nama Konselor')
+                    ->description(fn ($record) => $record->email)
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->weight('bold'),
 
                 TextColumn::make('title')
-                    ->label('Jabatan / Fakultas')
-                    ->searchable(),
+                    ->label('Jabatan / Instansi')
+                    ->searchable()
+                    ->wrap(),
+
+                TextColumn::make('slots_count')
+                    ->label('Total Jadwal')
+                    ->counts('slots')
+                    ->badge()
+                    ->color('info'),
 
                 ToggleColumn::make('is_active')
-                    ->label('Aktif'),
+                    ->label('Tampil'),
             ])
-
             ->actions([
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-
             ->bulkActions([
                 BulkActionGroup::make([
-                DeleteBulkAction::make(),
+                    DeleteBulkAction::make(),
                 ]),
             ])
-
-            // Aktifkan fitur reorder
+            ->defaultSort('order_column', 'asc')
             ->reorderable('order_column');
     }
 }

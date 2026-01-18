@@ -41,7 +41,6 @@ return new class extends Migration
             ])->default('pending');
 
             $table->text('rejection_reason')->nullable();
-            $table->text('counselor_notes')->nullable();
 
             // Timestamps untuk tracking
             $table->timestamp('accepted_at')->nullable();

@@ -37,8 +37,10 @@ const getEventTypeLabel = (type) => {
         'seminar': 'Seminar',
         'campus_hiring': 'Campus Hiring',
         'konsultasi': 'Konsultasi',
-        'deadline_loker': 'Deadline Loker',
-        'deadline_magang': 'Deadline Magang',
+        'deadline_loker': 'Loker',
+        'deadline_magang': 'Magang',
+        'sertifikasi': 'Sertifikasi',
+        'orientasi': 'Orientasi Kerja',
         'custom': 'Acara Pribadi'
     };
     return labels[type] || type;
@@ -48,9 +50,9 @@ const getEventTypeColor = (type) => {
     const colors = {
         'seminar': 'bg-blue-100 text-blue-700',
         'campus_hiring': 'bg-purple-100 text-purple-700',
-        'konsultasi': 'bg-emerald-100 text-emerald-700',
-        'deadline_loker': 'bg-red-100 text-red-700',
-        'deadline_magang': 'bg-orange-100 text-orange-700',
+        'konsultasi': 'bg-emerald-100 text-emerald-700 border-emerald-500',
+        'sertifikasi': 'bg-cyan-100 text-cyan-700',
+        'orientasi': 'bg-violet-100 text-violet-700',
         'custom': 'bg-green-100 text-green-700'
     };
     return colors[type] || 'bg-gray-100 text-gray-700';

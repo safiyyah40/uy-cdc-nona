@@ -5,7 +5,7 @@ import { Head, Link } from "@inertiajs/react";
 import {
     ArrowLeft, User, Calendar, Clock, FileText,
     CheckCircle, XCircle, AlertCircle, Download,
-    List, Lightbulb, MapPin, MessageSquare, Image as ImageIcon
+    List, Lightbulb, MapPin, MessageCircle, Image as ImageIcon
 } from 'lucide-react';
 
 const DetailKonsultasi = ({ consultation, auth }) => {
@@ -39,6 +39,33 @@ const DetailKonsultasi = ({ consultation, auth }) => {
         return /\.(jpg|jpeg|png|gif|webp)$/i.test(filename);
     };
 
+    const handleChatAdmin = (booking) => {
+        const adminPhone = "6281295986204";
+        const fakultas = user.faculty || '-';
+        const prodi = user.study_program || '-';
+        const idNumber = user.id_number || '-';
+        const message =
+            `Assalamualaikum Wr. Wb.\n` +
+            `Halo Admin PUSKAKA.\n\n` +
+            `Perkenalkan saya:\n` +
+            `Nama: *${user.name}*\n` +
+            `NPM: ${idNumber}\n` +
+            `Fakultas: ${fakultas}\n` +
+            `Prodi: ${prodi}\n\n` +
+            `Saya ingin menanyakan status permohonan konsultasi yang saya ajukan pada:\n` +
+            `*${booking.submitted_at}*\n\n` +
+            `Dengan detail sesi sebagai berikut:\n` +
+            `Konselor: ${booking.counselor_name}\n` +
+            `Topik: ${booking.topic}\n` +
+            `Jadwal: ${booking.date_only}\n` +
+            `Waktu: ${booking.time_range} WIB\n\n` +
+            `Mohon informasinya. Terima kasih.`;
+
+        window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`, '_blank');
+    };
+
+    const displayTitle = (!consultation.counselor_title || consultation.counselor_title === '-') ? 'Konselor Akademik' : consultation.counselor_title;
+
     return (
         <MainLayout user={user}>
             <Head title="Detail Konsultasi" />
@@ -61,8 +88,8 @@ const DetailKonsultasi = ({ consultation, auth }) => {
 
                         {/* Header Banner */}
                         <div className={`h-3 w-full ${consultation.status === 'completed' ? 'bg-blue-500' :
-                                consultation.status === 'accepted' ? 'bg-green-500' :
-                                    consultation.status === 'rejected' ? 'bg-red-500' : 'bg-yellow-400'
+                            consultation.status === 'accepted' ? 'bg-green-500' :
+                                consultation.status === 'rejected' ? 'bg-red-500' : 'bg-yellow-400'
                             }`}></div>
 
                         <div className="p-8 md:p-12">
@@ -96,7 +123,7 @@ const DetailKonsultasi = ({ consultation, auth }) => {
                                         )}
                                         <div>
                                             <p className="text-xl font-bold text-gray-900">{consultation.counselor_name}</p>
-                                            <p className="text-sm text-gray-500">{consultation.counselor_title}</p>
+                                            <p className="text-sm text-gray-500">{displayTitle}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -157,31 +184,38 @@ const DetailKonsultasi = ({ consultation, auth }) => {
                                         <h2 className="text-3xl font-bold text-gray-900 font-serif">Hasil & Feedback Konseling</h2>
                                     </div>
 
-                                    <div className="space-y-8">
+                                    <div className="space-y-6 md:space-y-8">
                                         {/* Feedback Utama */}
-                                        <div className="bg-blue-50/50 p-8 rounded-3xl border border-blue-100">
-                                            <h4 className="text-sm font-bold text-blue-800 uppercase tracking-wider mb-3">Catatan dari Konselor</h4>
-                                            <p className="text-gray-900 text-xl leading-relaxed whitespace-pre-wrap">
+                                        <div className="bg-blue-50/50 p-6 md:p-8 rounded-2xl md:rounded-3xl border border-blue-100 overflow-hidden shadow-sm">
+                                            <h4 className="text-xs md:text-sm font-bold text-blue-800 uppercase tracking-wider mb-3">
+                                                Catatan dari Konselor
+                                            </h4>
+                                            <p className="text-gray-900 text-lg md:text-xl leading-relaxed whitespace-pre-wrap break-words">
                                                 {consultation.report.feedback}
                                             </p>
                                         </div>
 
                                         {/* Action Plan & Rekomendasi */}
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                                             {consultation.report.action_plan && (
-                                                <div className="bg-white p-6 rounded-2xl border-2 border-gray-100 shadow-sm">
-                                                    <h4 className="text-sm font-bold text-[#004d40] uppercase tracking-wider mb-3 flex items-center">
-                                                        <List className="w-5 h-5 mr-2" /> Rencana Tindak Lanjut
+                                                <div className="bg-white p-5 md:p-6 rounded-2xl border-2 border-gray-100 shadow-sm overflow-hidden">
+                                                    <h4 className="text-xs md:text-sm font-bold text-[#004d40] uppercase tracking-wider mb-3 flex items-center">
+                                                        <List className="w-5 h-5 mr-2 flex-shrink-0" /> Rencana Tindak Lanjut
                                                     </h4>
-                                                    <p className="text-gray-800 text-lg">{consultation.report.action_plan}</p>
+                                                    <p className="text-gray-800 text-base md:text-lg break-words">
+                                                        {consultation.report.action_plan}
+                                                    </p>
                                                 </div>
                                             )}
+
                                             {consultation.report.recommendations && (
-                                                <div className="bg-white p-6 rounded-2xl border-2 border-gray-100 shadow-sm">
-                                                    <h4 className="text-sm font-bold text-amber-600 uppercase tracking-wider mb-3 flex items-center">
-                                                        <Lightbulb className="w-5 h-5 mr-2" /> Rekomendasi
+                                                <div className="bg-white p-5 md:p-6 rounded-2xl border-2 border-gray-100 shadow-sm overflow-hidden">
+                                                    <h4 className="text-xs md:text-sm font-bold text-amber-600 uppercase tracking-wider mb-3 flex items-center">
+                                                        <Lightbulb className="w-5 h-5 mr-2 flex-shrink-0" /> Rekomendasi
                                                     </h4>
-                                                    <p className="text-gray-800 text-lg">{consultation.report.recommendations}</p>
+                                                    <p className="text-gray-800 text-base md:text-lg break-words">
+                                                        {consultation.report.recommendations}
+                                                    </p>
                                                 </div>
                                             )}
                                         </div>
@@ -242,9 +276,19 @@ const DetailKonsultasi = ({ consultation, auth }) => {
                                 <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-8 text-center mt-8">
                                     <AlertCircle className="w-16 h-16 text-yellow-600 mx-auto mb-4" />
                                     <h3 className="text-2xl font-bold text-yellow-900 mb-2">Menunggu Persetujuan Konselor</h3>
-                                    <p className="text-yellow-800 text-lg">
-                                        Permintaan Anda sedang ditinjau. Mohon cek halaman ini secara berkala untuk update status.
+                                    <p className="text-yellow-800 text-lg mb-6">
+                                        Permintaan Anda sedang ditinjau. Untuk mempercepat proses verifikasi,
+                                        <span className="font-bold"> Anda wajib menghubungi Admin PUSKAKA</span> melalui WhatsApp.
                                     </p>
+
+                                    <button
+                                        onClick={() => handleChatAdmin(consultation)}
+                                        className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg hover:shadow-green-200 active:scale-95"
+                                    >
+                                        {/* Menggunakan icon MessageCircle (dari lucide-react) */}
+                                        <MessageCircle className="w-5 h-5" />
+                                        Hubungi Admin Sekarang
+                                    </button>
                                 </div>
                             )}
 

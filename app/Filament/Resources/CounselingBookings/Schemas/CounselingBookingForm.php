@@ -86,6 +86,28 @@ class CounselingBookingForm
                     ])
                     ->columns(1)
                     ->collapsible(),
+
+                Section::make('Status & Catatan Admin')
+                    ->schema([
+                        Select::make('status')
+                            ->label('Status')
+                            ->options([
+                                'pending' => 'Menunggu Persetujuan',
+                                'accepted' => 'Disetujui',
+                                'rejected' => 'Ditolak',
+                                'completed' => 'Selesai',
+                            ])
+                            ->required()
+                            ->native(false)
+                            ->live(),
+
+                        Textarea::make('rejection_reason')
+                            ->label('Alasan Penolakan')
+                            ->visible(fn (callable $get) => $get('status') === 'rejected')
+                            ->rows(3)
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(1),
                 Section::make('Detail Sesi')
                     ->schema([
                         Select::make('counselor_id')
@@ -188,33 +210,6 @@ class CounselingBookingForm
                             ->required()
                             ->disabled()
                             ->rows(4)
-                            ->columnSpanFull(),
-                    ])
-                    ->columns(2),
-
-                Section::make('Status & Catatan Admin')
-                    ->schema([
-                        Select::make('status')
-                            ->label('Status')
-                            ->options([
-                                'pending' => 'Menunggu Persetujuan',
-                                'accepted' => 'Disetujui',
-                                'rejected' => 'Ditolak',
-                                'completed' => 'Selesai',
-                            ])
-                            ->required()
-                            ->native(false)
-                            ->live(),
-
-                        Textarea::make('rejection_reason')
-                            ->label('Alasan Penolakan')
-                            ->visible(fn (callable $get) => $get('status') === 'rejected')
-                            ->rows(3)
-                            ->columnSpanFull(),
-
-                        Textarea::make('counselor_notes')
-                            ->label('Catatan Konselor/Admin')
-                            ->rows(3)
                             ->columnSpanFull(),
                     ])
                     ->columns(2),

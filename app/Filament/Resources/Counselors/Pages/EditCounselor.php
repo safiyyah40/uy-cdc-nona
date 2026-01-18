@@ -15,7 +15,22 @@ class EditCounselor extends EditRecord
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->before(function () {
+                    if ($this->record->user) {
+                        $this->record->user->update(['role' => 'dosen_staf']);
+                    }
+                }),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Data konselor berhasil diperbarui!';
     }
 }

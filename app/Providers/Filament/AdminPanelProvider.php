@@ -25,9 +25,12 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->brandName('CDC-UY Admin') // Ganti nama di pojok kiri
+            ->homeUrl('/')
+            ->brandName('CDC-UY Admin')
             ->brandLogo(asset('/images/LOGO CDC-UY.png')) 
             ->brandLogoHeight('3rem')
+            ->authGuard('web')
+            ->authPasswordBroker('users')
 
             ->navigationGroups([
                 'Manajemen Konten Beranda',
@@ -42,7 +45,7 @@ class AdminPanelProvider extends PanelProvider
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,
                 'info' => Color::Blue,
-                'primary' => Color::Amber,
+                'primary' => Color::Green,
                 'success' => Color::Emerald,
                 'warning' => Color::Orange,
             ])

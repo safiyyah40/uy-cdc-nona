@@ -2,16 +2,21 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
+use App\Models\Counselor;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
+use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
+use LdapRecord\Laravel\Auth\HasLdapUser;
+use LdapRecord\Laravel\Auth\LdapAuthenticatable;
 
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser, LdapAuthenticatable
 {
-    use HasFactory, Notifiable;
+    use AuthenticatesWithLdap, HasFactory, HasLdapUser, Notifiable;
 
     /**
      * Get the attributes that should be cast.
@@ -24,7 +29,6 @@ class User extends Authenticatable
         'id_number',
         'faculty',
         'study_program',
-        'gender',
         'email',
         'phone',
         'photo_url',
@@ -58,8 +62,8 @@ class User extends Authenticatable
         }
 
         // Cek Data Wajib UNTUK SEMUA USER
-        // Phone wajib. Gender wajib (tapi bisa jadi null dari LDAP, maka harus diisi user)
-        if (empty($this->phone) || empty($this->gender)) {
+        // Phone wajib (tapi bisa jadi null dari LDAP, maka harus diisi user)
+        if (empty($this->phone)) {
             return true;
         }
 
@@ -82,9 +86,14 @@ class User extends Authenticatable
     {
         return match ($this->role) {
             'mahasiswa' => 'NPM',
-            'konselor', 'admin' => 'NIP',
+            'konselor', 'admin', 'dosen_staf' => 'NIP/NIK',
             default => 'ID'
         };
+    }
+
+    public function isDosenStaf(): bool
+    {
+        return $this->role === 'dosen_staf';
     }
 
     /**
@@ -117,6 +126,55 @@ class User extends Authenticatable
         return $this->hasOne(Counselor::class, 'user_id');
     }
 
+    public function slots(): HasMany
+    {
+        return $this->hasMany(CounselorSlot::class, 'user_id');
+    }
+
+    protected static function booted()
+    {
+        static::updated(function ($user) {
+            // Cek apakah kolom role berubah
+            if ($user->wasChanged('role')) {
+
+                // Jika role berubah JADI konselor
+                if ($user->role === 'konselor') {
+                    // Buat data di tabel counselors jika belum ada
+                    Counselor::firstOrCreate(
+                        ['user_id' => $user->id],
+                        [
+                            'name' => $user->name,
+                            'email' => $user->email,
+                            'phone' => $user->phone,
+                            'title' => '-', // Default karena data belum ada
+                            'is_active' => true,
+                        ]
+                    );
+                }
+
+                // Jika role berubah DARI konselor ke yang lain
+                if ($user->getOriginal('role') === 'konselor' && $user->role !== 'konselor') {
+                    // Hapus data dari tabel counselors
+                    Counselor::where('user_id', $user->id)->delete();
+                }
+            }
+        });
+
+        // Handle juga saat baru daftar/dibuat langsung sebagai konselor
+        static::created(function ($user) {
+            if ($user->role === 'konselor') {
+                Counselor::create([
+                    'user_id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'title' => '-',
+                    'is_active' => true,
+                ]);
+            }
+        });
+    }
+
     // Helper untuk cek apakah user ini konselor
     public function isCounselor()
     {
@@ -139,7 +197,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(CounselingBooking::class);
     }
-    
+
     /**
      * Cek role admin
      */

@@ -2,14 +2,13 @@ import React from 'react';
 import { Link, usePage, Head } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
 import Footer from '@/Components/Footer';
-import { 
-    ArrowLeft, Clock, CheckCircle, FileText, Download, 
+import {
+    ArrowLeft, Clock, MessageCircle, FileText, Download,
     User, Phone, Mail, Building, GraduationCap, BookOpen,
     AlertCircle, XCircle, UserCheck, Loader2, PenTool, Paperclip
 } from 'lucide-react';
 
 // Helper Components
-
 const Icons = {
     Document: (props) => (
         <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,11 +25,10 @@ const Icons = {
 const DataRow = ({ label, value, icon: Icon, highlight = false }) => (
     <div className="group">
         <label className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">{label}</label>
-        <div className={`mt-1.5 p-3 sm:p-4 rounded-xl border transition-colors duration-300 font-semibold flex items-center gap-3 shadow-sm ${
-            highlight 
-            ? 'bg-indigo-50 border-indigo-200 text-indigo-800' 
+        <div className={`mt-1.5 p-3 sm:p-4 rounded-xl border transition-colors duration-300 font-semibold flex items-center gap-3 shadow-sm ${highlight
+            ? 'bg-indigo-50 border-indigo-200 text-indigo-800'
             : 'bg-gray-50 border-gray-100 text-gray-800 group-hover:border-emerald-200 group-hover:bg-emerald-50/30'
-        }`}>
+            }`}>
             {Icon && <Icon className={`w-5 h-5 flex-shrink-0 ${highlight ? 'text-indigo-600' : 'text-emerald-600/70'}`} />}
             <span className="truncate text-sm sm:text-base">{value || '-'}</span>
         </div>
@@ -41,6 +39,21 @@ const DetailSubmission = () => {
     const { reviewData, auth } = usePage().props;
     const user = auth.user;
     const isCounselor = user?.role === 'konselor';
+    const handleChatAdminCv = (item) => {
+        const adminPhone = "6281295986204";
+        const messageText =
+            `Assalamualaikum Wr. Wb.\n` +
+            `Selamat Pagi/Siang Admin PUSKAKA.\n\n` +
+            `Perkenalkan, nama saya *${user.name}* (NPM: ${reviewData.npm}) dari Fakultas ${reviewData.faculty}, Program Studi ${reviewData.study_program}.\n\n` +
+            `Saya bermaksud menanyakan mengenai status pengajuan *Review CV* yang telah saya ajukan melalui website CDC dengan detail sebagai berikut:\n\n` +
+            `Tanggal Pengajuan: ${reviewData.tanggalPengajuan}\n` +
+            `Posisi Target: ${reviewData.posisi}\n` +
+            `Status Saat Ini: ${reviewData.statusPeninjauan}\n\n` +
+            `Mohon informasinya terkait perkembangan verifikasi dokumen tersebut. Terima kasih banyak atas bantuan dan waktunya.\n\n` +
+            `Wassalamualaikum Wr. Wb.`;
+
+        window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(messageText)}`, '_blank');
+    };
 
     // Handle jika data kosong
     if (!reviewData) {
@@ -61,24 +74,24 @@ const DetailSubmission = () => {
     }
 
     const handleDownload = (url) => {
-        if(url) window.open(url, '_blank');
+        if (url) window.open(url, '_blank');
         else alert('File tidak tersedia');
     };
 
     // Helper warna status (Header Badge)
     const getStatusStyle = (status) => {
         switch (status) {
-            case 'Selesai': 
+            case 'Selesai':
                 return { wrapper: 'bg-emerald-50 border-emerald-200 text-emerald-700', icon: <Icons.CheckCircle className="w-5 h-5" /> };
-            case 'Sedang Direview': 
+            case 'Sedang Direview':
                 return { wrapper: 'bg-blue-50 border-blue-200 text-blue-700', icon: <Clock className="w-5 h-5 animate-pulse" /> };
-            case 'Ditugaskan': 
+            case 'Ditugaskan':
                 return { wrapper: 'bg-violet-50 border-violet-200 text-violet-700', icon: <UserCheck className="w-5 h-5" /> };
-            case 'Perlu Revisi': 
+            case 'Perlu Revisi':
                 return { wrapper: 'bg-amber-50 border-amber-200 text-amber-700', icon: <AlertCircle className="w-5 h-5" /> };
-            case 'Dibatalkan': 
+            case 'Dibatalkan':
                 return { wrapper: 'bg-red-50 border-red-200 text-red-700', icon: <XCircle className="w-5 h-5" /> };
-            default: 
+            default:
                 return { wrapper: 'bg-gray-50 border-gray-200 text-gray-600', icon: <Clock className="w-5 h-5" /> };
         }
     };
@@ -103,13 +116,26 @@ const DetailSubmission = () => {
                     title: 'Sedang Direview',
                     desc: `Konselor yang ditugaskan sedang meninjau detail CV Anda. Hasil review akan segera tersedia.`
                 };
-            case 'pending':
+
             default:
                 return {
-                    bg: 'bg-gray-50/60', border: 'border-gray-200', text: 'text-gray-800',
+                    bg: 'bg-yellow-50/50',
+                    border: 'border-yellow-200',
+                    text: 'text-yellow-900',
                     icon: <Clock className="text-yellow-600 w-10 h-10" />,
                     title: 'Menunggu Antrian',
-                    desc: 'CV Anda telah masuk ke dalam sistem dan sedang menunggu ketersediaan konselor.'
+                    desc: (
+                        <div className="flex flex-col items-center gap-4">
+                            <p className="text-gray-600">CV Anda telah masuk ke dalam sistem dan sedang menunggu ketersediaan konselor.</p>
+                            <button
+                                onClick={handleChatAdminCv}
+                                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white py-2.5 px-6 rounded-xl text-sm font-bold transition-all shadow-md hover:shadow-green-100 active:scale-95"
+                            >
+                                <MessageCircle size={18} />
+                                Konfirmasi ke Admin Sekarang
+                            </button>
+                        </div>
+                    )
                 };
         }
     };
@@ -124,10 +150,10 @@ const DetailSubmission = () => {
                 <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-emerald-50/50 to-transparent -z-10"></div>
 
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-                    
+
                     {/* Header Back Button */}
                     <div className="mb-8">
-                        <Link 
+                        <Link
                             href={route('layanan.tabel.cv.review')}
                             className="group inline-flex items-center text-gray-500 hover:text-emerald-800 transition-colors duration-300"
                         >
@@ -141,7 +167,7 @@ const DetailSubmission = () => {
                     </div>
 
                     <div className="bg-white rounded-[2rem] shadow-xl shadow-gray-200/50 border border-white overflow-hidden relative">
-                        
+
                         {/* Header Status Bar */}
                         <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-100 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div>
@@ -165,7 +191,7 @@ const DetailSubmission = () => {
                         </div>
 
                         <div className="p-6 sm:p-8 lg:p-10">
-                            
+
                             {/* SECTION: Informasi */}
                             <div className="mb-12">
                                 <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2 border-b border-gray-100 pb-2">
@@ -186,7 +212,7 @@ const DetailSubmission = () => {
                                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
                                         {isCounselor ? "Dokumen CV Pemohon" : "Dokumen yang Anda Kirim"}
                                     </h3>
-                                    <a 
+                                    <a
                                         href={route('layanan.cv.download', reviewData.id)}
                                         className="group flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-xl hover:border-emerald-400 hover:bg-emerald-50 transition-all duration-300 max-w-md cursor-pointer"
                                     >
@@ -232,7 +258,7 @@ const DetailSubmission = () => {
                                     <div className="bg-emerald-50/50 rounded-3xl p-6 sm:p-8 border border-emerald-100">
                                         <h3 className="text-xl font-bold text-emerald-900 mb-4 flex items-center gap-2">
                                             <span className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
-                                                <FileText className="w-4 h-4 text-emerald-600"/> 
+                                                <FileText className="w-4 h-4 text-emerald-600" />
                                             </span>
                                             Hasil Review & Saran
                                         </h3>
@@ -246,8 +272,8 @@ const DetailSubmission = () => {
                                             <h3 className="text-lg font-bold text-gray-900 mb-4 ml-1">Dokumen Hasil Revisi</h3>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 {reviewData.feedback_files.map((file, idx) => (
-                                                    <button 
-                                                        key={idx} 
+                                                    <button
+                                                        key={idx}
                                                         onClick={() => handleDownload(file.url)}
                                                         className="group flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-2xl hover:border-emerald-500 hover:shadow-lg hover:shadow-emerald-500/10 transition-all duration-300 text-left w-full"
                                                     >
@@ -276,14 +302,14 @@ const DetailSubmission = () => {
                                         {pendingState.icon}
                                     </div>
                                     <h3 className={`text-lg font-bold mb-1 ${pendingState.text}`}>{pendingState.title}</h3>
-                                    <p className="text-gray-500 max-w-lg mx-auto leading-relaxed px-4">
+                                    <div className="text-gray-500 max-w-lg mx-auto leading-relaxed px-4">
                                         {pendingState.desc}
-                                    </p>
+                                    </div>
                                 </div>
                             )}
 
-                             {/* SECTION: Cancelled State */}
-                             {reviewData.status_raw === 'cancelled' && (
+                            {/* SECTION: Cancelled State */}
+                            {reviewData.status_raw === 'cancelled' && (
                                 <div className="text-center py-12 bg-red-50/50 rounded-3xl border border-dashed border-red-200">
                                     <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-red-100">
                                         <XCircle className="w-8 h-8 text-red-500" />

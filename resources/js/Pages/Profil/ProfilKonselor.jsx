@@ -49,6 +49,12 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
     const { ref, style } = useScrollFadeIn(0.1);
     const [imageError, setImageError] = useState(false);
 
+    // Auto-fill jabatan jika kosong atau berisi "-"
+    const displayTitle = (!title || title === '-') ? 'Konselor Akademik' : title;
+
+    //  Placeholder foto (menggunakan UI Icon jika foto tidak ada)
+    const hasPhoto = photoUrl && !imageError;
+
     return (
         <div
             ref={ref}
@@ -58,14 +64,10 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
         >
             {/* Header dengan Foto Profil */}
             <div className="relative">
-                {/* Background Pattern */}
                 <div className="h-48 bg-gradient-to-br from-yarsi-green via-yarsi-green-light to-yarsi-green-dark relative overflow-hidden">
-                    {/* Decorative Circles */}
                     <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/5 rounded-full"></div>
                     <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-white/5 rounded-full"></div>
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/3 rounded-full blur-3xl"></div>
-
-                    {/* Verified Badge */}
+                    
                     <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-full px-3 py-1.5 
                                     flex items-center gap-1.5 shadow-lg border border-yarsi-green/20 z-10">
                         <div className="text-yarsi-green">
@@ -78,49 +80,43 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
                 {/* Foto Profil */}
                 <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 z-10">
                     <div className="relative">
-                        {/* Shadow Layer untuk depth */}
                         <div className="absolute inset-0 bg-yarsi-green/20 rounded-3xl blur-2xl scale-105 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                        {/* Frame Foto */}
                         <div className="relative w-40 h-40 rounded-3xl bg-gradient-to-br from-white to-gray-50 p-2 
                                         shadow-2xl ring-4 ring-white group-hover:ring-yarsi-accent/30 
                                         transition-all duration-300 group-hover:scale-105">
-                            <div className="w-full h-full rounded-2xl overflow-hidden relative
-                                            group-hover:shadow-inner transition-all duration-300">
-                                {/* Background Gradient Layer */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50 z-0"></div>
-
-                                {/* Image Container */}
-                                <div className="absolute inset-0 z-10">
+                            <div className="w-full h-full rounded-2xl overflow-hidden relative bg-gray-100">
+                                
+                                {hasPhoto ? (
                                     <img
-                                        src={!imageError && photoUrl ? photoUrl : '/images/placeholder-avatar.png'}
+                                        src={photoUrl}
                                         alt={name}
-                                        className="w-full h-full object-cover object-center mix-blend-multiply group-hover:scale-110 transition-transform duration-700 ease-out"
+                                        className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out"
                                         onError={() => setImageError(true)}
                                         loading="lazy"
                                     />
-                                </div>
+                                ) : (
+                                    /* AVATAR PLACEHOLDER: Tampil jika foto kosong atau error */
+                                    <div className="w-full h-full flex items-center justify-center bg-emerald-50 text-emerald-200">
+                                        <div className="transform group-hover:scale-110 transition-transform duration-500">
+                                            <Icons.Users /> 
+                                        </div>
+                                    </div>
+                                )}
 
-                                {/* Overlay gradient saat hover */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-yarsi-green/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20"></div>
                             </div>
                         </div>
 
-                        {/* Status Online */}
                         <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-yarsi-accent rounded-full border-4 border-white shadow-lg group-hover:scale-110 transition-transform flex items-center justify-center">
                             <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
                         </div>
-
-                        {/* Decorative Corner Elements */}
-                        <div className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-yarsi-accent/40 rounded-tl-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-yarsi-accent/40 rounded-tr-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                 </div>
             </div>
 
             {/* Content Area */}
             <div className="pt-24 pb-6 px-6 flex-grow flex flex-col">
-                {/* Nama & Gelar */}
                 <div className="text-center mb-4">
                     <h3 className="text-xl font-bold font-kaisei text-gray-900 mb-2 
                                  group-hover:text-yarsi-green transition-colors leading-tight min-h-[3.5rem] 
@@ -129,12 +125,15 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
                     </h3>
 
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-gray-50 to-white 
-                                  rounded-xl mb-3 border border-gray-200 shadow-sm group-hover:border-yarsi-green/30 
-                                  transition-all duration-300 min-h-[2.5rem]">
+                                 rounded-xl mb-3 border border-gray-200 shadow-sm group-hover:border-yarsi-green/30 
+                                 transition-all duration-300 min-h-[2.5rem]">
                         <div className="text-yarsi-green flex-shrink-0">
                             <Icons.Academic />
                         </div>
-                        <span className="text-sm font-semibold text-yarsi-green-light">{title}</span>
+                        {/* JABATAN: Menggunakan displayTitle hasil logic di atas */}
+                        <span className="text-sm font-semibold text-yarsi-green-light">
+                            {displayTitle}
+                        </span>
                     </div>
                 </div>
 

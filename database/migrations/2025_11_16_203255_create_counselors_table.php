@@ -18,17 +18,11 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('title');
-            $table->string('faculty')->nullable();
-            $table->string('expertise')->nullable();
-            $table->text('bio')->nullable();
             $table->string('photo_path')->nullable();
             $table->boolean('is_active')->default(true);
             $table->integer('order_column')->default(0);
             $table->timestamps();
             $table->softDeletes();
-
-            $table->index('is_active');
-            $table->index('order_column');
         });
     }
 

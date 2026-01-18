@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Counselors;
 use App\Filament\Resources\Counselors\Pages\CreateCounselor;
 use App\Filament\Resources\Counselors\Pages\EditCounselor;
 use App\Filament\Resources\Counselors\Pages\ListCounselors;
+use App\Filament\Resources\Counselors\Pages\ViewCounselor;
 use App\Filament\Resources\Counselors\Schemas\CounselorForm;
 use App\Filament\Resources\Counselors\Schemas\CounselorInfolist;
 use App\Filament\Resources\Counselors\Tables\CounselorsTable;
@@ -14,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class CounselorResource extends Resource
@@ -23,7 +25,7 @@ class CounselorResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
     protected static string|UnitEnum|null $navigationGroup = 'Manajemen Halaman Profil';
-    
+
     protected static ?int $navigationSort = 2;
 
     public static function getModelLabel(): string
@@ -58,12 +60,28 @@ class CounselorResource extends Resource
         ];
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery();
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => ListCounselors::route('/'),
             'create' => CreateCounselor::route('/create'),
+            'view' => ViewCounselor::route('/{record}'),
             'edit' => EditCounselor::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('is_active', true)->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
     }
 }

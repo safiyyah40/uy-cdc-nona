@@ -219,9 +219,20 @@ const TabelCvReview = ({ reviews, stats }) => {
 
     const handleChatAdmin = (item) => {
         const adminPhone = "6281295986204";
-        const messageText = `Assalamualaikum Wr. Wb.\nHalo Admin PUSKAKA.\n\nSaya ingin menanyakan status Review CV saya:\nPosisi Target: *${item.posisi}*\nTanggal Submit: ${item.tanggalSubmit}\nStatus saat ini: ${item.status}\n\nMohon informasinya.`;
-        window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(messageText)}`, '_blank');
-    };
+        const messageText =
+        `Assalamualaikum Wr. Wb.\n` +
+        `Selamat Pagi/Siang Admin PUSKAKA.\n\n` +
+        `Perkenalkan, nama saya *${item.namaLengkap}* (NPM: ${item.npm}) dari Fakultas ${item.faculty}, Program Studi ${item.study_program}.\n\n` +
+        `Saya bermaksud menanyakan mengenai status pengajuan *Review CV* yang telah saya ajukan melalui website CDC dengan detail sebagai berikut:\n\n` +
+        `Tanggal Pengajuan: ${item.tanggalSubmit}\n` +
+        `Posisi Target: ${item.posisi}\n` +
+        `Status Saat Ini: ${item.status}\n\n` +
+        `Mohon informasinya terkait perkembangan verifikasi dokumen tersebut. Terima kasih banyak atas bantuan dan waktunya.\n\n` +
+        `Wassalamualaikum Wr. Wb.`;
+
+    // Jangan lupa panggil window.open
+    window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(messageText)}`, '_blank');
+};
 
     const handleReviewAction = (item) => setModal({ isVisible: true, type: 'review', id: item.id, item });
     

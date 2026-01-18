@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Counselor extends Model
 {
@@ -14,9 +15,6 @@ class Counselor extends Model
         'user_id',
         'name',
         'title',
-        'faculty',
-        'expertise',
-        'bio',
         'photo_path',
         'email',
         'phone',
@@ -36,16 +34,34 @@ class Counselor extends Model
         return null;
     }
 
-    public function user()
+    protected static function booted()
     {
-        return $this->belongsTo(User::class);
+        // Saat Konselor DIBUAT (Create)
+        static::created(function ($counselor) {
+            if ($counselor->user_id) {
+                // Ubah role user tersebut menjadi 'konselor'
+                $counselor->user->update(['role' => 'konselor']);
+            }
+        });
+
+        // Saat Konselor DIHAPUS (Delete)
+        static::deleted(function ($counselor) {
+            if ($counselor->user_id) {
+                // Balikkan role user tersebut menjadi 'dosen_staf'
+                $counselor->user->update(['role' => 'dosen_staf']);
+            }
+        });
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function slots(): HasMany
     {
-        return $this->hasMany(CounselorSlot::class);
+        return $this->hasMany(CounselorSlot::class, 'counselor_id');
     }
-
     public function bookings()
     {
         return $this->hasMany(CounselingBooking::class);

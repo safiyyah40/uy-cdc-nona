@@ -11,13 +11,9 @@ const LOGO_YARSI_CDC = '/images/LOGO CDC-UY.png';
 export default function CompleteProfile({ user }) {
     const { data, setData, post, processing, errors } = useForm({
         phone: user.phone || '',
-        gender: user.gender || '',
     });
 
     const [phoneStatus, setPhoneStatus] = useState(null);
-
-    // Cek apakah gender dikunci (read-only) atau bisa diedit
-    const isGenderLocked = !!user.gender;
 
     // Validasi Phone Effect
     useEffect(() => {
@@ -44,7 +40,7 @@ export default function CompleteProfile({ user }) {
 
     const submit = (e) => {
         e.preventDefault();
-        if (phoneStatus !== 'valid' || (!isGenderLocked && !data.gender)) return;
+        if (phoneStatus !== 'valid') return;
 
         // Kirim data
         post(route('profile.complete.store'));
@@ -59,7 +55,7 @@ export default function CompleteProfile({ user }) {
         }
     };
 
-    const isButtonDisabled = processing || phoneStatus !== 'valid' || (!isGenderLocked && !data.gender);
+    const isButtonDisabled = processing || phoneStatus !== 'valid';
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
@@ -190,32 +186,7 @@ export default function CompleteProfile({ user }) {
                                 )}
                             </div>
 
-                            {/* Gender & ID Number dalam satu baris untuk desktop */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                {/* Jenis Kelamin */}
-                                <div className='flex flex-col space-y-1'>
-                                    <InputLabel htmlFor="gender" value="Jenis Kelamin" className="text-gray-700 font-bold ml-1" />
-                                    <div className="relative">
-                                        <select
-                                            id="gender"
-                                            value={data.gender}
-                                            onChange={(e) => setData('gender', e.target.value)}
-                                            disabled={isGenderLocked}
-                                            className={`w-full py-3.5 pl-4 pr-10 rounded-xl border-gray-200 shadow-sm focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm
-                                                ${isGenderLocked ? 'bg-gray-100 cursor-not-allowed text-gray-600' : 'bg-white'}`}
-                                            required
-                                        >
-                                            <option value="" disabled>Pilih Jenis Kelamin</option>
-                                            <option value="L">Laki-laki</option>
-                                            <option value="P">Perempuan</option>
-                                        </select>
-                                    </div>
-                                    {isGenderLocked && (
-                                        <p className="text-xs text-gray-400 mt-1 ml-1">*Data dari sistem akademik</p>
-                                    )}
-                                    <InputError message={errors.gender} className="mt-1 ml-1" />
-                                </div>
-
+                            
                                 {/* ID Number (Read-only) */}
                                 <div className='flex flex-col space-y-1'>
                                     <InputLabel value={user.id_label || 'NPM/NIP'} className="text-gray-700 font-bold ml-1" />
@@ -227,7 +198,7 @@ export default function CompleteProfile({ user }) {
                                         />
                                     </div>
                                 </div>
-                            </div>
+                            
 
                             {/* --- BAGIAN KHUSUS MAHASISWA (Read-only) --- */}
                             {user.role === 'mahasiswa' && (

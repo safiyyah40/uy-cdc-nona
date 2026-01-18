@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class OrientasiDuniaKerja extends Model
 {
@@ -31,5 +32,10 @@ class OrientasiDuniaKerja extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    public function calendarEvent(): MorphOne
+    {
+        return $this->morphOne(CalendarEvent::class, 'eventable');
     }
 }

@@ -25,6 +25,7 @@ export default function EditProfile() {
     };
 
     const { data, setData, post, processing, errors } = useForm({
+        email: user.email,
         phone: user.phone ?? '',
         photo: null,
     });
@@ -133,12 +134,16 @@ export default function EditProfile() {
                                 <Mail className="h-5 w-5 text-gray-400" />
                             </div>
                             <TextInput
+                                id="email"
                                 type="email"
-                                value={user.email}
-                                className="pl-12 pr-4 py-3.5 block w-full rounded-xl border-gray-200 bg-gray-50 text-gray-600 cursor-not-allowed"
-                                disabled
+                                value={data.email}
+                                className="pl-12 pr-4 py-3.5 block w-full rounded-xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500 shadow-sm transition-all"
+                                onChange={(e) => setData('email', e.target.value)}
+                                required
                             />
                         </div>
+                        {/* Tampilkan error jika validasi gagal */}
+                        {errors.email && <div className="text-red-500 text-sm mt-1">{errors.email}</div>}
                     </div>
 
                     {/* Nomor Telepon (Editable) */}

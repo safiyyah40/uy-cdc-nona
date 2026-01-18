@@ -17,7 +17,7 @@ class CounselingBooking extends Model
         'student_faculty', 'student_study_program', 'student_gender',
         'topic', 'notes',
         'scheduled_date', 'scheduled_time', 'counselor_name',
-        'status', 'rejection_reason', 'counselor_notes',
+        'status', 'rejection_reason',
         'accepted_at', 'rejected_at', 'completed_at', 'cancelled_at',
     ];
 

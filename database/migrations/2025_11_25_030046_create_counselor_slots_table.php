@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('counselor_id')->constrained('counselors')->onDelete('cascade');
             $table->date('date');
-            
             $table->time('start_time');
             $table->time('end_time');
             $table->boolean('is_available')->default(true);

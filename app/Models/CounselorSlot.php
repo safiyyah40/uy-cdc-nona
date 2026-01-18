@@ -23,7 +23,7 @@ class CounselorSlot extends Model
 
     public function counselor(): BelongsTo
     {
-        return $this->belongsTo(Counselor::class);
+        return $this->belongsTo(Counselor::class, 'counselor_id');
     }
 
     public function booking()

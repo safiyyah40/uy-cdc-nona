@@ -12,7 +12,6 @@ class DatabaseSeeder extends Seeder
             Beranda\BerandaSlideSeeder::class,
             Profil\UserSeeder::class,
             Profil\PuskakaSeeder::class,
-            Profil\CounselorSeeder::class,
             Profil\DeveloperSeeder::class,
             Program\OrientasiDuniaKerjaSeeder::class,
             Program\CampusHiringSeeder::class,

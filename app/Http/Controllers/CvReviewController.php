@@ -199,6 +199,10 @@ class CvReviewController extends Controller
         $mappedReviews = $reviews->through(function ($review) {
             return [
                 'id' => $review->id,
+                'namaLengkap' => $review->student_name,
+                'npm' => $review->student_npm,
+                'faculty' => $review->student_faculty,
+                'study_program' => $review->student_study_program,
                 'media' => $review->cv_file_original_name,
                 'posisi' => $review->target_position,
                 'keterangan' => $review->additional_notes ?? '-',
@@ -405,7 +409,7 @@ class CvReviewController extends Controller
             DB::commit();
 
             return redirect()->route('layanan.tabel.cv.review')
-                ->with('success', 'CV berhasil diunggah! Menunggu penugasan konselor.');
+                ->with('success', 'CV berhasil diunggah! Silakan klik tombol "Konfirmasi ke Admin" di tabel riwayat untuk mempercepat proses.');
 
         } catch (\Exception $e) {
             DB::rollback();
