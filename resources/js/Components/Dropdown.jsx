@@ -2,6 +2,7 @@ import { Transition } from '@headlessui/react';
 import { Link } from '@inertiajs/react';
 import { createContext, useContext, useState } from 'react';
 
+// Buat wadah context untuk share status open/close ke sub-komponen
 const DropDownContext = createContext();
 
 const Dropdown = ({ children }) => {
@@ -13,6 +14,7 @@ const Dropdown = ({ children }) => {
 
     return (
         <DropDownContext.Provider value={{ open, setOpen, toggleOpen }}>
+            {/* Wrapper utama harus relative buat patokan posisi menu */}
             <div className="relative">{children}</div>
         </DropDownContext.Provider>
     );
@@ -25,6 +27,7 @@ const Trigger = ({ children }) => {
         <>
             <div onClick={toggleOpen}>{children}</div>
 
+            {/* Overlay transparan buat nutup menu kalau kita klik di luar */}
             {open && (
                 <div
                     className="fixed inset-0 z-40"
@@ -45,6 +48,7 @@ const Content = ({
 
     let alignmentClasses = 'origin-top';
 
+    // Logika buat nentuin posisi munculnya menu (kiri/kanan)
     if (align === 'left') {
         alignmentClasses = 'ltr:origin-top-left rtl:origin-top-right start-0';
     } else if (align === 'right') {
@@ -59,6 +63,7 @@ const Content = ({
 
     return (
         <>
+            {/* Animasi transisi pas menu muncul atau hilang */}
             <Transition
                 show={open}
                 enter="transition ease-out duration-200"
@@ -100,6 +105,7 @@ const DropdownLink = ({ className = '', children, ...props }) => {
     );
 };
 
+// Pasang sub-komponen ke objek Dropdown biar panggilannya rapi
 Dropdown.Trigger = Trigger;
 Dropdown.Content = Content;
 Dropdown.Link = DropdownLink;

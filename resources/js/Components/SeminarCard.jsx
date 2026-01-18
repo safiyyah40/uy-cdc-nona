@@ -1,3 +1,7 @@
+/**
+ * Komponen SeminarCard
+ * Menampilkan daftar agenda seminar terbaru dalam bentuk kartu interaktif dengan indikator tipe event (Online/Offline).
+ */
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import { Calendar, MapPin, Wifi, ArrowRight, BookOpen } from 'lucide-react';

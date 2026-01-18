@@ -1,3 +1,7 @@
+/**
+ * Komponen NavLink
+ * Link navigasi berbasis Inertia.js dengan status aktif otomatis untuk indikator visual border-bottom.
+ */
 import { Link } from '@inertiajs/react';
 
 export default function NavLink({

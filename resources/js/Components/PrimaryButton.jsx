@@ -1,3 +1,7 @@
+/**
+ * Komponen PrimaryButton
+ * Tombol utama dengan gaya standar (dark mode) yang mendukung status disabled dan kustomisasi class.
+ */
 export default function PrimaryButton({
     className = '',
     disabled,

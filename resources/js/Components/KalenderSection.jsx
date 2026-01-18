@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { 
-    Clock, MapPin, ExternalLink, AlertCircle, Plus, X, 
+import {
+    Clock, MapPin, ExternalLink, AlertCircle, Plus, X,
     Calendar as CalendarIcon, Type, AlignLeft, Link as LinkIcon,
-    CheckCircle2, Pencil, Trash2, Lock 
-} from 'lucide-react'; 
+    CheckCircle2, Pencil, Trash2, Lock
+} from 'lucide-react';
+
+/**
+ * Komponen Kalender Kegiatan
+ * Mengelola tampilan kalender bulanan, integrasi API kegiatan, dan manajemen agenda (CRUD).
+ */
 
 const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 const daysOfWeek = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -15,7 +20,7 @@ const getDaysInMonth = (date, eventsData) => {
     const firstDayOfMonth = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const days = [];
-    
+
     for (let i = 0; i < firstDayOfMonth; i++) {
         days.push(null);
     }
@@ -68,7 +73,7 @@ const KalenderSection = () => {
     const [statusMsg, setStatusMsg] = useState({ type: '', text: '' });
 
     const [formData, setFormData] = useState({
-        title: '', description: '', start_date: '', start_time: '', 
+        title: '', description: '', start_date: '', start_time: '',
         end_time: '', event_type: 'custom', location: '', link: ''
     });
 
@@ -211,7 +216,7 @@ const KalenderSection = () => {
                 <div className="mt-12">
                     <h3 className="text-2xl font-bold mb-4 text-gray-800">Rencana Kegiatan</h3>
                     {selectedDate && <h4 className="text-lg font-medium mb-4 text-gray-700">{selectedDate.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</h4>}
-                    
+
                     <div className="space-y-4">
                         {isLoading ? <div className="p-4 text-center text-gray-500">Memuat kegiatan...</div> : selectedEvents.length > 0 ? (
                             selectedEvents.map((event) => (

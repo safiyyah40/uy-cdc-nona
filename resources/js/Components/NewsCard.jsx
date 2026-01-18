@@ -1,3 +1,7 @@
+/**
+ * Komponen Seksi Berita
+ * Menampilkan daftar berita terbaru dalam layout grid responsif dengan integrasi NewsCard.
+ */
 import React from 'react';
 import NewsCard from '@/Components/NewsCard';
 import { Link } from '@inertiajs/react';
@@ -6,7 +10,7 @@ const BeritaSection = ({ latestNews = [] }) => {
     return (
         <section className="bg-gray-50 py-16 border-t border-gray-200">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                
+
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-gray-300 pb-4">
                     <div>
@@ -18,8 +22,8 @@ const BeritaSection = ({ latestNews = [] }) => {
                         </p>
                     </div>
 
-                    <Link 
-                        href={route('program.berita')} 
+                    <Link
+                        href={route('program.berita')}
                         className="hidden md:inline-flex items-center font-semibold text-green-600 hover:text-green-800 transition-colors mt-4 md:mt-0"
                     >
                         Lihat Semua Arsip &rarr;
@@ -30,8 +34,7 @@ const BeritaSection = ({ latestNews = [] }) => {
                 {latestNews && latestNews.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {latestNews.map((item) => (
-                            // PANGGIL NEWSCARD DISINI
-                            <NewsCard 
+                            <NewsCard
                                 key={item.id}
                                 title={item.title}
                                 imageSrc={item.image_url}

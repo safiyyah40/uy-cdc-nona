@@ -8,12 +8,15 @@ import {
     MousePointerClick, Eye, GraduationCap, TrendingUp, ArrowRight
 } from "lucide-react";
 
-/* --- TEMPLATE CARD COMPONENT --- */
+/* --- KOMPONEN KARTU TEMPLATE ---
+   Nampilin preview CV, kategori, dan tombol buat pake template-nya.
+*/
 const TemplateCard = ({ template, onKlik }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
 
     return (
         <div className="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 hover:border-emerald-200 transform hover:-translate-y-2">
+            {/* Label khusus kalau templatenya masuk kategori unggulan */}
             {template.is_unggulan && (
                 <div className="absolute top-4 right-4 z-20 bg-gradient-to-r from-amber-400 to-orange-500 text-white px-3 py-1 rounded-full text-[10px] font-bold shadow-lg flex items-center gap-1.5 animate-pulse">
                     <Sparkles className="w-3 h-3" />
@@ -22,6 +25,7 @@ const TemplateCard = ({ template, onKlik }) => {
             )}
 
             <div className="aspect-[3/4] overflow-hidden bg-gray-50 relative">
+                {/* Loader kecil pas gambar lagi proses loading */}
                 {!imageLoaded && (
                     <div className="absolute inset-0 flex items-center justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#004d40]"></div>
@@ -35,6 +39,7 @@ const TemplateCard = ({ template, onKlik }) => {
                     className={`w-full h-full object-cover transition-transform duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'} group-hover:scale-110`}
                 />
 
+                {/* Overlay yang muncul pas kartu di-hover (tombol pakai template) */}
                 <div className="absolute inset-0 bg-[#004d40]/80 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-6 gap-4 backdrop-blur-[2px]">
                     <button
                         onClick={() => onKlik(template.id, template.url_template)}
@@ -69,7 +74,7 @@ const TemplateCard = ({ template, onKlik }) => {
                     {template.deskripsi || 'Template profesional siap pakai & mudah diedit.'}
                 </p>
 
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50">
+                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
                     <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-widest ${
                         template.sumber === 'canva' ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'
                     }`}>
@@ -86,13 +91,16 @@ const TemplateCard = ({ template, onKlik }) => {
     );
 };
 
-/* --- MAIN PAGE COMPONENT --- */
+/* --- HALAMAN UTAMA CV REVIEW ---
+   Isinya filter pencarian, list template, dan tombol buat upload CV review.
+*/
 const CvReviewComp = () => {
     const { auth, templates, pagination, filters } = usePage().props;
     const user = auth?.user;
     const isCounselor = user?.role === 'konselor';
     const scrollFade = useScrollFadeIn(0.2);
 
+    // State buat handle pencarian dan filter kategori
     const safeTemplates = templates || [];
     const safePagination = pagination || { links: [] };
     const [searchTerm, setSearchTerm] = useState(filters?.search || '');
@@ -101,6 +109,7 @@ const CvReviewComp = () => {
 
     const isFirstRender = useRef(true);
 
+    // Efek buat delay pencarian (debouncing) biar gak terlalu berat ke server
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
@@ -112,6 +121,7 @@ const CvReviewComp = () => {
         return () => clearTimeout(delayDebounceFn);
     }, [searchTerm]);
 
+    // Fungsi buat narik data pake router Inertia
     const fetchData = (params = {}) => {
         router.get(route('layanan.cv.review'), {
             search: searchTerm,
@@ -154,14 +164,14 @@ const CvReviewComp = () => {
     safeTemplates.length === 0 ? 'py-10' : 'py-14'
   }`}
 >
-            {/* Background Decorative Elements - Identik dengan KonsultasiComp */}
+            {/* Dekorasi background (lingkaran gradasi blur) */}
             <div className="absolute top-0 inset-x-0 h-full w-full pointer-events-none overflow-hidden">
                 <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-emerald-50 rounded-full blur-[100px] opacity-60 mix-blend-multiply"></div>
                 <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-green-50 rounded-full blur-[100px] opacity-60 mix-blend-multiply"></div>
             </div>
 
             <div className="container mx-auto px-6 lg:px-12 relative z-10 max-w-7xl">
-                {/* Header Section - Identik dengan KonsultasiComp */}
+                {/* Header halaman */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6" ref={scrollFade.ref} style={scrollFade.style}>
                     <div className="max-w-3xl">
                         <span className="inline-block py-1.5 px-3 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold tracking-wider uppercase mb-4">
@@ -179,7 +189,7 @@ const CvReviewComp = () => {
                     </p>
                 </div>
 
-                {/* Main Action Bar (Upload & History) */}
+                {/* Barisan tombol utama (Upload dan Riwayat) */}
                 <div className="flex flex-wrap gap-4 mb-12">
                     {user && !isCounselor && (
                         <button
@@ -200,7 +210,7 @@ const CvReviewComp = () => {
                     </Link>
                 </div>
 
-                {/* Filter & Search Section */}
+                {/* Input cari dan dropdown filter kategori */}
                 {!isCounselor && (
                     <div className="flex flex-col md:flex-row gap-4 mb-12">
                         <div className="flex-grow relative group">
@@ -238,7 +248,7 @@ const CvReviewComp = () => {
                     </div>
                 )}
 
-                {/* Grid Template */}
+                {/* Grid buat nampilin kartu-kartu template */}
                 {!isCounselor && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {safeTemplates.map((tpl) => (
@@ -247,7 +257,7 @@ const CvReviewComp = () => {
                     </div>
                 )}
 
-                {/* Empty State */}
+                {/* Tampilan kalau template yang dicari nggak ada */}
                 {!isCounselor && safeTemplates.length === 0 && (
                     <div className="relative group">
                          <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-[#004d40] rounded-[2rem] blur opacity-10"></div>
@@ -261,7 +271,7 @@ const CvReviewComp = () => {
                     </div>
                 )}
 
-                {/* Pagination */}
+                {/* Komponen pagination otomatis dari Laravel/Inertia */}
                 {!isCounselor && safePagination.links.length > 3 && (
                     <div className="flex justify-center mt-16 gap-3">
                         {safePagination.links.map((link, i) => (

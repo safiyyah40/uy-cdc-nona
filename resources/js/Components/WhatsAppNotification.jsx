@@ -1,3 +1,8 @@
+/**
+ * Komponen WhatsAppNotification
+ * Menampilkan floating panel untuk mengirim notifikasi WhatsApp ke berbagai peran (Mahasiswa, Konselor, Admin).
+ * Dilengkapi dengan auto-close setelah aksi klik.
+ */
 import React from 'react';
 import { MessageCircle, X } from 'lucide-react';
 
@@ -22,7 +27,7 @@ const WhatsAppNotification = ({ waUrls, onClose }) => {
                         </div>
                         <h3 className="font-bold text-gray-900 text-sm">Kirim Notifikasi</h3>
                     </div>
-                    <button 
+                    <button
                         onClick={onClose}
                         className="text-gray-400 hover:text-gray-600 transition"
                     >

@@ -2,6 +2,10 @@ import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { Calendar, Clock, ArrowRight, UserCheck } from 'lucide-react';
 
+/**
+ * Komponen Seksi Konsultasi
+ * Menampilkan ringkasan layanan konsultasi karir dengan fitur deteksi status login user.
+ */
 const KonsultasiComp = () => {
     const { auth } = usePage().props;
     const user = auth?.user;

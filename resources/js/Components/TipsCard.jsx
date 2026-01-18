@@ -1,3 +1,8 @@
+/**
+ * Komponen TipsCard
+ * Menampilkan ringkasan artikel tips & trik dalam bentuk grid kartu,
+ * lengkap dengan informasi estimasi waktu baca dan kategori.
+ */
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import { Lightbulb, ArrowRight, Clock, BookOpen } from 'lucide-react';

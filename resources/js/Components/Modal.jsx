@@ -1,3 +1,7 @@
+/**
+ * Komponen Reusable Modal
+ * Menggunakan Headless UI untuk menangani dialog transisi, overlay, dan ukuran konten yang fleksibel.
+ */
 import {
     Dialog,
     DialogPanel,

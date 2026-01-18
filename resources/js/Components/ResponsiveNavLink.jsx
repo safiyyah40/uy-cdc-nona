@@ -1,3 +1,7 @@
+/**
+ * Komponen ResponsiveNavLink
+ * Link navigasi untuk tampilan mobile dengan indikator border-left dan state aktif/non-aktif.
+ */
 import { Link } from '@inertiajs/react';
 
 export default function ResponsiveNavLink({

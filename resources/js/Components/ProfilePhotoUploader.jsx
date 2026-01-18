@@ -1,3 +1,7 @@
+/**
+ * Komponen ProfilePhotoUploader
+ * Mengelola unggahan foto profil dengan fitur pratinjau (preview) dan fallback inisial nama.
+ */
 import { useState, useRef } from "react";
 
 export default function ProfilePhotoUploader({
