@@ -74,7 +74,10 @@ const TabelCvReview = ({ reviews, stats }) => {
     const isCounselor = user?.role === 'konselor';
 
     // State
-    const [allData] = useState(reviews || []);
+    const [allData, setAllData] = useState(reviews || []);
+    useEffect(() => {
+        setAllData(reviews || []);
+    }, [reviews]);
     const [modal, setModal] = useState({ isVisible: false, type: null, id: null, item: null });
     
     // Filter States
@@ -215,7 +218,7 @@ const TabelCvReview = ({ reviews, stats }) => {
     };
 
     const handleChatAdmin = (item) => {
-        const adminPhone = "6289529127621";
+        const adminPhone = "6281295986204";
         const messageText = `Assalamualaikum Wr. Wb.\nHalo Admin PUSKAKA.\n\nSaya ingin menanyakan status Review CV saya:\nPosisi Target: *${item.posisi}*\nTanggal Submit: ${item.tanggalSubmit}\nStatus saat ini: ${item.status}\n\nMohon informasinya.`;
         window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(messageText)}`, '_blank');
     };

@@ -48,7 +48,7 @@ class CvTemplatesTable
                     ->label('Sumber')
                     ->colors([
                         'success' => 'canva',
-                        'info' => 'google_slides',
+                        'info' => 'slides_go',
                         'secondary' => 'manual',
                     ]),
 

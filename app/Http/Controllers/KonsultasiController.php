@@ -216,7 +216,6 @@ class KonsultasiController extends Controller
             });
 
             // JIKA SUKSES
-            // Panggil Helper WhatsApp (lihat poin 3 di bawah)
             $waUrl = WhatsAppHelper::generateAdminNotify($user->name, $validated['topic']);
 
             return back()->with([

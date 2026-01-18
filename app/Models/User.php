@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+
 
 class User extends Authenticatable
 {
@@ -79,7 +82,7 @@ class User extends Authenticatable
     {
         return match ($this->role) {
             'mahasiswa' => 'NPM',
-            'konselor', 'admin', 'super_admin' => 'NIP',
+            'konselor', 'admin' => 'NIP',
             default => 'ID'
         };
     }
@@ -142,6 +145,11 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return in_array($this->role, ['admin', 'super_admin']);
+        return in_array($this->role, ['admin']);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return in_array($this->role, ['admin']);
     }
 }

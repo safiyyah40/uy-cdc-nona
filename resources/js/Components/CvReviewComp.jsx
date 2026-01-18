@@ -1,18 +1,25 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState} from "react";
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 import { Link, usePage, router } from "@inertiajs/react";
 import {
-    FileText, Briefcase, Upload,
+    Briefcase, Upload,
     Download, Palette,
-    Sparkles, Search, Filter, X,
-    MousePointerClick, Eye, GraduationCap, TrendingUp, ArrowRight
+    Sparkles, X,
+    MousePointerClick, Eye, ArrowRight, LayoutGrid
 } from "lucide-react";
 
+<<<<<<< HEAD
 /* --- KOMPONEN KARTU TEMPLATE ---
    Nampilin preview CV, kategori, dan tombol buat pake template-nya.
 */
+=======
+// TEMPLATE CARD COMPONENT
+>>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
 const TemplateCard = ({ template, onKlik }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
+    const [imageError, setImageError] = useState(false);
+
+    const placeholderImage = "https://placehold.co/400x600/e2e8f0/1e293b?text=No+Preview";
 
     return (
         <div className="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 hover:border-emerald-200 transform hover:-translate-y-2">
@@ -32,6 +39,18 @@ const TemplateCard = ({ template, onKlik }) => {
                     </div>
                 )}
 
+                {/* Gambar Utama dengan Fallback */}
+                <img
+                    src={imageError || !template.preview_url ? placeholderImage : template.preview_url}
+                    alt={template.judul}
+                    onLoad={() => setImageLoaded(true)}
+                    onError={() => {
+                        setImageError(true);
+                        setImageLoaded(true);
+                    }}
+                    className={`w-full h-full object-cover transition-transform duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'} group-hover:scale-110`}
+                />
+
                 <img
                     src={template.preview_url}
                     alt={template.judul}
@@ -42,11 +61,11 @@ const TemplateCard = ({ template, onKlik }) => {
                 {/* Overlay yang muncul pas kartu di-hover (tombol pakai template) */}
                 <div className="absolute inset-0 bg-[#004d40]/80 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-6 gap-4 backdrop-blur-[2px]">
                     <button
-                        onClick={() => onKlik(template.id, template.url_template)}
+                        onClick={() => onKlik(template)}
                         className="px-6 py-3 bg-white text-[#004d40] font-bold rounded-xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-2 hover:bg-emerald-50 w-full justify-center shadow-xl"
                     >
                         {template.sumber === 'canva' ? <Palette className="w-4 h-4" /> : <Download className="w-4 h-4" />}
-                        Gunakan Template
+                        {template.sumber === 'manual' ? 'Download File' : 'Gunakan Template'}
                     </button>
 
                     <div className="flex items-center gap-4 text-white text-xs font-medium translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-75">
@@ -57,10 +76,6 @@ const TemplateCard = ({ template, onKlik }) => {
                             <MousePointerClick className="w-3.5 h-3.5" /> {template.jumlah_klik || 0}
                         </span>
                     </div>
-                </div>
-
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-[10px] font-black text-[#004d40] shadow-sm border border-emerald-100 uppercase tracking-wider">
-                    {template.kategori}
                 </div>
             </div>
 
@@ -74,10 +89,16 @@ const TemplateCard = ({ template, onKlik }) => {
                     {template.deskripsi || 'Template profesional siap pakai & mudah diedit.'}
                 </p>
 
+<<<<<<< HEAD
                 <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
                     <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-widest ${
                         template.sumber === 'canva' ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'
                     }`}>
+=======
+                <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50">
+                    <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-widest ${template.sumber === 'canva' ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'
+                        }`}>
+>>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
                         {template.sumber === 'canva' ? 'Canva' : 'File'}
                     </span>
                     <div className="flex gap-1">
@@ -95,18 +116,22 @@ const TemplateCard = ({ template, onKlik }) => {
    Isinya filter pencarian, list template, dan tombol buat upload CV review.
 */
 const CvReviewComp = () => {
-    const { auth, templates, pagination, filters } = usePage().props;
+    // Ambil props dari page
+    const { auth, templates, pagination } = usePage().props;
     const user = auth?.user;
     const isCounselor = user?.role === 'konselor';
     const scrollFade = useScrollFadeIn(0.2);
+<<<<<<< HEAD
 
     // State buat handle pencarian dan filter kategori
+=======
+>>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
     const safeTemplates = templates || [];
-    const safePagination = pagination || { links: [] };
-    const [searchTerm, setSearchTerm] = useState(filters?.search || '');
-    const [filterKategori, setFilterKategori] = useState(filters?.kategori || 'semua');
-    const [showKategoriDropdown, setShowKategoriDropdown] = useState(false);
 
+    // Cek apakah pagination ada isinya sebelum akses .links
+    const safePagination = pagination || { links: [] };
+
+<<<<<<< HEAD
     const isFirstRender = useRef(true);
 
     // Efek buat delay pencarian (debouncing) biar gak terlalu berat ke server
@@ -143,42 +168,56 @@ const CvReviewComp = () => {
     const handleTemplateKlik = (id, url) => {
         if (url?.startsWith('http')) {
             window.open(url, '_blank');
+=======
+    const handleTemplateKlik = (template) => {
+        if (template.sumber === 'manual') {
+            // Jika Manual -> Download File
+            window.location.href = route('layanan.cv.template.download', { id: template.id });
+>>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
         } else {
-            router.visit(url);
+            // Jika Canva/Slides -> Buka Tab Baru
+            if (template.url_template?.startsWith('http')) {
+                window.open(template.url_template, '_blank');
+            } else {
+                // Fallback jika url aneh
+                console.error("URL Template tidak valid");
+            }
         }
     };
 
-    const kategoriOptions = [
-        { value: 'semua', label: 'Semua Kategori', icon: FileText },
-        { value: 'ATS Friendly', label: 'ATS Friendly', icon: TrendingUp },
-        { value: 'Kreatif', label: 'Kreatif', icon: Palette },
-        { value: 'Profesional', label: 'Profesional', icon: Briefcase },
-        { value: 'Akademik', label: 'Akademik', icon: GraduationCap },
-        { value: 'Modern', label: 'Modern', icon: Sparkles },
-    ];
-
     return (
         <section
+<<<<<<< HEAD
   id="layanan-cv-review"
   className={`relative overflow-hidden ${
     safeTemplates.length === 0 ? 'py-10' : 'py-14'
   }`}
 >
             {/* Dekorasi background (lingkaran gradasi blur) */}
+=======
+            id="layanan-cv-review"
+            className={`relative overflow-hidden ${safeTemplates.length === 0 ? 'py-10' : 'py-14'
+                }`}
+        >
+>>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
             <div className="absolute top-0 inset-x-0 h-full w-full pointer-events-none overflow-hidden">
                 <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-emerald-50 rounded-full blur-[100px] opacity-60 mix-blend-multiply"></div>
                 <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-green-50 rounded-full blur-[100px] opacity-60 mix-blend-multiply"></div>
             </div>
 
             <div className="container mx-auto px-6 lg:px-12 relative z-10 max-w-7xl">
+<<<<<<< HEAD
                 {/* Header halaman */}
+=======
+                {/* Header Section */}
+>>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6" ref={scrollFade.ref} style={scrollFade.style}>
                     <div className="max-w-3xl">
                         <span className="inline-block py-1.5 px-3 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold tracking-wider uppercase mb-4">
                             Layanan Persiapan Karir
                         </span>
                         <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-[1.15] font-serif">
-                            Template & <br/>
+                            Template & <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#004d40] to-emerald-500">
                                 Review CV.
                             </span>
@@ -191,25 +230,29 @@ const CvReviewComp = () => {
 
                 {/* Barisan tombol utama (Upload dan Riwayat) */}
                 <div className="flex flex-wrap gap-4 mb-12">
-                    {user && !isCounselor && (
+                    {!isCounselor && (
                         <button
                             onClick={() => router.visit(route('layanan.cv.review.upload'))}
+                            // ^^^ Ini kuncinya. Saat diklik tamu, Laravel akan mendeteksi route ini butuh login,
+                            // melempar ke login page, menyimpan 'intended url', dan mengembalikan user ke sini setelah login.
                             className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#004d40] text-white font-bold rounded-xl hover:bg-[#00382e] shadow-lg hover:shadow-[#004d40]/30 transition-all transform hover:-translate-y-1 w-full sm:w-auto"
                         >
                             <Upload className="w-5 h-5" />
                             Upload CV Sekarang
                         </button>
                     )}
-                    <Link
-                        href={user ? route('layanan.tabel.cv.review') : route('login')}
+                    {/* TOMBOL RIWAYAT */}
+                    <button
+                        onClick={() => router.visit(route('layanan.tabel.cv.review'))}
                         className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#004d40] border-2 border-[#004d40] font-bold rounded-xl hover:bg-emerald-50 transition-all transform hover:-translate-y-1 w-full sm:w-auto"
                     >
                         <Briefcase className="w-5 h-5" />
                         {isCounselor ? "Dashboard Konselor" : "Riwayat Review"}
                         <ArrowRight className="w-5 h-5 ml-1" />
-                    </Link>
+                    </button>
                 </div>
 
+<<<<<<< HEAD
                 {/* Input cari dan dropdown filter kategori */}
                 {!isCounselor && (
                     <div className="flex flex-col md:flex-row gap-4 mb-12">
@@ -267,8 +310,35 @@ const CvReviewComp = () => {
                             </div>
                             <h3 className="text-xl font-bold text-gray-900">Template tidak ditemukan</h3>
                             <p className="text-gray-500">Coba gunakan kata kunci atau kategori lain.</p>
+=======
+                {/* Grid Template */}
+                {!isCounselor && (
+                    <>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                            {safeTemplates.slice(0, 4).map((tpl) => (
+                                <TemplateCard key={tpl.id} template={tpl} onKlik={handleTemplateKlik} />
+                            ))}
+>>>>>>> a1ff6fd30e1335b017d9b0632964dfda84e5156a
                         </div>
-                    </div>
+
+                        {/* TOMBOL LIHAT SEMUA */}
+                        <div className="text-center relative z-20">
+                            <Link
+                                href={route('layanan.cv.review')}
+                                className="group inline-flex items-center justify-center gap-3 px-10 py-4 bg-white border border-gray-200 text-gray-700 font-bold rounded-full hover:border-[#00CA65] hover:text-[#004d40] hover:shadow-xl transition-all duration-300"
+                            >
+                                <LayoutGrid className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                                <span>Lihat Semua Template</span>
+                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+
+                            {!user && (
+                                <p className="mt-4 text-sm text-gray-500 animate-pulse">
+                                    Login untuk akses penuh ke 50+ template premium lainnya!
+                                </p>
+                            )}
+                        </div>
+                    </>
                 )}
 
                 {/* Komponen pagination otomatis dari Laravel/Inertia */}
@@ -279,11 +349,10 @@ const CvReviewComp = () => {
                                 key={i}
                                 onClick={() => link.url && router.get(link.url)}
                                 disabled={!link.url || link.active}
-                                className={`min-w-[48px] h-[48px] flex items-center justify-center rounded-xl font-bold transition-all ${
-                                    link.active
+                                className={`min-w-[48px] h-[48px] flex items-center justify-center rounded-xl font-bold transition-all ${link.active
                                     ? 'bg-[#004d40] text-white shadow-lg shadow-[#004d40]/30'
                                     : 'bg-white border border-gray-200 text-gray-500 hover:border-emerald-500 hover:text-emerald-600'
-                                } ${!link.url ? 'opacity-30 cursor-not-allowed' : ''}`}
+                                    } ${!link.url ? 'opacity-30 cursor-not-allowed' : ''}`}
                                 dangerouslySetInnerHTML={{ __html: link.label }}
                             />
                         ))}

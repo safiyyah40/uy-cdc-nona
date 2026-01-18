@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('kategori');
 
             // Sumber Template
-            $table->enum('sumber', ['canva', 'google_slides', 'manual'])->default('manual');
+            $table->enum('sumber', ['canva', 'slides_go', 'manual'])->default('manual');
             $table->string('url_template')->nullable(); // Link eksternal (Canva/GSlides)
             
             $table->string('file_path')->nullable();
