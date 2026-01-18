@@ -1,3 +1,7 @@
+/**
+ * Komponen TesMinatBakatComp
+ * Menampilkan grid layanan tes psikologi, minat, dan bakat dengan kartu interaktif dan background dekoratif.
+ */
 import React from 'react';
 import { Link } from '@inertiajs/react';
 

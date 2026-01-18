@@ -1,3 +1,8 @@
+/**
+ * Komponen Input Checkbox
+ * Custom checkbox yang sudah ada styling default-nya (Indigo style).
+ * Bisa nerima class tambahan lewat props tanpa numpuk class bawaannya.
+ */
 export default function Checkbox({ className = '', ...props }) {
     return (
         <input

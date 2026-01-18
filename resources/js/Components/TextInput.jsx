@@ -1,3 +1,8 @@
+/**
+ * Komponen TextInput
+ * Input teks kustom yang mendukung forwardRef, pengaturan fokus otomatis via props,
+ * dan ekspos metode fokus ke komponen induk melalui useImperativeHandle.
+ */
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 export default forwardRef(function TextInput(

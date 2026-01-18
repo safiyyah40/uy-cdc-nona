@@ -1,3 +1,8 @@
+/**
+ * Komponen SecondaryButton
+ * Tombol sekunder dengan gaya outline (border gray-300) dan latar belakang putih,
+ * biasanya digunakan untuk aksi "Batal" atau pilihan non-utama.
+ */
 export default function SecondaryButton({
     type = 'button',
     className = '',

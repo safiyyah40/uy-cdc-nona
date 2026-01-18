@@ -17,6 +17,7 @@ const TemplateCard = ({ template, onKlik }) => {
 
     return (
         <div className="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 hover:border-emerald-200 transform hover:-translate-y-2">
+            {/* Label khusus kalau templatenya masuk kategori unggulan */}
             {template.is_unggulan && (
                 <div className="absolute top-4 right-4 z-20 bg-gradient-to-r from-amber-400 to-orange-500 text-white px-3 py-1 rounded-full text-[10px] font-bold shadow-lg flex items-center gap-1.5 animate-pulse">
                     <Sparkles className="w-3 h-3" />
@@ -25,6 +26,7 @@ const TemplateCard = ({ template, onKlik }) => {
             )}
 
             <div className="aspect-[3/4] overflow-hidden bg-gray-50 relative">
+                {/* Loader kecil pas gambar lagi proses loading */}
                 {!imageLoaded && (
                     <div className="absolute inset-0 flex items-center justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#004d40]"></div>
@@ -50,6 +52,7 @@ const TemplateCard = ({ template, onKlik }) => {
                     className={`w-full h-full object-cover transition-transform duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'} group-hover:scale-110`}
                 />
 
+                {/* Overlay yang muncul pas kartu di-hover (tombol pakai template) */}
                 <div className="absolute inset-0 bg-[#004d40]/80 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center p-6 gap-4 backdrop-blur-[2px]">
                     <button
                         onClick={() => onKlik(template)}
@@ -96,7 +99,9 @@ const TemplateCard = ({ template, onKlik }) => {
     );
 };
 
-/* --- MAIN PAGE COMPONENT --- */
+/* --- HALAMAN UTAMA CV REVIEW ---
+   Isinya filter pencarian, list template, dan tombol buat upload CV review.
+*/
 const CvReviewComp = () => {
     // Ambil props dari page
     const { auth, templates, pagination } = usePage().props;
@@ -153,7 +158,7 @@ const CvReviewComp = () => {
                     </p>
                 </div>
 
-                {/* Main Action Bar (Upload & History) */}
+                {/* Barisan tombol utama (Upload dan Riwayat) */}
                 <div className="flex flex-wrap gap-4 mb-12">
                     {!isCounselor && (
                         <button
@@ -206,7 +211,7 @@ const CvReviewComp = () => {
                     </>
                 )}
 
-                {/* Pagination */}
+                {/* Komponen pagination otomatis dari Laravel/Inertia */}
                 {!isCounselor && safePagination.links.length > 3 && (
                     <div className="flex justify-center mt-16 gap-3">
                         {safePagination.links.map((link, i) => (

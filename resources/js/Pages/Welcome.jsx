@@ -5,6 +5,7 @@ import BeritaSection from "../Components/BeritaSection";
 import StatistikLayanan from '../Components/StatistikLayanan';
 import LowonganPekerjaan from '../Components/LowonganPekerjaan';
 import InfoMagang from '../Components/InfoMagang';
+import InfoSertifikasi from '../Components/InfoSertifikasi';
 import TesMinatBakat from '../Components/TesMinatBakatComp';
 import KonsultasiComp from '@/Components/KonsultasiComp';
 import KalenderSection from '../Components/KalenderSection';
@@ -15,7 +16,7 @@ import CvReviewComp from '@/Components/CvReviewComp';
 import SeminarCard from '@/Components/SeminarCard';
 import TipsCard from '@/Components/TipsCard';
 
-export default function Welcome({ auth, slides, latestNews, latestCampusHiring,latestMagang, latestLoker, latestSeminar = [], latestTips = [], latestODK 
+export default function Welcome({ auth, slides, latestNews, latestCampusHiring,latestMagang, latestLoker, latestSeminar, latestSertifikasi = [], latestTips = [], latestODK 
 }) {
     return (
         <MainLayout>
@@ -67,6 +68,11 @@ export default function Welcome({ auth, slides, latestNews, latestCampusHiring,l
                         <div className="max-w-7xl mx-auto px-6 mb-8">
                         </div>
                         <LowonganPekerjaan jobs={latestLoker} />
+                    </div>
+
+                    {/* Info Sertifikasi */}
+                        <div className="w-full">
+                        <InfoSertifikasi latestSertifikasi={latestSertifikasi} />
                     </div>
 
                     <ODKCard latestODK={latestODK} />

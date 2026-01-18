@@ -1,3 +1,7 @@
+/**
+ * Komponen Input Label
+ * Menampilkan label teks untuk field input.
+ */
 export default function InputLabel({
     value,
     className = '',

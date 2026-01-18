@@ -1,3 +1,7 @@
+/**
+ * Komponen ODKCard (Orientasi Dunia Kerja)
+ * Menampilkan grid materi pembekalan karir dengan efek hover kartu 3D dan background dekoratif.
+ */
 import React from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
 import { ArrowRight, Calendar, MapPin, Briefcase } from 'lucide-react';

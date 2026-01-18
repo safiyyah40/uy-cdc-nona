@@ -5,6 +5,8 @@ import BeritaSection from "../Components/BeritaSection";
 import StatistikLayanan from '../Components/StatistikLayanan';
 import LowonganPekerjaan from '../Components/LowonganPekerjaan';
 import InfoMagang from '../Components/InfoMagang';
+/* Komponen InfoSertifikasi */
+import InfoSertifikasi from '../Components/InfoSertifikasi'; 
 import TesMinatBakat from '../Components/TesMinatBakatComp';
 import KalenderSection from '../Components/KalenderSection';
 import Footer from '../Components/Footer';
@@ -15,10 +17,21 @@ import TipsCard from '@/Components/TipsCard';
 import KonsultasiComp from '@/Components/KonsultasiComp';
 import CvReviewComp from '@/Components/CvReviewComp';
 
-export default function Dashboard({ auth, slides, latestNews, latestCampusHiring, latestMagang, latestLoker, latestSeminar = [], latestTips = [], latestODK = [] }) {
+/* Menambahkan latestSertifikasi ke dalam list props */
+export default function Dashboard({ 
+    auth, 
+    slides, 
+    latestNews, 
+    latestCampusHiring, 
+    latestMagang, 
+    latestLoker, 
+    latestSertifikasi = [], 
+    latestSeminar = [], 
+    latestTips = [], 
+    latestODK = [] 
+}) {
     return (
         <MainLayout>
-            {/* Slideshow */}
             <Slideshow slides={slides} />
 
             <Head title="Dashboard - CDC YARSI" />
@@ -49,22 +62,24 @@ export default function Dashboard({ auth, slides, latestNews, latestCampusHiring
                     </div>
                 </section>
 
-                {/* Layanan & Program */}
                 <div className="space-y-0 pb-20 mt-12">
                     <KonsultasiComp />
                     <CvReviewComp />
                     <TesMinatBakat />
                     {auth.user && <KalenderSection />}
 
-                    {/* Info Magang */}
                     <div className="w-full">
                         <InfoMagang latestMagang={latestMagang} />
                     </div>
 
-                    {/* Lowongan Pekerjaan */}
                     <div className="w-full">
                         <div className="max-w-7xl mx-auto px-6 mb-8"></div>
                         <LowonganPekerjaan jobs={latestLoker} />
+                    </div>
+
+                    {/* Menambahkan InfoSertifikasi di bawah LowonganPekerjaan */}
+                    <div className="w-full">
+                        <InfoSertifikasi latestSertifikasi={latestSertifikasi} />
                     </div>
 
                     <section className="w-full">
@@ -81,7 +96,6 @@ export default function Dashboard({ auth, slides, latestNews, latestCampusHiring
 
                     <TipsCard tips={latestTips} />
 
-                    {/* Berita */}
                     <div className="w-full">
                         <div className="max-w-7xl mx-auto px-6 mb-8"></div>
                         <div className="w-full">
@@ -96,4 +110,4 @@ export default function Dashboard({ auth, slides, latestNews, latestCampusHiring
             </div>
         </MainLayout>
     );
-}
+} 

@@ -1,6 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Link } from '@inertiajs/react';
-import { ArrowRight, Briefcase } from 'lucide-react'; // Tambahkan icon untuk konsistensi
+import { ArrowRight, Briefcase } from 'lucide-react';
+
+/**
+ * Komponen Slider Lowongan Pekerjaan
+ * Menampilkan daftar lowongan kerja terbaru dalam bentuk carousel 3D dengan auto-play.
+ */
 
 // Gambar Placeholder jika logo kosong/error
 const PLACEHOLDER_IMG = "https://placehold.co/400x400/044732/ffffff?text=YARSI";
@@ -110,10 +115,8 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
     if (totalJobs === 0) return null;
 
     return (
-        /* Konsistensi Padding dan Background dengan InfoMagang */
         <section className="pt-8 pb-16 md:pt-12 md:pb-24 bg-white relative overflow-hidden font-inter">
 
-            {/* Background Blur Decoration (Sama dengan InfoMagang) */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute -top-24 -right-24 w-96 h-96 bg-emerald-50/50 rounded-full blur-3xl"></div>
             </div>
@@ -135,7 +138,6 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
                         </p>
                     </div>
 
-                    {/* Tombol Lihat Semua (Samping Kanan) */}
                     <Link
                         href={route('loker.index')}
                         className="hidden md:inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-700 font-bold rounded-xl hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all shadow-sm group"
@@ -145,7 +147,6 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
                     </Link>
                 </div>
 
-                {/* Slider Container (Logika Tidak Berubah) */}
                 <div
                     className="relative flex justify-center items-center h-[550px]"
                     onMouseEnter={() => setIsPaused(true)}
@@ -221,7 +222,6 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
                     </div>
                 </div>
 
-                {/* Pagination Dots */}
                 {totalJobs > 1 && (
                     <div className="flex justify-center space-x-3 mt-4">
                         {jobList.map((_, index) => (
@@ -239,7 +239,6 @@ const LowonganPekerjaan = ({ jobs = [] }) => {
                     </div>
                 )}
 
-                {/* Tombol Lihat Semua (Mobile Only) */}
                 <div className="mt-10 text-center md:hidden">
                     <Link
                         href={route('loker.index')}

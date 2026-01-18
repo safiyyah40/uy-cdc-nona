@@ -1,3 +1,7 @@
+/**
+ * Komponen Logo Aplikasi Utama (Standard Laravel Breeze/Jetstream)
+ * Menyediakan aset vektor SVG yang digunakan pada halaman Login, Register, dan Navigation Bar.
+ */
 export default function ApplicationLogo(props) {
     return (
         <svg

@@ -1,3 +1,8 @@
+/**
+ * Komponen VisiMisi
+ * Menampilkan visi dan misi institusi dengan animasi scroll-reveal menggunakan Framer Motion
+ * dan desain kartu gradien kustom.
+ */
 import React from "react";
 import { motion } from "framer-motion";
 
