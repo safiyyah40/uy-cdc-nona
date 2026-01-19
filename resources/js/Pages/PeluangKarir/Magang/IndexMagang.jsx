@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import { Calendar, MapPin, Briefcase, Search, Filter, Clock, ArrowRight, Building2, Wallet, TrendingUp, Award, ChevronLeft, ChevronRight  } from 'lucide-react';
 
 export default function IndexMagang({ auth, magangs, pagination, filters, isGuest, total, categoriesList, locationsList }) {
@@ -524,7 +523,6 @@ export default function IndexMagang({ auth, magangs, pagination, filters, isGues
                         )}
                     </div>
                 </div>
-                <Footer />
             </MainLayout>
         </>
     );

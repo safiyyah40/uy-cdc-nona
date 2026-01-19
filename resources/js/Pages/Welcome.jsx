@@ -9,14 +9,13 @@ import InfoSertifikasi from '../Components/InfoSertifikasi';
 import TesMinatBakat from '../Components/TesMinatBakatComp';
 import KonsultasiComp from '@/Components/KonsultasiComp';
 import KalenderSection from '../Components/KalenderSection';
-import Footer from '../Components/Footer';
 import ODKCard from '@/Components/ODKCard';
 import CampusHiringCard from '@/Components/CampusHiringCard';
 import CvReviewComp from '@/Components/CvReviewComp';
 import SeminarCard from '@/Components/SeminarCard';
 import TipsCard from '@/Components/TipsCard';
 
-export default function Welcome({ auth, slides, latestNews, latestCampusHiring,latestMagang, latestLoker, latestSeminar, latestSertifikasi = [], latestTips = [], latestODK 
+export default function Welcome({ auth, slides, latestNews, latestCampusHiring,latestMagang, latestLoker, latestSeminar, latestSertifikasi = [], latestTips = [], latestODK
 }) {
     return (
         <MainLayout>
@@ -90,8 +89,6 @@ export default function Welcome({ auth, slides, latestNews, latestCampusHiring,l
                     </div>
                 </div>
                 <StatistikLayanan />
-
-                <Footer />
             </div>
         </MainLayout>
     );

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import {
     Calendar, MapPin, Briefcase, Building2, Wallet,
     Clock, ExternalLink, CheckCircle, AlertCircle,
@@ -393,7 +392,6 @@ export default function DetailLoker({ auth, loker }) {
                     </div>
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 }

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import MainLayout from "@/Layouts/MainLayout";
-import Footer from "@/Components/Footer";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import { 
     ArrowLeft, FileText, Upload, X, AlertCircle, 
@@ -291,7 +290,6 @@ const UploadReportForm = ({ booking }) => {
                     </div>
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 };

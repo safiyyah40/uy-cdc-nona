@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import { Head, Link } from '@inertiajs/react';
-import Footer from '@/Components/Footer';
 import {
     ArrowLeft, Calendar, User, Clock, Share2,
     CheckCircle, Copy, Facebook, Twitter, MessageCircle
@@ -119,7 +118,6 @@ export default function DetailTipsDanTrik({ tip, auth }) {
                     </div>
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import {Calendar, MapPin, Briefcase, Search, Filter, Clock, ArrowRight, Building2, Wallet, TrendingUp, ChevronLeft, ChevronRight, ListFilter} from 'lucide-react';
 
 export default function IndexLoker({ auth, lokers, pagination, filters, isGuest, total, categoriesList, locationsList }) {
@@ -426,7 +425,6 @@ export default function IndexLoker({ auth, lokers, pagination, filters, isGuest,
                     )}
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 }

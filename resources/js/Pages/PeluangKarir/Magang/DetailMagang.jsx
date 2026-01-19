@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import { Calendar, MapPin, Briefcase, Clock, ArrowLeft, ExternalLink, Share2, Building2, Wallet, Timer, CheckCircle, Copy, CornerDownRight, Image as ImageIcon } from 'lucide-react';
 
 export default function DetailMagang({ auth, magang }) {
@@ -372,7 +371,6 @@ export default function DetailMagang({ auth, magang }) {
                     <ExternalLink className="w-5 h-5" />
                 </a>
             </div>
-            <Footer />
         </MainLayout>
     );
 }

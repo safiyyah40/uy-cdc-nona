@@ -1,6 +1,5 @@
 import React from 'react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import { Head, Link } from '@inertiajs/react';
 import { Clock, Calendar, MapPin, Tag, ArrowLeft, ArrowRight, BookOpen } from 'lucide-react';
 
@@ -133,7 +132,6 @@ export default function DetailOrientasiDuniaKerja({ auth, odkData }) {
                         </div>
                     </div>
                 </div>
-                <Footer />
             </MainLayout>
         </>
     );

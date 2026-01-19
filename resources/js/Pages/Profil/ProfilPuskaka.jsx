@@ -2,13 +2,12 @@ import React from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import VisiMisi from "@/Components/VisiMisi";
 import { Head, Link, usePage } from '@inertiajs/react';
-import Footer from '@/Components/Footer';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Mousewheel, Autoplay, Parallax, A11y } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Newspaper, Users, Camera, ArrowRight, Sparkles } from 'lucide-react';
+import { Newspaper, Users, ArrowRight, Phone, Mail, Instagram, MessageCircle, MapPin } from 'lucide-react';
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 
 // --- KOMPONEN KARTU TIM ---
@@ -21,7 +20,6 @@ function PuskakaTeamCard({ name, title, photoUrl }) {
             style={style}
             className="group relative w-full max-w-[300px] mx-auto bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-emerald-100/50 border border-gray-100 hover:border-yarsi-green/30 transition-all duration-500 hover:-translate-y-2"
         >
-            {/* --- CONTAINER FOTO --- */}
             <div className="relative w-full aspect-[3/4] overflow-hidden">
                 <div className="absolute inset-0 bg-emerald-50 animate-pulse"></div>
 
@@ -39,7 +37,6 @@ function PuskakaTeamCard({ name, title, photoUrl }) {
                 <div className="absolute bottom-0 left-0 z-30 w-full h-1.5 bg-gradient-to-r from-yarsi-green via-yarsi-accent to-yarsi-green transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
             </div>
 
-            {/* --- CONTAINER TEXT --- */}
             <div className="p-6 text-center relative bg-white transition-colors duration-500 group-hover:bg-emerald-50/30">
                 <h3 className="text-lg md:text-xl font-bold font-kaisei text-gray-900 group-hover:text-yarsi-green-dark transition-colors duration-300 leading-tight mb-2">
                     {name}
@@ -57,15 +54,24 @@ function PuskakaTeamCard({ name, title, photoUrl }) {
 }
 
 // --- KOMPONEN UTAMA ---
-export default function ProfilPuskaka({ teamMembers = [], photos = [] }) {
+export default function ProfilPuskaka({ teamMembers = [], photos = [], contactInfo }) {
     const heroTitle = useScrollFadeIn(0.2);
     const heroText = useScrollFadeIn(0.3);
     const heroImage = useScrollFadeIn(0.4);
     const teamTitle = useScrollFadeIn(0.2);
+    const contactTitle = useScrollFadeIn(0.2);
     const { auth } = usePage().props;
-    const targetUrl = auth?.user
-        ? '/dashboard#layanan-tes'
-        : '/#layanan-tes';
+    const targetUrl = auth?.user ? '/dashboard#layanan-tes' : '/#layanan-tes';
+
+    // Default contact info
+    const contact = contactInfo || {
+        email: 'bidang1@yarsi.ac.id',
+        instagram_username: 'kariralumni.yarsi',
+        whatsapp_number: '',
+        phone_number: '',
+        address_university: 'Menara YARSI, Jl. Let. Jend. Suprapto Kav. 13. Cempaka Putih, Jakarta Pusat, DKI Jakarta 10510. Indonesia.',
+        address_cdc: 'Pusat Kemahasiswaan Karir dan Alumni, Universitas Yarsi, Lantai.1, Rektorat'
+    };
 
     return (
         <>
@@ -110,7 +116,6 @@ export default function ProfilPuskaka({ teamMembers = [], photos = [] }) {
                                     Puskaka-UY (Pusat Kemahasiswaan, Karir, dan Alumni Universitas YARSI) adalah unit kerja di Bidang 1, Universitas YARSI yang bertugas mengelola berbagai layanan kemahasiswaan, pengembangan karir, dan hubungan alumni.
                                 </p>
 
-                                {/* Stats Grid */}
                                 <div className="grid grid-cols-3 gap-4 border-t border-gray-200 pt-8 max-w-md mx-auto lg:mx-0">
                                     <div>
                                         <div className="text-3xl font-bold font-kaisei text-yarsi-green">3</div>
@@ -181,13 +186,12 @@ export default function ProfilPuskaka({ teamMembers = [], photos = [] }) {
                     </div>
                 </section>
 
-                <div className="relative z-20 bg-white"> 
-                     <VisiMisi />
+                <div className="relative z-20 bg-white">
+                    <VisiMisi />
                 </div>
 
                 {/* --- STRUKTUR ORGANISASI --- */}
                 <div className="py-20 md:py-28 bg-slate-50 relative overflow-hidden">
-                    {/* Pattern Dot Halus */}
                     <div className="absolute inset-0 opacity-[0.4]"
                         style={{ backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
                     </div>
@@ -224,14 +228,151 @@ export default function ProfilPuskaka({ teamMembers = [], photos = [] }) {
                     </div>
                 </div>
 
+                {/* SECTION INFORMASI KONTAK */}
+                <section className="py-20 md:py-28 bg-white relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-[0.03]"
+                        style={{ backgroundImage: 'radial-gradient(circle, #044732 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
+                    </div>
+
+                    <div className="container mx-auto px-6 lg:px-8 relative z-10">
+                        <div className="mb-14 max-w-4xl mx-auto text-center">
+                            <h2
+                                ref={contactTitle.ref}
+                                style={contactTitle.style}
+                                className="text-3xl font-bold text-gray-900 border-b-2 border-yarsi-accent/50 pb-2 inline-flex items-center font-kaisei"
+                            >
+                                <Phone className="w-6 h-6 mr-2 text-yarsi-green" />
+                                Informasi Kontak
+                            </h2>
+                            <p className="text-gray-600 mt-3">Hubungi kami untuk informasi lebih lanjut mengenai layanan Puskaka-UY.</p>
+                        </div>
+
+                        <div className="max-w-6xl mx-auto">
+                            <div className="grid md:grid-cols-2 gap-8">
+                                {/* Kartu Alamat */}
+                                <div className="bg-gradient-to-br from-emerald-50 to-white p-8 rounded-2xl border border-emerald-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                                    <div className="flex items-start gap-4 mb-6">
+                                        <div className="bg-emerald-100 p-3 rounded-xl">
+                                            <MapPin className="w-6 h-6 text-yarsi-green-dark" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold text-gray-900 font-kaisei mb-1">Alamat</h3>
+                                            <p className="text-sm text-gray-500">Lokasi Kampus & CDC</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <div className="bg-white p-4 rounded-xl border border-emerald-50">
+                                            <p className="font-semibold text-yarsi-green-dark mb-2 text-sm">Universitas YARSI</p>
+                                            <p className="text-gray-700 text-sm leading-relaxed">{contact.address_university}</p>
+                                        </div>
+
+                                        <div className="bg-white p-4 rounded-xl border border-emerald-50">
+                                            <p className="font-semibold text-yarsi-green-dark mb-2 text-sm">CDC Puskaka-UY</p>
+                                            <p className="text-gray-700 text-sm leading-relaxed">{contact.address_cdc}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Kartu Kontak Digital */}
+                                <div className="bg-gradient-to-br from-emerald-50 to-white p-8 rounded-2xl border border-emerald-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                                    <div className="flex items-start gap-4 mb-6">
+                                        <div className="bg-emerald-100 p-3 rounded-xl">
+                                            <MessageCircle className="w-6 h-6 text-yarsi-green-dark" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold text-gray-900 font-kaisei mb-1">Kontak Digital</h3>
+                                            <p className="text-sm text-gray-500">Email, Telepon & Sosial Media</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        {/* Email */}
+                                        <a
+                                            href={`mailto:${contact.email}`}
+                                            className="flex items-center gap-4 p-4 bg-white rounded-xl border border-emerald-50 hover:border-yarsi-green/30 hover:bg-emerald-50/50 transition-all duration-300 group"
+                                        >
+                                            <div className="bg-emerald-100 p-2.5 rounded-lg group-hover:bg-yarsi-green group-hover:scale-110 transition-all duration-300">
+                                                <Mail className="w-5 h-5 text-yarsi-green-dark group-hover:text-white" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Email</p>
+                                                <p className="text-gray-900 font-semibold truncate">{contact.email}</p>
+                                            </div>
+                                        </a>
+
+                                        {/* WhatsApp */}
+                                        {contact.whatsapp_number && (
+                                            <a
+                                                href={`https://wa.me/${contact.whatsapp_number}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-4 p-4 bg-white rounded-xl border border-emerald-50 hover:border-yarsi-green/30 hover:bg-emerald-50/50 transition-all duration-300 group"
+                                            >
+                                                <div className="bg-emerald-100 p-2.5 rounded-lg group-hover:bg-yarsi-green group-hover:scale-110 transition-all duration-300">
+                                                    <MessageCircle className="w-5 h-5 text-yarsi-green-dark group-hover:text-white" />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">WhatsApp</p>
+                                                    <p className="text-gray-900 font-semibold">+{contact.whatsapp_number}</p>
+                                                </div>
+                                            </a>
+                                        )}
+
+                                        {/* Telepon */}
+                                        {contact.phone_number && (
+                                            <a
+                                                href={`tel:${contact.phone_number}`}
+                                                className="flex items-center gap-4 p-4 bg-white rounded-xl border border-emerald-50 hover:border-yarsi-green/30 hover:bg-emerald-50/50 transition-all duration-300 group"
+                                            >
+                                                <div className="bg-emerald-100 p-2.5 rounded-lg group-hover:bg-yarsi-green group-hover:scale-110 transition-all duration-300">
+                                                    <Phone className="w-5 h-5 text-yarsi-green-dark group-hover:text-white" />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Telepon</p>
+                                                    <p className="text-gray-900 font-semibold">{contact.phone_number}</p>
+                                                </div>
+                                            </a>
+                                        )}
+
+                                        {/* Instagram */}
+                                        <a
+                                            href={`https://instagram.com/${contact.instagram_username}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-4 p-4 bg-white rounded-xl border border-emerald-50 hover:border-yarsi-green/30 hover:bg-emerald-50/50 transition-all duration-300 group"
+                                        >
+                                            <div className="bg-emerald-100 p-2.5 rounded-lg group-hover:bg-yarsi-green group-hover:scale-110 transition-all duration-300">
+                                                <Instagram className="w-5 h-5 text-yarsi-green-dark group-hover:text-white" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Instagram</p>
+                                                <p className="text-gray-900 font-semibold">@{contact.instagram_username}</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-12 text-center">
+                                <a
+                                    href={`https://wa.me/${contact?.whatsapp_number}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yarsi-green to-yarsi-accent text-white rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                                >
+                                    <MessageCircle className="w-5 h-5" />
+                                    <span className="font-semibold">Siap Membantu Anda 24/7</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 {/* --- CTA SECTION --- */}
                 <section className="py-24 bg-gradient-to-br from-[#006241] to-[#004d33] relative overflow-hidden">
-
-                    {/* Ornamen Lingkaran Abstrak */}
                     <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full border-[20px] border-white/5 blur-sm"></div>
                     <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full border-[30px] border-white/5 blur-sm"></div>
-
-                    {/* Noise Texture Overlay */}
                     <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
 
                     <div className="container mx-auto px-4 lg:px-6 relative z-10">
@@ -253,10 +394,7 @@ export default function ProfilPuskaka({ teamMembers = [], photos = [] }) {
                         </div>
                     </div>
                 </section>
-                <Footer />
             </MainLayout>
         </>
     );
 }
-
-ProfilPuskaka.layout = (page) => <MainLayout children={page} />;

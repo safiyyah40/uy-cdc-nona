@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useForm, router, usePage, Link } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import {
     Upload, Trash2, Info, CheckCircle, ArrowLeft,
     FileText, User, Phone, Mail, Building,
@@ -278,8 +277,6 @@ const FormUnggahCv = () => {
                     </div>
                 </div>
             )}
-
-            <Footer />
         </MainLayout>
     );
 };

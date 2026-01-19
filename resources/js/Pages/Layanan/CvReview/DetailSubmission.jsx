@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, usePage, Head } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import {
     ArrowLeft, Clock, MessageCircle, FileText, Download,
     User, Phone, Mail, Building, GraduationCap, BookOpen,
@@ -325,7 +324,6 @@ const DetailSubmission = () => {
                     </div>
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 };

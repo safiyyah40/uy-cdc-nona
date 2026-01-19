@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { router, usePage, Head } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import {
     Search, FolderCheck, CheckCircle, Trash2, ArrowLeft,
     Upload, Eye, MessageCircle, ChevronLeft, ChevronRight,
@@ -710,8 +709,6 @@ const TabelCvReview = ({ reviews, stats }) => {
                     </div>
                 </div>
             </Modal>
-
-            <Footer />
         </MainLayout>
     );
 };

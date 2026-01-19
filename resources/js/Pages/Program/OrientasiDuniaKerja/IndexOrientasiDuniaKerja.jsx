@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import { Head, Link, router } from '@inertiajs/react';
 import { Search, Filter, BookOpen, MapPin, Calendar, ChevronLeft, ChevronRight, Tag } from 'lucide-react';
 
@@ -374,7 +373,6 @@ export default function IndexOrientasiDuniaKerja({
 
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 }

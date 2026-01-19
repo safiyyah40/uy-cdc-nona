@@ -1,7 +1,6 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import { Head, Link, usePage } from '@inertiajs/react';
-import Footer from '@/Components/Footer';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Mousewheel, Autoplay, Parallax, A11y } from 'swiper/modules';
 import 'swiper/css';
@@ -280,7 +279,6 @@ export default function Developer({ teamMembers, photos }) {
                         </div>
                     </div>
                 </section>
-                <Footer />
             </MainLayout>
         </>
     );

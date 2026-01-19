@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import MainLayout from "@/Layouts/MainLayout";
-import Footer from "@/Components/Footer";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import {
     ChevronLeft, ChevronRight, Clock, Trash2, Eye,
@@ -421,8 +420,6 @@ const UserCounselingList = ({ bookings, filters }) => {
                     </div>
                 </div>
             )}
-
-            <Footer />
         </MainLayout>
     );
 };

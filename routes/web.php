@@ -23,17 +23,18 @@ use App\Http\Controllers\StatistikLayananController;
 use App\Http\Controllers\TipsDanTrikController;
 use App\Models\BerandaSlide;
 use App\Models\Berita;
-use App\Models\CvTemplate;
 use App\Models\CampusHiring;
+use App\Models\CvTemplate;
 use App\Models\Loker;
 use App\Models\Magang;
 use App\Models\OrientasiDuniaKerja;
 use App\Models\Seminar;
+use App\Models\Sertifikasi;
 use App\Models\TipsDanTrik;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use Illuminate\Support\Carbon;
 
 Route::get('/', function () {
     $slides = BerandaSlide::where('is_active', true)
@@ -118,29 +119,29 @@ Route::get('/', function () {
                 'logo' => $item->logo,
             ];
         });
-        
-   $latestHiring = CampusHiring::where('is_active', true)
-    ->whereDate('date', '>=', now())
-    ->orderBy('date', 'asc')
-    ->take(4)
-    ->get()
-    ->map(function ($item) {
-        return [
-            'id' => $item->id,
-            'slug' => $item->slug,
-            'title' => $item->title,
-            'company_name' => $item->company_name,
-            'location' => $item->location,
-            'formatted_date' => $item->date
-                ? Carbon::parse($item->date)->translatedFormat('d M Y')
-                : '-',
-            'imageSrc' => $item->image
-                ? (str_starts_with($item->image, 'http') 
-                    ? $item->image 
-                    : Storage::url($item->image))
-                : null,
-        ];
-    });
+
+    $latestHiring = CampusHiring::where('is_active', true)
+        ->whereDate('date', '>=', now())
+        ->orderBy('date', 'asc')
+        ->take(4)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'slug' => $item->slug,
+                'title' => $item->title,
+                'company_name' => $item->company_name,
+                'location' => $item->location,
+                'formatted_date' => $item->date
+                    ? Carbon::parse($item->date)->translatedFormat('d M Y')
+                    : '-',
+                'imageSrc' => $item->image
+                    ? (str_starts_with($item->image, 'http')
+                        ? $item->image
+                        : Storage::url($item->image))
+                    : null,
+            ];
+        });
 
     $latestSeminar = Seminar::where('is_active', true)
         ->orderBy('date', 'desc')
@@ -169,6 +170,24 @@ Route::get('/', function () {
                 'category' => $item->category,
                 'reading_time' => $item->reading_time,
                 'image_url' => $item->thumbnail ? Storage::url($item->thumbnail) : null,
+            ];
+        });
+
+    $latestSertifikasi = Sertifikasi::published()
+        ->latest('published_at')
+        ->take(4)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'title' => $item->title,
+                'slug' => $item->slug,
+                'provider' => $item->provider_name,
+                'logo' => $item->logo,
+                'category' => $item->categories[0] ?? 'Umum',
+                'method' => $item->mode,
+                'level' => $item->level,
+                'deadline' => $item->registration_deadline,
             ];
         });
 
@@ -203,6 +222,7 @@ Route::get('/', function () {
         'latestLoker' => $latestLoker,
         'latestSeminar' => $latestSeminar,
         'latestTips' => $latestTips,
+        'latestSertifikasi' => $latestSertifikasi,
         'templates' => $latestTemplates,
     ]);
 })->name('welcome');

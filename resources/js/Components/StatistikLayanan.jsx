@@ -4,7 +4,6 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Sector } from 'recha
 const COLORS = ['#10B981', '#3B82F6', '#6366F1'];
 
 const StatistikLayanan = () => {
-    // Default value biar gak error pas awal render
     const [dataStatistik, setDataStatistik] = useState([
         { name: 'Tes Minat dan Bakat', value: 0 },
         { name: 'CV Review', value: 0 },
@@ -18,17 +17,9 @@ const StatistikLayanan = () => {
             setIsLoading(true);
             try {
                 const response = await fetch('/api/statistik-layanan');
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
+                if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
-
-                // Cek jika data kosong/error, kita pakai fallback atau biarkan 0
-                if (Array.isArray(data)) {
-                    setDataStatistik(data);
-                }
+                if (Array.isArray(data)) setDataStatistik(data);
             } catch (error) {
                 console.error("Gagal mengambil data statistik:", error);
             } finally {
@@ -38,19 +29,15 @@ const StatistikLayanan = () => {
         fetchStatistik();
     }, []);
 
-    const onPieEnter = (_, index) => {
-        setActiveIndex(index);
-    };
-
-    const onPieLeave = () => {
-        setActiveIndex(null);
-    };
+    // Perbaikan: Fungsi highlight yang bisa dipanggil dari chart maupun list
+    const onMouseEnter = (_, index) => setActiveIndex(index);
+    const onMouseLeave = () => setActiveIndex(null);
 
     if (isLoading) {
         return (
-            <div className="w-full py-20 flex justify-center items-center text-gray-400">
+            <div className="w-full h-[500px] flex justify-center items-center text-gray-400">
                 <div className="animate-pulse flex flex-col items-center">
-                    <div className="h-12 w-12 bg-gray-200 rounded-full mb-4"></div>
+                    <div className="h-12 w-12 bg-green-100 rounded-full mb-4"></div>
                     <p>Menyiapkan data statistik...</p>
                 </div>
             </div>
@@ -58,12 +45,10 @@ const StatistikLayanan = () => {
     }
 
     return (
-        <section className="bg-white py-12 w-full">
+        <section className="bg-white py-12 w-full overflow-hidden">
             <div className="max-w-7xl mx-auto px-6">
-
-                {/* Grid tanpa background abu-abu */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
+                    
                     {/* Sisi Kiri: Informasi */}
                     <div className="w-full">
                         <div className="inline-block px-4 py-1.5 mb-6 text-xs font-bold tracking-widest text-green-600 uppercase bg-green-50 rounded-full">
@@ -73,21 +58,25 @@ const StatistikLayanan = () => {
                             Statistik <span className="text-green-600">Layanan</span> Kami
                         </h2>
                         <p className="text-gray-500 text-lg mb-10 leading-relaxed max-w-lg">
-                            Data partisipasi mahasiswa dalam berbagai program pengembangan karir yang disediakan oleh CDC YARSI.
+                            Data partisipasi mahasiswa dalam berbagai program pengembangan karir CDC YARSI.
                         </p>
 
                         <div className="space-y-5">
                             {dataStatistik.map((entry, index) => (
                                 <div
                                     key={entry.name}
-                                    className={`flex items-center justify-between p-2 transition-all duration-300 ${activeIndex === index ? 'translate-x-2' : ''}`}
+                                    onMouseEnter={() => setActiveIndex(index)} // Tambahan: Hover di list efek ke chart
+                                    onMouseLeave={onMouseLeave}
+                                    className={`flex items-center justify-between p-3 rounded-xl transition-all duration-300 cursor-pointer ${
+                                        activeIndex === index ? 'bg-green-50 translate-x-2' : 'bg-transparent'
+                                    }`}
                                 >
                                     <div className="flex items-center">
                                         <div
                                             className="w-3 h-3 rounded-full mr-4 shadow-sm"
                                             style={{ backgroundColor: COLORS[index % COLORS.length] }}
                                         ></div>
-                                        <p className={`text-base font-medium transition-colors ${activeIndex === index ? 'text-gray-900' : 'text-gray-600'}`}>
+                                        <p className={`text-base font-semibold transition-colors ${activeIndex === index ? 'text-green-700' : 'text-gray-600'}`}>
                                             {entry.name}
                                         </p>
                                     </div>
@@ -97,8 +86,8 @@ const StatistikLayanan = () => {
                         </div>
                     </div>
 
-                    {/* Sisi Kanan: Chart */}
-                    <div className="h-[450px] w-full relative flex justify-center items-center">
+                    {/* Sisi Kanan: Chart (Perbaikan pembungkus grid) */}
+                    <div className="h-[450px] w-full min-w-0 relative flex justify-center items-center">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
@@ -106,26 +95,27 @@ const StatistikLayanan = () => {
                                     activeShape={(props) => (
                                         <Sector
                                             {...props}
-                                            outerRadius={props.outerRadius + 8}
+                                            outerRadius={props.outerRadius + 12} // Diperbesar sedikit agar lebih cantik
+                                            innerRadius={props.innerRadius - 2}
                                             fill={props.fill}
                                         />
                                     )}
                                     data={dataStatistik}
                                     cx="50%"
                                     cy="50%"
-                                    innerRadius="65%"
-                                    outerRadius="85%"
-                                    paddingAngle={10}
+                                    innerRadius="68%"
+                                    outerRadius="88%"
+                                    paddingAngle={8}
                                     dataKey="value"
-                                    onMouseEnter={onPieEnter}
-                                    onMouseLeave={onPieLeave}
+                                    onMouseEnter={onMouseEnter}
+                                    onMouseLeave={onMouseLeave}
                                     stroke="none"
                                 >
                                     {dataStatistik.map((entry, index) => (
                                         <Cell
                                             key={`cell-${index}`}
                                             fill={COLORS[index % COLORS.length]}
-                                            className="outline-none"
+                                            className="outline-none transition-all duration-500"
                                         />
                                     ))}
                                 </Pie>
@@ -136,12 +126,16 @@ const StatistikLayanan = () => {
                             </PieChart>
                         </ResponsiveContainer>
 
+                        {/* Teks Tengah Dinamis */}
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
-                            <p className="text-gray-400 text-sm font-semibold uppercase tracking-[0.2em] mb-1">Total</p>
-                            <p className="text-5xl font-black text-gray-900">100%</p>
+                            <p className="text-gray-400 text-xs font-bold uppercase tracking-[0.2em] mb-1">
+                                {activeIndex !== null ? dataStatistik[activeIndex].name : 'Total'}
+                            </p>
+                            <p className="text-5xl font-black text-gray-900">
+                                {activeIndex !== null ? `${dataStatistik[activeIndex].value}%` : '100%'}
+                            </p>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>

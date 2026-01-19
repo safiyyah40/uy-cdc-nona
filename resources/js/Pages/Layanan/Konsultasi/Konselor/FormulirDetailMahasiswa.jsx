@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import MainLayout from "@/Layouts/MainLayout";
-import Footer from "@/Components/Footer";
 import { Head, Link, usePage, useForm, router } from "@inertiajs/react";
 import {
     ArrowLeft, User, Calendar, MessageSquare, Clock, Mail, Phone,
@@ -462,7 +461,6 @@ const FormulirDetailMahasiswa = ({ consultation }) => {
                     </div>
                 </div>
             )}
-            <Footer />
         </MainLayout>
     );
 };

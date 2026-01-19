@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import MainLayout from "@/Layouts/MainLayout";
-import Footer from "@/Components/Footer";
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 import { Head, Link, usePage, router } from "@inertiajs/react";
 import {
@@ -317,7 +316,6 @@ const Konsultasi = ({ counselors = [] }) => {
             <MainLayout user={user}>
                 <Head title="Dashboard Konselor" />
                 <HeroSection user={user} isCounselorView={true} />
-                <Footer />
             </MainLayout>
         );
     }
@@ -418,7 +416,6 @@ const Konsultasi = ({ counselors = [] }) => {
                     </div>
                 </section>
             </div>
-            <Footer />
         </MainLayout>
     );
 };

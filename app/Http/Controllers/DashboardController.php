@@ -10,6 +10,7 @@ use App\Models\Loker;
 use App\Models\Magang;
 use App\Models\OrientasiDuniaKerja;
 use App\Models\Seminar;
+use App\Models\Sertifikasi;
 use App\Models\TipsDanTrik;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -157,6 +158,24 @@ class DashboardController extends Controller
                 ];
             });
 
+        $latestSertifikasi = Sertifikasi::published()
+            ->latest('published_at')
+            ->take(4)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'slug' => $item->slug,
+                    'provider' => $item->provider_name,
+                    'logo' => $item->logo,
+                    'category' => $item->categories[0] ?? 'Umum',
+                    'method' => $item->mode,
+                    'level' => $item->level,
+                    'deadline' => $item->registration_deadline,
+                ];
+            });
+
         $templates = CvTemplate::where('is_active', true)
             ->orderBy('is_unggulan', 'desc')
             ->latest()
@@ -190,6 +209,7 @@ class DashboardController extends Controller
             'latestNews' => $latestNews,
             'latestMagang' => $latestMagang,
             'latestLoker' => $latestLoker,
+            'latestSertifikasi' => $latestSertifikasi,
             'templates' => $templates,
         ]);
     }

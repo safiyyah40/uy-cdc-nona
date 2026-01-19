@@ -12,7 +12,7 @@ const CardSertifikasi = ({ item, isGuest }) => {
     const diffDays = deadlineDate ? Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24)) : null;
     const isUrgent = diffDays <= 7 && diffDays > 0;
 
-    const cardLink = route('sertifikasi.show', { slug: item.slug });
+const cardLink = route('sertifikasi.show', { id: item.slug });
 
     return (
         <Link

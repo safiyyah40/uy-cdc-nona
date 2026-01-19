@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\PuskakaTeam;
 use App\Models\PuskakaGallery;
+use App\Models\ContactInfo;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-
 class ProfilPuskakaController extends Controller
 {
     public function index()
@@ -24,6 +24,7 @@ class ProfilPuskakaController extends Controller
                         ? Storage::url($member->photo_path) 
                         : asset('images/placeholder-avatar.png'),
                     'sort_order' => $member->sort_order,
+                    'contactInfo' => ContactInfo::getContact()
                 ];
             });
 

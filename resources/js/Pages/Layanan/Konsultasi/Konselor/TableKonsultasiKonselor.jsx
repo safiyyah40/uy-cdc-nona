@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MainLayout from "@/Layouts/MainLayout";
-import Footer from "@/Components/Footer";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import {
     Calendar, Clock, BookOpen, Users, ArrowLeft, Eye,
@@ -353,7 +352,6 @@ const TableKonsultasiKonselor = ({ consultations, pagination, stats }) => {
                     </div>
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 };

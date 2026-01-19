@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import {
     Calendar, MapPin, Clock, ArrowLeft, Share2, Building2, Award,
     CheckCircle, Copy, CornerDownRight, Wallet, BookOpen, Users,
@@ -399,7 +398,6 @@ export default function DetailSertifikasi({ auth, sertifikasi }) {
                     </div>
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 }

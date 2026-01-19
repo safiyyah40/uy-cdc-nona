@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import { Head, Link, router } from '@inertiajs/react';
 import {
     Newspaper, Search, Filter, LogIn,
@@ -301,7 +300,6 @@ export default function IndexBerita({ berita, auth, filters, isGuest, total }) {
 
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 }

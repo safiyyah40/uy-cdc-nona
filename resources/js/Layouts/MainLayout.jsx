@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, usePage } from '@inertiajs/react';
+import Footer from '@/Components/Footer';
+import { X, ChevronDown, User, LogOut, Home, Users, Briefcase, Wrench, TrendingUp } from 'lucide-react';
 
 const LOGO_YARSI_CDC = '/images/LOGO CDC-UY.png';
 
@@ -104,8 +106,8 @@ function NavDropdown({ title, children, basePath }) {
     );
 }
 
-// --- KOMPONEN MOBILE NAV LINK ---
-function MobileNavLink({ href, children, onClick }) {
+// --- KOMPONEN MOBILE NAV LINK (UNTUK SIDEBAR) ---
+function MobileNavLink({ href, children, onClick, icon: Icon }) {
     const { url } = usePage();
     const isActive = url === href || url.startsWith(href + '/');
 
@@ -113,38 +115,60 @@ function MobileNavLink({ href, children, onClick }) {
         <Link
             href={href}
             onClick={onClick}
-            className={`block px-4 py-3 text-base font-semibold rounded-lg transition-all duration-200
-            ${isActive ? 'bg-cdc-green-dark text-white' : 'text-cdc-green-dark hover:bg-cdc-green-dark hover:text-white'}`}
+            className={`flex items-center gap-3 px-5 py-4 text-base font-semibold rounded-xl transition-all duration-200
+            ${isActive ? 'bg-cdc-green-dark text-white shadow-md' : 'text-gray-700 hover:bg-emerald-50'}`}
+        >
+            {Icon && <Icon className="w-5 h-5" />}
+            <span>{children}</span>
+        </Link>
+    );
+}
+
+// --- KOMPONEN MOBILE DROPDOWN (UNTUK SIDEBAR) ---
+function MobileDropdown({ title, children, icon: Icon }) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <div>
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center justify-between w-full px-5 py-4 text-base font-semibold text-gray-700 hover:bg-emerald-50 rounded-xl transition-all"
+            >
+                <div className="flex items-center gap-3">
+                    {Icon && <Icon className="w-5 h-5" />}
+                    <span>{title}</span>
+                </div>
+                <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {isOpen && (
+                <div className="pl-4 mt-1 space-y-1 border-l-2 border-emerald-100 ml-5">
+                    {children}
+                </div>
+            )}
+        </div>
+    );
+}
+
+// --- KOMPONEN MOBILE DROPDOWN LINK ---
+function MobileDropdownLink({ href, children, onClick }) {
+    const { url } = usePage();
+    const isActive = url.startsWith(href);
+
+    return (
+        <Link
+            href={href}
+            onClick={onClick}
+            className={`block px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200
+            ${isActive ? 'bg-cdc-green-dark text-white' : 'text-gray-600 hover:bg-emerald-50 hover:text-cdc-green-dark'}`}
         >
             {children}
         </Link>
     );
 }
 
-// --- KOMPONEN MOBILE DROPDOWN ---
-function MobileDropdown({ title, children }) {
-    const [isOpen, setIsOpen] = useState(false);
-
-    return (
-        <div className="border-b border-gray-200 last:border-b-0">
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center justify-between w-full px-4 py-3 text-base font-semibold text-cdc-green-dark hover:bg-gray-50 transition-all"
-            >
-                {title}
-                <svg className={`h-5 w-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-            </button>
-            {isOpen && <div className="pl-4 pb-2 space-y-1">{children}</div>}
-        </div>
-    );
-}
-
 export default function MainLayout({ children }) {
-    const { auth } = usePage().props;
+    const { auth, contactInfo } = usePage().props;
     const user = auth.user;
-    const isCounselor = user?.role === 'konselor';
 
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -152,6 +176,7 @@ export default function MainLayout({ children }) {
 
     const profileDropdownRef = useRef(null);
     const notifDropdownRef = useRef(null);
+    const sidebarRef = useRef(null);
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -166,16 +191,29 @@ export default function MainLayout({ children }) {
         setIsMobileMenuOpen(false);
     }, [usePage().url]);
 
+    // Lock body scroll when mobile menu is open
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isMobileMenuOpen]);
+
     return (
         <div className="min-h-screen bg-transparent overflow-x-hidden relative">
+            {/* HEADER / NAVBAR */}
             <header className="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-xl shadow-[0_8px_25px_rgba(0,0,0,0.12)] rounded-b-[60px]">
-                <nav className="w-full flex items-center px-6 lg:px-20 py-4 md:py-5">
-                    <div className="flex items-center space-x-8">
+                <nav className="w-full flex items-center px-4 sm:px-6 lg:px-20 py-3 md:py-5">
+                    <div className="flex items-center space-x-4 md:space-x-8">
                         <Link href="/" className="flex-shrink-0">
-                            <img src={LOGO_YARSI_CDC} alt="Logo" className="h-16 md:h-[92px] object-contain" />
+                            <img src={LOGO_YARSI_CDC} alt="Logo" className="h-14 sm:h-16 md:h-[92px] object-contain" />
                         </Link>
 
-                        <div className="hidden md:flex items-center space-x-6">
+                        <div className="hidden lg:flex items-center space-x-6">
                             <NavLink href={auth.user ? route('dashboard') : '/'}>BERANDA</NavLink>
 
                             <NavDropdown title="PROFIL" basePath="/profil">
@@ -206,21 +244,21 @@ export default function MainLayout({ children }) {
                         </div>
                     </div>
 
-                    <div className="flex items-center space-x-4 md:space-x-6 ml-auto">
-                        {/* Lonceng Dropdown */}
+                    <div className="flex items-center space-x-2 sm:space-x-4 md:space-x-6 ml-auto">
+                        {/* Lonceng Notifikasi */}
                         {auth.user && (
                             <div className="relative" ref={notifDropdownRef}>
                                 <button onClick={() => setIsNotifOpen(!isNotifOpen)} className="relative p-2 text-cdc-green-dark rounded-full hover:bg-gray-100 transition-all group">
-                                    <svg className="h-8 w-8 md:h-10 md:w-10 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                                     </svg>
-                                    <span className="absolute top-2 right-2 flex h-3 w-3 md:h-4 md:w-4">
+                                    <span className="absolute top-1 right-1 sm:top-2 sm:right-2 flex h-3 w-3 sm:h-4 sm:w-4">
                                         <span className="animate-ping absolute h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                        <span className="relative rounded-full h-3 w-3 md:h-4 md:w-4 bg-red-500 border-2 border-white"></span>
+                                        <span className="relative rounded-full h-3 w-3 sm:h-4 sm:w-4 bg-red-500 border-2 border-white"></span>
                                     </span>
                                 </button>
                                 {isNotifOpen && (
-                                    <div className="absolute top-full right-0 mt-4 w-72 md:w-80 bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden z-50">
+                                    <div className="absolute top-full right-0 mt-4 w-72 sm:w-80 bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden z-50">
                                         <div className="px-5 py-3 bg-cdc-green-dark text-white font-bold text-center">NOTIFIKASI</div>
                                         <div className="max-h-60 overflow-y-auto">
                                             <div className="px-5 py-4 text-center text-sm text-gray-500">Belum ada notifikasi baru</div>
@@ -230,8 +268,9 @@ export default function MainLayout({ children }) {
                             </div>
                         )}
 
+                        {/* Dropdown Profile Desktop */}
                         {auth.user ? (
-                            <div className="relative hidden md:block" ref={profileDropdownRef}>
+                            <div className="relative hidden lg:block" ref={profileDropdownRef}>
                                 <button onClick={() => setIsProfileOpen(!isProfileOpen)} className={`p-3 rounded-xl transition-all ${isProfileOpen ? 'bg-cdc-green-dark text-white shadow-md' : 'text-cdc-green-dark hover:bg-gray-100'}`}>
                                     <svg className={`h-10 w-10 transition-transform ${isProfileOpen ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16m-16 6h16" />
@@ -251,59 +290,176 @@ export default function MainLayout({ children }) {
                                 )}
                             </div>
                         ) : (
-                            <Link href={route('login')} className="hidden md:inline-flex rounded-[10px] bg-gradient-to-r from-[#09AD79] to-[#044732] px-9 py-4 text-[22px] font-semibold text-white shadow-lg hover:scale-105 transition-all">MASUK</Link>
+                            <Link href={route('login')} className="hidden lg:inline-flex rounded-[10px] bg-gradient-to-r from-[#09AD79] to-[#044732] px-9 py-4 text-[22px] font-semibold text-white shadow-lg hover:scale-105 transition-all">MASUK</Link>
                         )}
 
-                        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-3 text-gray-700">
-                            <svg className="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                {isMobileMenuOpen ? <path d="M6 18L18 6M6 6l12 12" /> : <path d="M4 6h16M4 12h16m-16 6h16" />}
+                        {/* Hamburger Mobile */}
+                        <button 
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+                            className="lg:hidden p-2 text-cdc-green-dark hover:bg-gray-100 rounded-xl transition-all"
+                            aria-label="Toggle menu"
+                        >
+                            <svg className="h-8 w-8 sm:h-10 sm:w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-16 6h16" />
                             </svg>
                         </button>
                     </div>
                 </nav>
-
-                {/* Mobile Menu */}
-                {isMobileMenuOpen && (
-                    <div className="md:hidden bg-white shadow-xl p-4 rounded-b-3xl border-t">
-                        <div className="flex flex-col space-y-2">
-                            <MobileNavLink href={auth.user ? route('dashboard') : '/'} onClick={() => setIsMobileMenuOpen(false)}>BERANDA</MobileNavLink>
-                            <MobileDropdown title="PROFIL">
-                                <DropdownLink href={route('profil.puskaka')}>PUSKAKA-UY</DropdownLink>
-                                <DropdownLink href={route('profil.konselor')}>KONSELOR</DropdownLink>
-                                <DropdownLink href={route('profil.developer')}>PENGEMBANG</DropdownLink>
-                            </MobileDropdown>
-                            <MobileDropdown title="PROGRAM">
-                                <DropdownLink href={route('program.odk.index')}>ORIENTASI DUNIA KERJA</DropdownLink>
-                                <DropdownLink href={route('program.campus.hiring')}>CAMPUS HIRING</DropdownLink>
-                                <DropdownLink href={route('program.seminar')}>SEMINAR</DropdownLink>
-                                <DropdownLink href={route('program.tips-dan-trik')}>TIPS DAN TRIK</DropdownLink>
-                                <DropdownLink href={route('program.berita')}>BERITA</DropdownLink>
-                            </MobileDropdown>
-                            <MobileDropdown title="LAYANAN">
-                                <DropdownLink href={route('layanan.konsultasi')}>KONSULTASI</DropdownLink>
-                                <DropdownLink href={route('layanan.cv.review')}>REVIEW CV</DropdownLink>
-                                <DropdownLink href={route('layanan.tes.minat.bakat')}>TES MINAT & BAKAT RIASEC</DropdownLink>
-                            </MobileDropdown>
-                            <MobileDropdown title="PELUANG KARIR">
-                                <DropdownLink href={route('magang.index')}>LOWONGAN MAGANG</DropdownLink>
-                                <DropdownLink href={route('loker.index')}>LOWONGAN PEKERJAAN</DropdownLink>
-                                <DropdownLink href={route('sertifikasi.index')}>PROGRAM SERTIFIKASI</DropdownLink>
-                            </MobileDropdown>
-                            {!auth.user ? (
-                                <Link href={route('login')} className="mt-4 block text-center rounded-lg bg-cdc-green-dark py-4 text-white font-bold">MASUK</Link>
-                            ) : (
-                                <div className="mt-4 pt-4 border-t space-y-2 text-center">
-                                    <p className="font-bold text-cdc-green-dark">{auth.user.name}</p>
-                                    <ProfileDropdownLink href={route('profile.show')}>AKUN</ProfileDropdownLink>
-                                    <ProfileDropdownLink href={route('logout')} method="post" as="button">KELUAR</ProfileDropdownLink>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                )}
             </header>
-            <main className="pt-[120px] md:pt-[130px]">{children}</main>
+
+            {/* OVERLAY (backdrop) */}
+            {isMobileMenuOpen && (
+                <div 
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] lg:hidden transition-opacity duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
+
+            {/* MOBILE SIDEBAR MENU */}
+            <aside 
+                ref={sidebarRef}
+                className={`fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-[70] transform transition-transform duration-300 ease-out lg:hidden overflow-y-auto
+                ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+            >
+                {/* Sidebar Header */}
+                <div className="sticky top-0 backdrop-blur-lg border-b-2 border-emerald-100 p-5 shadow-sm z-10">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                            <img src={LOGO_YARSI_CDC} alt="Logo" className="h-12 w-auto" />
+                        </div>
+                        <button 
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="p-2 hover:bg-emerald-50 rounded-xl  text-gray-600"
+                            aria-label="Close menu"
+                        >
+                            <X className="w-6 h-6" />
+                        </button>
+                    </div>
+
+                    {/* User Info in Sidebar */}
+                    {auth.user && (
+                        <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-2xl p-4 border border-emerald-200/50 shadow-sm">
+                            <div className="flex items-center gap-3">
+                                <div className="bg-white p-2.5 rounded-xl shadow-sm">
+                                    <User className="w-5 h-5 text-yarsi-green" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-xs text-gray-600 font-medium">Masuk sebagai</p>
+                                    <p className="font-bold text-yarsi-green-dark truncate">{auth.user.name}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                
+                </div>
+
+                {/* Sidebar Content */}
+                <div className="p-5 space-y-2">
+                    <MobileNavLink 
+                        href={auth.user ? route('dashboard') : '/'} 
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        icon={Home}
+                    >
+                        BERANDA
+                    </MobileNavLink>
+
+                    <MobileDropdown title="PROFIL" icon={Users}>
+                        <MobileDropdownLink href={route('profil.puskaka')} onClick={() => setIsMobileMenuOpen(false)}>
+                            PUSKAKA-UY
+                        </MobileDropdownLink>
+                        <MobileDropdownLink href={route('profil.konselor')} onClick={() => setIsMobileMenuOpen(false)}>
+                            KONSELOR
+                        </MobileDropdownLink>
+                        <MobileDropdownLink href={route('profil.developer')} onClick={() => setIsMobileMenuOpen(false)}>
+                            PENGEMBANG
+                        </MobileDropdownLink>
+                    </MobileDropdown>
+
+                    <MobileDropdown title="PROGRAM" icon={Briefcase}>
+                        <MobileDropdownLink href={route('program.odk.index')} onClick={() => setIsMobileMenuOpen(false)}>
+                            ORIENTASI DUNIA KERJA
+                        </MobileDropdownLink>
+                        <MobileDropdownLink href={route('program.campus.hiring')} onClick={() => setIsMobileMenuOpen(false)}>
+                            CAMPUS HIRING
+                        </MobileDropdownLink>
+                        <MobileDropdownLink href={route('program.seminar')} onClick={() => setIsMobileMenuOpen(false)}>
+                            SEMINAR
+                        </MobileDropdownLink>
+                        <MobileDropdownLink href={route('program.tips-dan-trik')} onClick={() => setIsMobileMenuOpen(false)}>
+                            TIPS DAN TRIK
+                        </MobileDropdownLink>
+                        <MobileDropdownLink href={route('program.berita')} onClick={() => setIsMobileMenuOpen(false)}>
+                            BERITA
+                        </MobileDropdownLink>
+                    </MobileDropdown>
+
+                    <MobileDropdown title="LAYANAN" icon={Wrench}>
+                        <MobileDropdownLink href={route('layanan.konsultasi')} onClick={() => setIsMobileMenuOpen(false)}>
+                            KONSULTASI
+                        </MobileDropdownLink>
+                        <MobileDropdownLink href={route('layanan.cv.review')} onClick={() => setIsMobileMenuOpen(false)}>
+                            REVIEW CV
+                        </MobileDropdownLink>
+                        <MobileDropdownLink href={route('layanan.tes.minat.bakat')} onClick={() => setIsMobileMenuOpen(false)}>
+                            TES MINAT & BAKAT RIASEC
+                        </MobileDropdownLink>
+                    </MobileDropdown>
+
+                    <MobileDropdown title="PELUANG KARIR" icon={TrendingUp}>
+                        <MobileDropdownLink href={route('magang.index')} onClick={() => setIsMobileMenuOpen(false)}>
+                            LOWONGAN MAGANG
+                        </MobileDropdownLink>
+                        <MobileDropdownLink href={route('loker.index')} onClick={() => setIsMobileMenuOpen(false)}>
+                            LOWONGAN PEKERJAAN
+                        </MobileDropdownLink>
+                        <MobileDropdownLink href={route('sertifikasi.index')} onClick={() => setIsMobileMenuOpen(false)}>
+                            PROGRAM SERTIFIKASI
+                        </MobileDropdownLink>
+                    </MobileDropdown>
+                </div>
+
+                {/* Sidebar Footer */}
+                <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-5">
+                    {auth.user ? (
+                        <div className="space-y-2">
+                            <Link
+                                href={route('profile.show')}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="flex items-center gap-3 w-full px-5 py-3 bg-white border border-gray-200 text-cdc-green-dark font-semibold rounded-xl hover:bg-emerald-50 transition-all"
+                            >
+                                <User className="w-5 h-5" />
+                                <span>AKUN SAYA</span>
+                            </Link>
+                            <Link
+                                href={route('logout')}
+                                method="post"
+                                as="button"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="flex items-center gap-3 w-full px-5 py-3 bg-red-50 border border-red-200 text-red-600 font-semibold rounded-xl hover:bg-red-100 transition-all"
+                            >
+                                <LogOut className="w-5 h-5" />
+                                <span>KELUAR</span>
+                            </Link>
+                        </div>
+                    ) : (
+                        <Link
+                            href={route('login')}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="block w-full text-center py-4 bg-gradient-to-r from-[#09AD79] to-[#044732] text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all"
+                        >
+                            MASUK
+                        </Link>
+                    )}
+                </div>
+            </aside>
+
+            {/* MAIN CONTENT */}
+            <main className="pt-[100px] sm:pt-[110px] md:pt-[130px]">
+                {children}
+            </main>
+
+            {/* FOOTER */}
+            <Footer contactInfo={contactInfo} />
         </div>
     );
 }
- 

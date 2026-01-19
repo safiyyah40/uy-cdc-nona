@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import { Head, Link, router } from '@inertiajs/react';
 import { Lightbulb, Search, Filter, ChevronLeft, ChevronRight, ArrowRight, Clock, Tag } from 'lucide-react';
 
@@ -280,7 +279,6 @@ export default function TipsIndex({ tips, auth, filters, isGuest, total, categor
                     )}
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 }

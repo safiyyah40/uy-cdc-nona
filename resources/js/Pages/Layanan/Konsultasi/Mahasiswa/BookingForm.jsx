@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import MainLayout from "@/Layouts/MainLayout";
-import Footer from "@/Components/Footer";
 import { Head, useForm, Link, usePage } from "@inertiajs/react";
 import { 
     ChevronLeft, Send, User, Phone, Mail, BookOpen, 
@@ -289,7 +288,6 @@ const BookingForm = ({ counselor_id, counselor_name, slot_date, slot_time, slot_
                     </form>
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 };

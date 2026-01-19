@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import { Head, Link, router } from '@inertiajs/react';
 import { ArrowRight, BookOpen, Clock, MapPin, Wifi, Calendar, Timer, LogIn, Search, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -316,7 +315,6 @@ export default function IndexSeminar({ auth, seminars, pagination, filters, isGu
                         )}
                     </div>
                 </div>
-                <Footer />
             </MainLayout>
         </>
     );

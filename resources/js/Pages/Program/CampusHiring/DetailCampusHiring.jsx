@@ -1,6 +1,5 @@
 import React from 'react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import { Head, Link } from '@inertiajs/react';
 import { Clock, Calendar, MapPin, User, ArrowLeft, ArrowRight } from 'lucide-react';
 
@@ -128,7 +127,6 @@ export default function DetailCampusHiring({ auth, campusHiring }) {
                         </div>
                     </div>
                 </div>
-                <Footer />
             </MainLayout>
         </>
     );

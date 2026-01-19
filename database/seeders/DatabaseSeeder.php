@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             Beranda\BerandaSlideSeeder::class,
             Profil\UserSeeder::class,
+            ContactInfoSeeder::class,
             Profil\PuskakaSeeder::class,
             Profil\DeveloperSeeder::class,
             Program\OrientasiDuniaKerjaSeeder::class,

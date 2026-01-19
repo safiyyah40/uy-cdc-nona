@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import { Head, Link } from '@inertiajs/react';
-import Footer from '@/Components/Footer';
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 
 // ICON COMPONENTS
@@ -537,7 +536,6 @@ export default function ProfilKonselor({ counselors }) {
                     </div>
                 </div>
             </section>
-            <Footer />
         </MainLayout>
     );
 }

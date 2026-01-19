@@ -1,6 +1,5 @@
 import React from 'react';
 import MainLayout from "@/Layouts/MainLayout";
-import Footer from "@/Components/Footer";
 import { Head, Link } from "@inertiajs/react";
 import {
     ArrowLeft, User, Calendar, Clock, FileText,
@@ -296,7 +295,6 @@ const DetailKonsultasi = ({ consultation, auth }) => {
                     </div>
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 };

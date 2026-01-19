@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import { Head, Link, router } from '@inertiajs/react';
 import { Search, Filter, BookOpen, MapPin, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -282,7 +281,6 @@ export default function IndexCampusHiring({ auth, programs, pagination, filters,
 
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 }

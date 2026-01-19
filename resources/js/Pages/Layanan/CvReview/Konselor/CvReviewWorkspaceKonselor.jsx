@@ -5,7 +5,6 @@ import {
     User, CheckCircle, Smartphone, Mail, Building, GraduationCap, Hash, AlertCircle
 } from 'lucide-react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 
 // Komponen Kartu Detail Kecil
 const DetailCard = ({ title, value, icon: Icon, isLink = false }) => (
@@ -309,7 +308,6 @@ export default function CvReviewWorkspaceKonselor() {
                     </div>
                 </div>
             )}
-            <Footer />
         </MainLayout>
     );
 }

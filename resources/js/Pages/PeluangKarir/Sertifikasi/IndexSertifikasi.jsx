@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import { Search, Filter, ArrowRight, TrendingUp, Award, Clock, MapPin, Building2, BookOpen, Wallet, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function IndexSertifikasi({ auth, sertifikasis, pagination, filters, isGuest, total, categoriesList, providersList }) {
@@ -592,7 +591,6 @@ export default function IndexSertifikasi({ auth, sertifikasis, pagination, filte
                         )}
                     </div>
                 </div>
-                <Footer />
             </MainLayout>
         </>
     );

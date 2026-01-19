@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
-import Footer from '@/Components/Footer';
 import { Head, Link } from '@inertiajs/react';
 import { ArrowLeft, Calendar, User, Share2, CornerDownRight, Clock, ArrowRight, MapPin, Building2, Wifi, CheckCircle, Timer, Copy } from 'lucide-react';
 
@@ -307,7 +306,6 @@ export default function DetailSeminar({ seminar, auth }) {
                     </div>
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 }

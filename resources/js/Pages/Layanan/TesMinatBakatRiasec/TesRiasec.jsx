@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import MainLayout from "@/Layouts/MainLayout";
-import Footer from "@/Components/Footer";
 import { Head, router } from "@inertiajs/react";
 import axios from 'axios';
 import html2canvas from "html2canvas";
@@ -615,7 +614,6 @@ const TesRiasec = ({ auth }) => {
                     )}
 
                 </div>
-                <Footer />
             </div>
         </MainLayout>
     );

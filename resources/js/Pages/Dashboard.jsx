@@ -5,11 +5,9 @@ import BeritaSection from "../Components/BeritaSection";
 import StatistikLayanan from '../Components/StatistikLayanan';
 import LowonganPekerjaan from '../Components/LowonganPekerjaan';
 import InfoMagang from '../Components/InfoMagang';
-/* Komponen InfoSertifikasi */
 import InfoSertifikasi from '../Components/InfoSertifikasi'; 
 import TesMinatBakat from '../Components/TesMinatBakatComp';
 import KalenderSection from '../Components/KalenderSection';
-import Footer from '../Components/Footer';
 import ODKCard from '@/Components/ODKCard';
 import CampusHiringCard from '@/Components/CampusHiringCard';
 import SeminarCard from '@/Components/SeminarCard';
@@ -17,7 +15,6 @@ import TipsCard from '@/Components/TipsCard';
 import KonsultasiComp from '@/Components/KonsultasiComp';
 import CvReviewComp from '@/Components/CvReviewComp';
 
-/* Menambahkan latestSertifikasi ke dalam list props */
 export default function Dashboard({ 
     auth, 
     slides, 
@@ -77,7 +74,6 @@ export default function Dashboard({
                         <LowonganPekerjaan jobs={latestLoker} />
                     </div>
 
-                    {/* Menambahkan InfoSertifikasi di bawah LowonganPekerjaan */}
                     <div className="w-full">
                         <InfoSertifikasi latestSertifikasi={latestSertifikasi} />
                     </div>
@@ -103,10 +99,7 @@ export default function Dashboard({
                         </div>
                     </div>
                 </div>
-
                 <StatistikLayanan />
-
-                <Footer />
             </div>
         </MainLayout>
     );

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import MainLayout from "@/Layouts/MainLayout";
-import Footer from "@/Components/Footer";
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 import { Head, Link, usePage, router } from "@inertiajs/react";
 import {
@@ -674,8 +673,6 @@ function IndexCvReview(props) {
                     </section>
                 )}
             </div>
-
-            <Footer />
         </MainLayout>
     );
 }

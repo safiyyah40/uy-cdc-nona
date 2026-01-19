@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import { Head, Link } from '@inertiajs/react';
-import Footer from '@/Components/Footer';
 import {ArrowLeft, Calendar, User, Eye, Share2, CheckCircle, Copy, Facebook, Twitter, MessageCircle} from 'lucide-react';
 
 export default function DetailBerita({ berita, auth }) {
@@ -190,7 +189,6 @@ export default function DetailBerita({ berita, auth }) {
                     </div>
                 </div>
             </div>
-            <Footer />
         </MainLayout>
     );
 }
