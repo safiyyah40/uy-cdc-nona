@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
@@ -25,13 +25,12 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update profil (Foto & No HP) setelah login
+     * Update profil (Foto & No HP) dari halaman Edit Profil biasa
      */
     public function update(Request $request)
     {
         $user = Auth::user();
 
-        // 1. Validasi
         $validated = $request->validate([
             'phone' => [
                 'required',
@@ -48,70 +47,78 @@ class ProfileController extends Controller
             'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ], [
             'phone.regex' => 'Format nomor WhatsApp tidak valid. Gunakan awalan 08 atau 628.',
-            'phone.unique' => 'Nomor WhatsApp ini sudah terdaftar.',
-            'photo.image' => 'File harus berupa gambar.',
-            'photo.mimes' => 'Format foto harus JPG, JPEG, atau PNG.',
             'photo.max' => 'Ukuran foto maksimal 5MB.',
         ]);
-        $user->fill($validated);
-        if ($user->isDirty('email')) {
-        $user->email_verified_at = null;
-    }
 
-        // Normalisasi Nomor HP (08 -> 628)
+        // Normalisasi Nomor HP
         $phone = preg_replace('/[^0-9]/', '', $request->phone);
         if (str_starts_with($phone, '0')) {
             $phone = '62'.substr($phone, 1);
         }
         $user->phone = $phone;
+        $user->email = $validated['email'];
 
-        // Proses Foto Profil
+        // Proses Foto
         if ($request->hasFile('photo')) {
-            if ($user->photo_url && Storage::disk('public')->exists(str_replace('/storage/', '', $user->photo_url))) {
+            if ($user->photo_url) {
                 Storage::disk('public')->delete(str_replace('/storage/', '', $user->photo_url));
             }
-
             $path = $request->file('photo')->store('profile_photos', 'public');
             $user->photo_url = '/storage/'.$path;
         }
 
         $user->save();
 
-        return redirect()
-            ->route('profile.show')
-            ->with('success', 'Profil berhasil diperbarui!');
+        return redirect()->route('profile.show')->with('success', 'Profil berhasil diperbarui!');
     }
 
     /**
-     * Menyimpan data awal (Complete Profile)
+     * Method Utama: Complete Profile (Untuk user yang baru pertama login)
      */
     public function store(Request $request)
     {
         $user = Auth::user();
 
-        $validated = $request->validate([
+        // 1. Validasi Input
+        $rules = [
             'phone' => ['required', 'string', 'regex:/^(08|628)[0-9]{8,13}$/'],
             'gender' => [$user->gender ? 'nullable' : 'required', 'in:L,P'],
-        ], [
-            'phone.regex' => 'Format nomor WhatsApp tidak valid. Gunakan awalan 08 atau 628.',
+        ];
+
+        // Jika dia mahasiswa, tambahkan syarat fakultas & prodi (sesuai needsProfileCompletion)
+        if ($user->role === 'mahasiswa') {
+            $rules['faculty'] = 'required|string|max:255';
+            $rules['study_program'] = 'required|string|max:255';
+        }
+
+        $validated = $request->validate($rules, [
+            'phone.regex' => 'Format nomor WhatsApp tidak valid (08... atau 628...).',
+            'faculty.required' => 'Fakultas wajib diisi.',
+            'study_program.required' => 'Program studi wajib diisi.',
         ]);
 
-        // Normalisasi Nomor HP (PENTING: Agar seragam dengan update)
+        // 2. Normalisasi Nomor HP
         $phone = preg_replace('/[^0-9]/', '', $validated['phone']);
         if (str_starts_with($phone, '0')) {
             $phone = '62'.substr($phone, 1);
         }
 
+        // 3. Update Data User
         $user->phone = $phone;
 
-        // Hanya update gender jika sebelumnya kosong
+        if ($user->role === 'mahasiswa') {
+            $user->faculty = $validated['faculty'];
+            $user->study_program = $validated['study_program'];
+        }
+
         if (empty($user->gender)) {
             $user->gender = $validated['gender'];
         }
 
+        // 4. SET FLAG SELESAI DISINI
         $user->is_profile_complete = true;
         $user->save();
 
-        return redirect()->route('dashboard')->with('success', 'Selamat datang! Profil Anda sudah lengkap.');
+        return redirect()->route('dashboard')->with('success', 'Profil Anda telah dilengkapi!');
     }
 }

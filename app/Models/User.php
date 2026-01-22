@@ -51,30 +51,32 @@ class User extends Authenticatable implements FilamentUser, LdapAuthenticatable
 
     /**
      * Cek apakah user perlu melengkapi profil
+     * Fungsi ini sekarang HANYA membaca data, tidak mengubah database.
      */
     public function needsProfileCompletion(): bool
     {
-        // Jika flag manual sudah true, berarti sudah oke
+        // Jika di database sudah ditandai lengkap, maka tidak perlu (false)
         if ($this->is_profile_complete) {
             return false;
         }
 
-        // Cek Data Wajib UNTUK SEMUA USER
-        // Phone wajib (tapi bisa jadi null dari LDAP, maka harus diisi user)
-        if (empty($this->phone)) {
-            return true;
+        // Cek apakah nomor telepon kosong?
+        // Gunakan trim() untuk memastikan tidak hanya berisi spasi
+        if (empty(trim($this->phone))) {
+            return true; // Perlu melengkapi
         }
 
         // Khusus Mahasiswa wajib punya Fakultas & Prodi
         if ($this->role === 'mahasiswa') {
-            if (empty($this->faculty) || empty($this->study_program)) {
-                return true;
+            if (empty(trim($this->faculty)) || empty(trim($this->study_program))) {
+                return true; // Perlu melengkapi
             }
         }
 
-        $this->update(['is_profile_complete' => true]);
-
-        return false;
+        // Jika semua data di atas sudah ada tapi is_profile_complete masih false,
+        // biarkan sistem mengarahkan ke halaman pelengkap profil satu kali lagi
+        // sampai user menekan tombol 'Simpan' di form.
+        return true;
     }
 
     /**

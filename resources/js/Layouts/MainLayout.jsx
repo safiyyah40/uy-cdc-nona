@@ -265,11 +265,32 @@ export default function MainLayout({ children }) {
                                     </span>
                                 </button>
                                 {isNotifOpen && (
-                                    <div className="absolute top-full right-0 mt-2 sm:mt-4 w-64 sm:w-72 md:w-80 bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden z-50">
-                                        <div className="px-4 sm:px-5 py-2.5 sm:py-3 bg-cdc-green-dark text-white font-bold text-sm sm:text-base text-center">NOTIFIKASI</div>
-                                        <div className="max-h-60 overflow-y-auto">
-                                            <div className="px-4 sm:px-5 py-3 sm:py-4 text-center text-xs sm:text-sm text-gray-500">Belum ada notifikasi baru</div>
+                                    <div className="absolute top-full right-0 mt-2 sm:mt-4 w-64 sm:w-72 md:w-80 bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 overflow-hidden z-50 animate-in fade-in zoom-in duration-200">
+                                        {/* Header Notifikasi */}
+                                        <div className="px-4 sm:px-5 py-2.5 sm:py-3 bg-cdc-green-dark text-white font-bold text-sm sm:text-base text-center tracking-wider">
+                                            NOTIFIKASI
                                         </div>
+
+                                        {/* Content - Under Development State */}
+                                        <div className="p-6 sm:p-8 flex flex-col items-center justify-center text-center">
+                                            {/* Icon Visual Tambahan (Opsional: menggunakan SVG megaphone sederhana) */}
+                                            <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mb-4">
+                                                <svg className="w-6 h-6 text-cdc-green-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                                                </svg>
+                                            </div>
+
+                                            <h4 className="text-gray-800 font-bold text-sm sm:text-base mb-1">
+                                                Segera Hadir!
+                                            </h4>
+                                            <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">
+                                                Fitur notifikasi sedang dalam tahap pengembangan. <br />
+                                                <span className="font-semibold text-cdc-green-dark">Pantau terus, ya!</span>
+                                            </p>
+                                        </div>
+
+                                        {/* Footer dekoratif tipis */}
+                                        <div className="h-1 bg-gradient-to-r from-transparent via-cdc-green-dark/20 to-transparent opacity-50"></div>
                                     </div>
                                 )}
                             </div>

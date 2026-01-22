@@ -27,6 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->homeUrl('/')
+            ->favicon(asset('images/logo-cdc-bulet.png'))
             ->navigationItems([
             NavigationItem::make('HALAMAN WEBSITE UTAMA')
                 ->url('/', shouldOpenInNewTab: false)
