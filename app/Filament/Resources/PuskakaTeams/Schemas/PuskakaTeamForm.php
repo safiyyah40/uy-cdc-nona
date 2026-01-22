@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\PuskakaTeam\Schemas;
+namespace App\Filament\Resources\PuskakaTeams\Schemas;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;

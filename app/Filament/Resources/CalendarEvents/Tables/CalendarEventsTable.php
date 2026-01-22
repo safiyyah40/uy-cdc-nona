@@ -11,6 +11,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -47,9 +48,8 @@ class CalendarEventsTable
                     ->limit(30)
                     ->toggleable(),
 
-                IconColumn::make('is_active')
-                    ->label('Aktif')
-                    ->boolean(),
+                ToggleColumn::make('is_active')
+                    ->label('Aktif'),
 
                 IconColumn::make('is_featured')
                     ->label('Featured')

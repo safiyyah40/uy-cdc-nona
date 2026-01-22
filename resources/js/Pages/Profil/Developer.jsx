@@ -10,8 +10,8 @@ import 'swiper/css/pagination';
 import { Users, Code, ArrowRight, Github, Linkedin, Instagram, Mail } from 'lucide-react';
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 
-// KOMPONEN KARTU TIM (Diupdate untuk terima sosmed)
-function PuskakaTeamCard({ name, title, photoUrl, npm, email, linkedin, github, instagram }) {
+// KOMPONEN KARTU TIM
+function DeveloperTeamCard({ name, title, photoUrl, npm, email, linkedin, github, instagram }) {
     const { ref, style } = useScrollFadeIn(0.1);
 
     return (
@@ -57,7 +57,7 @@ function PuskakaTeamCard({ name, title, photoUrl, npm, email, linkedin, github, 
                     </div>
                 </div>
 
-                {/* ICON SOSMED (Ditambahkan dengan styling minimalis) */}
+                {/* ICON SOSMED */}
                 <div className="flex justify-center gap-3 mt-4 pt-3 border-t border-gray-100/50 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
                     {email && <a href={`mailto:${email}`} className="text-gray-400 hover:text-yarsi-green transition-colors hover:scale-110"><Mail size={16} /></a>}
                     {linkedin && <a href={linkedin} target="_blank" className="text-gray-400 hover:text-blue-600 transition-colors hover:scale-110"><Linkedin size={16} /></a>}
@@ -70,15 +70,16 @@ function PuskakaTeamCard({ name, title, photoUrl, npm, email, linkedin, github, 
 }
 
 // Komponen utama (Menerima Props dari Backend)
-export default function Developer({ teamMembers, photos }) {
+export default function Developer({ teamMembers = [], photos = [] }) {
     const heroTitle = useScrollFadeIn(0.2);
     const heroText = useScrollFadeIn(0.3);
     const heroImage = useScrollFadeIn(0.4);
     const teamTitle = useScrollFadeIn(0.2);
     const ctaRef = useScrollFadeIn(0.5);
+    const hasMultiplePhotos = photos && photos.length > 1;
+
 
     const targetUrl = '/';
-
     // Gunakan props dari database, atau array kosong jika belum ada data
     const memberList = teamMembers || [];
     const photoList = photos || [];
@@ -89,7 +90,7 @@ export default function Developer({ teamMembers, photos }) {
                 <Head title="Tentang Pengembang - Tim NONA" />
 
                 {/* HERO SECTION */}
-                <section className="relative w-full py-14 md:py-20 pt-28 md:pt-40 bg-gradient-to-br from-white to-emerald-50 overflow-hidden">
+                <section className="relative w-full py-14 md:py-20 bg-gradient-to-br from-white to-emerald-50 overflow-hidden">
                     {/* Pattern dan Ornamen Background */}
                     <div className="absolute inset-0 opacity-[0.05]"
                         style={{ backgroundImage: 'radial-gradient(circle, #044732 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
@@ -109,13 +110,12 @@ export default function Developer({ teamMembers, photos }) {
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yarsi-accent opacity-75"></span>
                                         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yarsi-accent"></span>
                                     </span>
-                                    Pengembang Aplikasi Multi Platform
+                                    Pengembang Website CDC - UY
                                 </div>
 
                                 <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 font-kaisei mb-6 leading-tight">
-                                    Kami Adalah Tim <br />
-                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-yarsi-green to-yarsi-accent">
-                                        NONA
+                                    Tim
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-yarsi-green to-yarsi-accent"> NONA
                                     </span>
                                 </h1>
 
@@ -145,7 +145,6 @@ export default function Developer({ teamMembers, photos }) {
                             </div>
 
                             <div className="lg:w-1/2 relative w-full" ref={heroImage.ref} style={heroImage.style}>
-                                {/* Swiper Slider dengan Data Dinamis */}
                                 <Swiper
                                     modules={[Navigation, Pagination, Mousewheel, Autoplay, Parallax, A11y]}
                                     spaceBetween={0}
@@ -159,11 +158,13 @@ export default function Developer({ teamMembers, photos }) {
                                     }}
                                     mousewheel={true}
                                     grabCursor={true}
+                                    // PROTEKSI: Loop hanya aktif jika data lebih dari 1
                                     loop={photoList.length > 1}
-                                    autoplay={{
+                                    // PROTEKSI: Autoplay dimatikan jika data hanya 1 agar tidak terjadi error render
+                                    autoplay={photoList.length > 1 ? {
                                         delay: 5000,
                                         disableOnInteraction: false,
-                                    }}
+                                    } : false}
                                     className="aspect-[4/3] relative rounded-[2rem] overflow-hidden border-4 border-white/80 ring-1 ring-gray-100/50 transform rotate-1 hover:rotate-0 transition-all duration-700 ease-out shadow-xl shadow-emerald-900/20 group aesthetic-pagination"
                                 >
                                     <div slot="container-start" className="parallax-bg absolute inset-0 bg-cover bg-center" data-swiper-parallax="-23%"></div>
@@ -232,7 +233,7 @@ export default function Developer({ teamMembers, photos }) {
                         {memberList && memberList.length > 0 ? (
                             <div className="flex flex-wrap justify-center gap-8 max-w-screen-xl mx-auto">
                                 {memberList.map((member) => (
-                                    <PuskakaTeamCard
+                                    <DeveloperTeamCard
                                         key={member.id}
                                         name={member.name}
                                         title={member.title}

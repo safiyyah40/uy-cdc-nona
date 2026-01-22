@@ -3,10 +3,11 @@
 namespace App\Filament\Resources\Developers\Tables;
 
 use Filament\Actions\DeleteAction;
-use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class DevelopersTable
@@ -27,6 +28,8 @@ class DevelopersTable
                 TextColumn::make('title')
                     ->sortable()
                     ->label('Posisi'),
+                ToggleColumn::make('is_active')
+                    ->label('Aktif'),
             ])
             ->filters([])
             ->actions([

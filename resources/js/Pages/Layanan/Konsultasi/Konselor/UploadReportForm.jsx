@@ -58,8 +58,8 @@ const UploadReportForm = ({ booking }) => {
         e.preventDefault();
         
         // Validasi Feedback wajib
-        if (!data.feedback || data.feedback.trim().length < 50) {
-            alert('Feedback minimal 50 karakter');
+        if (!data.feedback || data.feedback.trim().length < 20) {
+            alert('Feedback minimal 20 karakter');
             return;
         }
 
@@ -130,7 +130,7 @@ const UploadReportForm = ({ booking }) => {
                                     Feedback Sesi <span className="text-red-500">*</span>
                                 </label>
                                 <p className="text-sm text-gray-500 mb-3">
-                                    Tuliskan rangkuman sesi, poin-poin penting yang dibahas, dan hasil konseling (minimal 50 karakter)
+                                    Tuliskan rangkuman sesi, poin-poin penting yang dibahas, dan hasil konseling (minimal 20 karakter)
                                 </p>
                                 <textarea
                                     value={data.feedback}
@@ -270,7 +270,7 @@ const UploadReportForm = ({ booking }) => {
                                 </Link>
                                 <button
                                     type="submit"
-                                    disabled={processing || !data.feedback || data.feedback.length < 50}
+                                    disabled={processing || !data.feedback || data.feedback.length < 20}
                                     className="px-8 py-3 text-base bg-[#004d40] text-white rounded-xl hover:bg-emerald-700 font-bold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                                 >
                                     {processing ? (

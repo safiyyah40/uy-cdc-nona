@@ -21,7 +21,8 @@ class KonsultasiController extends Controller
     {
         $user = Auth::user();
         if ($user && $user->role === 'konselor') {
-            return redirect()->route('konselor.dashboard');
+            return redirect()->route('konselor.dashboard')
+                ->with('info', 'Anda telah dialihkan ke dashboard konselor.');
         }
 
         $counselors = Counselor::with(['slots' => function ($query) {
@@ -39,14 +40,11 @@ class KonsultasiController extends Controller
                     'title' => $counselor->title,
                     'photo_url' => $counselor->photo_url,
                     'slots' => $counselor->slots->map(function ($slot) {
-                        // FORMAT YANG LEBIH JELAS
                         $date = Carbon::parse($slot->date);
 
                         return [
                             'id' => $slot->id,
-                            // Format: "Jumat, 12 Des" atau "Jumat, 12 Desember"
                             'date_string' => $date->locale('id')->isoFormat('dddd, D MMMM'),
-                            // Format: "18:00 - 19:00"
                             'time_string' => substr($slot->start_time, 0, 5).' - '.substr($slot->end_time, 0, 5),
                             'raw_date' => $slot->date,
                             'raw_time' => $slot->start_time,
@@ -68,9 +66,16 @@ class KonsultasiController extends Controller
     {
         $user = Auth::user();
 
-        // Cek Role
+        // Proteksi Konselor
         if ($user && $user->role === 'konselor') {
-            return redirect()->route('konselor.dashboard');
+            return redirect()->route('konselor.dashboard')
+                ->with('info', 'Anda tidak dapat membuat booking sebagai konselor.');
+        }
+
+        // Proteksi Dosen/Staf
+        if ($user && $user->role === 'dosen_staf') {
+            return redirect()->route('layanan.konsultasi')
+                ->with('error', 'Anda tidak memiliki akses untuk membuat booking konsultasi. Fitur ini hanya untuk mahasiswa.');
         }
 
         // VALIDASI: Jika tidak ada slot_id di URL, kembalikan ke halaman index
@@ -84,7 +89,7 @@ class KonsultasiController extends Controller
         // Ambil data slot
         $slot = CounselorSlot::with('counselor')->find($slotId);
 
-        $isJustBooked = session('success'); // Cek flash message
+        $isJustBooked = session('success');
 
         if (! $isJustBooked) {
             if (! $slot || ! $slot->is_available) {
@@ -95,7 +100,6 @@ class KonsultasiController extends Controller
 
         return Inertia::render('Layanan/Konsultasi/Mahasiswa/BookingForm', [
             'counselor_id' => $slot->counselor_id,
-
             'counselor_name' => $slot->counselor->name,
             'slot_date' => Carbon::parse($slot->date)->locale('id')->isoFormat('dddd, D MMMM YYYY'),
             'slot_time' => substr($slot->start_time, 0, 5),
@@ -104,17 +108,28 @@ class KonsultasiController extends Controller
         ]);
     }
 
-    // App/Http/Controllers/KonsultasiController.php
-
+    /**
+     * TABEL LIST KONSULTASI USER
+     */
     public function userList(Request $request)
     {
         $user = Auth::user();
 
-        // 1. Query Dasar
+        // Proteksi Konselor
+        if ($user && $user->role === 'konselor') {
+            return redirect()->route('konselor.table_konsultasi')
+                ->with('info', 'Silakan gunakan dashboard konselor untuk melihat daftar konsultasi.');
+        }
+
+        // Proteksi Dosen/Staf
+        if ($user && $user->role === 'dosen_staf') {
+            return redirect()->route('dashboard')
+                ->with('error', 'Anda tidak memiliki akses ke riwayat konsultasi mahasiswa.');
+        }
         $query = CounselingBooking::where('user_id', $user->id)
             ->with(['counselor', 'slot']);
 
-        // 2. Filter Search (Topik atau Nama Konselor)
+        // Filter Search (Topik atau Nama Konselor)
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -123,12 +138,12 @@ class KonsultasiController extends Controller
             });
         }
 
-        // 3. Filter Status
+        // Filter Status
         if ($request->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
 
-        // 4. Sorting & Pagination
+        // Sorting & Pagination
         // Menggunakan through() untuk mapping data setelah pagination
         $bookings = $query->orderBy('created_at', 'desc')
             ->paginate(10) // 10 data per halaman
@@ -166,6 +181,15 @@ class KonsultasiController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
+
+        // Double check role
+        if ($user->role === 'dosen_staf') {
+            return back()->withErrors(['error' => 'Anda tidak memiliki akses untuk membuat booking konsultasi.']);
+        }
+
+        if ($user->role === 'konselor') {
+            return back()->withErrors(['error' => 'Konselor tidak dapat membuat booking untuk diri sendiri.']);
+        }
         $validated = $request->validate([
             'counselor_id' => 'required|exists:counselors,id',
             'slot_id' => 'required|exists:counselor_slots,id',
@@ -182,7 +206,7 @@ class KonsultasiController extends Controller
                     ->lockForUpdate()
                     ->first();
 
-                // 2. CEK KETERSEDIAAN LAGI (Double Check)
+                // CEK KETERSEDIAAN LAGI (Double Check)
                 if (! $slot || ! $slot->is_available) {
                     // Lempar error agar ditangkap catch block
                     throw new \Exception('Mohon maaf, jadwal ini baru saja diambil oleh mahasiswa lain.');
@@ -232,6 +256,10 @@ class KonsultasiController extends Controller
     public function show($id)
     {
         $user = Auth::user();
+        if ($user && $user->role === 'dosen_staf') {
+            return redirect()->route('dashboard')
+                ->with('error', 'Anda tidak memiliki akses ke detail konsultasi.');
+        }
 
         // Cari booking milik user yang sedang login
         $booking = CounselingBooking::where('user_id', $user->id)
@@ -279,30 +307,37 @@ class KonsultasiController extends Controller
                 'date_formatted' => Carbon::parse($booking->scheduled_date)->locale('id')->isoFormat('dddd, D MMMM YYYY'),
                 'time_formatted' => $timeString,
                 'date_only' => Carbon::parse($booking->scheduled_date)->locale('id')->isoFormat('dddd, D MMMM YYYY'),
-                    'time_range' => "$startTime - $endTime",
+                'time_range' => "$startTime - $endTime",
                 'submitted_at' => $booking->created_at
-                        ->timezone('Asia/Jakarta')
-                        ->locale('id')
-                        ->isoFormat('dddd, D MMMM YYYY [pukul] HH:mm [WIB]'),
+                    ->timezone('Asia/Jakarta')
+                    ->locale('id')
+                    ->isoFormat('dddd, D MMMM YYYY [pukul] HH:mm [WIB]'),
                 'created_at' => $booking->created_at
-                    ->timezone('Asia/Jakarta') // Tambahkan ini
+                    ->timezone('Asia/Jakarta')
                     ->locale('id')
                     ->isoFormat('D MMMM YYYY [pukul] HH:mm [WIB]'),
-                'notes' => $booking->notes, // Keluhan awal mahasiswa
-                'rejection_reason' => $booking->rejection_reason, // Alasan tolak
-                'report' => $reportData, // Hasil laporan konselor
+                'notes' => $booking->notes,
+                'rejection_reason' => $booking->rejection_reason,
+                'report' => $reportData,
             ],
         ]);
     }
 
     public function redirectLogin()
     {
-        session()->put('url.intended', route('layanan.konsultasi') . '#list-konselor');
+        session()->put('url.intended', route('layanan.konsultasi').'#list-konselor');
+
         return redirect()->route('login');
     }
 
     public function cancel($id)
     {
+        $user = Auth::user();
+
+        // Proteksi Dosen/Staf
+        if ($user->role === 'dosen_staf') {
+            return back()->withErrors(['error' => 'Anda tidak memiliki akses untuk membatalkan booking.']);
+        }
         $booking = CounselingBooking::where('user_id', Auth::id())->findOrFail($id);
         $booking->update(['status' => 'cancelled']);
         if ($booking->slot) {

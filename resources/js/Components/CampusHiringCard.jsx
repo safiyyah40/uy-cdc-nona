@@ -9,7 +9,7 @@ const CampusHiringCard = ({ latestCampusHiring = [] }) => {
     const DEFAULT_IMAGE = '/images/campushiring.jpg'; 
 
     return (
-        <section id="campus-hiring-section" className="py-20 bg-white relative overflow-hidden">
+        <section id="campus-hiring-section" className=" rounded-2xl h-full relative overflow-hidden">
              {/* Background Decor */}
              <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute top-[10%] left-[-5%] w-[300px] h-[300px] bg-green-50 rounded-full blur-[80px] opacity-40"></div>

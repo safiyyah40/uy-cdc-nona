@@ -25,9 +25,9 @@ class DeveloperDocResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-     protected static string|UnitEnum|null $navigationGroup = 'Manajemen Halaman Profil';
+    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Halaman Profil';
 
-     protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 5;
 
     public static function getModelLabel(): string
     {

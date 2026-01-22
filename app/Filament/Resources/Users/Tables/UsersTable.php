@@ -3,14 +3,14 @@
 namespace App\Filament\Resources\Users\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Actions\DeleteAction;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 
 class UsersTable
 {
@@ -56,7 +56,7 @@ class UsersTable
                 TextColumn::make('faculty')
                     ->label('Fakultas')
                     ->searchable()
-                    ->placeholder('-') // Jika Dosen/Staf kosong, akan tampil strip
+                    ->placeholder('-')
                     ->toggleable(),
 
                 IconColumn::make('is_profile_complete')
@@ -83,11 +83,16 @@ class UsersTable
             ])
             ->actions([
                 EditAction::make(),
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->hidden(fn ($record) => $record->username === 'admin.puskaka'),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->action(function (Collection $records) {
+                            $records->filter(fn ($user) => $user->username !== 'admin.puskaka')
+                                ->each->delete();
+                        }),
                 ]),
             ]);
     }

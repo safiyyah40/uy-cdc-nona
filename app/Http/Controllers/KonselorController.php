@@ -16,75 +16,99 @@ use Inertia\Inertia;
 class KonselorController extends Controller
 {
     /**
-     * DASHBOARD KONSELOR: INPUT JADWAL
+     * Helper method untuk validasi akses konselor
+     * Digunakan di semua method untuk konsistensi
      */
-    public function index()
-{
-    $user = Auth::user();
+    private function validateKonselorAccess()
+    {
+        $user = Auth::user();
+        if (!$user) return redirect()->route('login');
 
-    // DEBUG: Cek user
-    if (!$user) {
-        return redirect()->route('login');
+        if ($user->role === 'dosen_staf') {
+            return redirect()->route('dashboard')->with('error', 'Akses ditolak. Anda adalah Dosen/Staf.');
+        }
+
+        if ($user->role === 'mahasiswa' || $user->role === null) {
+            return redirect()->route('layanan.konsultasi');
+        }
+
+        $isVerified = Counselor::where('user_id', $user->id)->exists();
+        if ($user->role === 'konselor' && !$isVerified) {
+            return redirect()->route('dashboard')->with('error', 'Profil Konselor belum terverifikasi.');
+        }
+
+        return null;
     }
 
-    $counselor = Counselor::where('user_id', $user->id)
-        ->with(['slots' => function ($query) {
-            $query->where('is_available', true)
-                ->where('date', '>=', now()->toDateString())
-                ->orderBy('date', 'asc')
-                ->orderBy('start_time', 'asc');
-        }])
-        ->first();
+    /**
+     * DASHBOARD KONSELOR
+     * Menampilkan profil dan daftar jadwal aktif.
+     */
+    public function index()
+    {
+        $redirectResponse = $this->validateKonselorAccess();
+        if ($redirectResponse) return $redirectResponse;
 
-    if (!$counselor) {
-        $counselor = Counselor::where('email', $user->email)
+        $user = Auth::user();
+        $now = Carbon::now('Asia/Jakarta');
+
+        // --- FITUR: AUTO-CLEANUP JADWAL KADALUWARSA ---
+        // Menghapus slot yang jamnya sudah lewat dan tidak ada yang booking
+        CounselorSlot::where('is_available', true)
+            ->where(function($query) use ($now) {
+                $query->where('date', '<', $now->toDateString())
+                      ->orWhere(function($q) use ($now) {
+                          $q->where('date', $now->toDateString())
+                            ->where('start_time', '<', $now->toTimeString());
+                      });
+            })->delete();
+
+        // Ambil data konselor
+        $counselor = Counselor::where('user_id', $user->id)
             ->with(['slots' => function ($query) {
                 $query->where('is_available', true)
                     ->where('date', '>=', now()->toDateString())
                     ->orderBy('date', 'asc')
                     ->orderBy('start_time', 'asc');
-            }])
-            ->first();
+            }])->first();
+
+        // Fallback jika pencarian via user_id gagal (backup via email)
+        if (!$counselor) {
+            $counselor = Counselor::where('email', $user->email)->first();
+        }
+
+        $counselorData = null;
+        if ($counselor) {
+            $counselorData = [
+                'id' => $counselor->id,
+                'name' => $counselor->name,
+                'title' => $counselor->title,
+                'photo_url' => $counselor->photo_url,
+                'slots' => $counselor->slots->map(function ($slot) {
+                    return [
+                        'id' => $slot->id,
+                        'date_string' => Carbon::parse($slot->date)->locale('id')->isoFormat('dddd, D MMM YYYY'),
+                        'time_string' => substr($slot->start_time, 0, 5).' - '.substr($slot->end_time, 0, 5),
+                    ];
+                }),
+            ];
+        }
+
+        return Inertia::render('Layanan/Konsultasi/Konselor/KonsultasiKonselor', [
+            'user' => $user,
+            'counselor' => $counselorData,
+        ]);
     }
-
-    // DEBUG LOG
-    Log::info('Konselor Index Debug', [
-        'user_id' => $user->id,
-        'user_email' => $user->email,
-        'counselor_found' => $counselor ? 'YES' : 'NO',
-        'counselor_id' => $counselor ? $counselor->id : null,
-        'slots_count' => $counselor ? $counselor->slots->count() : 0
-    ]);
-
-    // Format data untuk dashboard
-    $counselorData = null;
-    if ($counselor) {
-        $counselorData = [
-            'id' => $counselor->id,
-            'name' => $counselor->name,
-            'title' => $counselor->title,
-            'photo_url' => $counselor->photo_url,
-            'slots' => $counselor->slots->map(function ($slot) {
-                return [
-                    'id' => $slot->id,
-                    'date_string' => \Carbon\Carbon::parse($slot->date)->locale('id')->isoFormat('dddd, D MMM YYYY'),
-                    'time_string' => substr($slot->start_time, 0, 5) . ' - ' . substr($slot->end_time, 0, 5),
-                ];
-            }),
-        ];
-    }
-
-    return Inertia::render('Layanan/Konsultasi/Konselor/KonsultasiKonselor', [
-        'user' => $user,
-        'counselor' => $counselorData,
-    ]);
-}
-
     /**
      * TABEL BOOKING
      */
     public function tableKonsultasi(Request $request)
     {
+        $redirectResponse = $this->validateKonselorAccess();
+        if ($redirectResponse) {
+            return $redirectResponse;
+        }
+
         $user = Auth::user();
 
         $counselor = Counselor::where('email', $user->email)
@@ -93,7 +117,7 @@ class KonselorController extends Controller
 
         if (! $counselor) {
             return redirect()->route('dashboard')
-                ->with('error', 'Data konselor tidak ditemukan.');
+                ->with('error', 'Data konselor tidak ditemukan. Hubungi admin.');
         }
 
         // Query Dasar
@@ -105,7 +129,7 @@ class KonselorController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('student_name', 'like', "%{$search}%")
-                  ->orWhere('topic', 'like', "%{$search}%");
+                    ->orWhere('topic', 'like', "%{$search}%");
             });
         }
 
@@ -124,7 +148,7 @@ class KonselorController extends Controller
         } else {
             // Default Sorting: Prioritas Status -> Waktu Terdekat
             $query->orderByRaw("FIELD(status, 'pending', 'accepted', 'completed', 'rejected', 'cancelled')")
-                  ->orderBy('scheduled_date', 'asc');
+                ->orderBy('scheduled_date', 'asc');
         }
 
         // PAGINATION
@@ -137,7 +161,7 @@ class KonselorController extends Controller
                 'user_name' => $booking->student_name,
                 'topic' => $booking->topic,
                 'date' => Carbon::parse($booking->scheduled_date)->locale('id')->isoFormat('dddd, D MMM YYYY'),
-                'time' => substr($booking->scheduled_time, 0, 5) . ' WIB',
+                'time' => substr($booking->scheduled_time, 0, 5).' WIB',
                 'status' => $booking->status,
                 'created_at' => $booking->created_at->diffForHumans(),
             ];
@@ -164,15 +188,22 @@ class KonselorController extends Controller
             'stats' => $stats,
         ]);
     }
+
     /**
      * DETAIL BOOKING
      */
     public function show($id)
     {
+        $redirectResponse = $this->validateKonselorAccess();
+        if ($redirectResponse) {
+            return $redirectResponse;
+        }
+
         $user = Auth::user();
         $counselor = Counselor::where('email', $user->email)->orWhere('name', $user->name)->first();
+
         if (! $counselor) {
-            abort(403);
+            abort(403, 'Data konselor tidak ditemukan');
         }
 
         $consultation = CounselingBooking::where('counselor_id', $counselor->id)
@@ -236,6 +267,11 @@ class KonselorController extends Controller
      */
     public function approve($id)
     {
+        $redirectResponse = $this->validateKonselorAccess();
+        if ($redirectResponse) {
+            return $redirectResponse;
+        }
+
         $user = Auth::user();
         $counselor = Counselor::where('email', $user->email)
             ->orWhere('name', $user->name)
@@ -284,6 +320,11 @@ class KonselorController extends Controller
 
     public function reject(Request $request, $id)
     {
+        $redirectResponse = $this->validateKonselorAccess();
+        if ($redirectResponse) {
+            return $redirectResponse;
+        }
+
         $user = Auth::user();
         $counselor = Counselor::where('email', $user->email)
             ->orWhere('name', $user->name)
@@ -334,6 +375,11 @@ class KonselorController extends Controller
 
     public function showReportForm($bookingId)
     {
+        $redirectResponse = $this->validateKonselorAccess();
+        if ($redirectResponse) {
+            return $redirectResponse;
+        }
+
         $user = Auth::user();
         $counselor = Counselor::where('email', $user->email)
             ->orWhere('name', $user->name)
@@ -362,8 +408,13 @@ class KonselorController extends Controller
 
     public function storeReport(Request $request, $bookingId)
     {
+        $redirectResponse = $this->validateKonselorAccess();
+        if ($redirectResponse) {
+            return $redirectResponse;
+        }
+
         $request->validate([
-            'feedback' => 'required|string|min:50',
+            'feedback' => 'required|string|min:20',
             'action_plan' => 'nullable|string',
             'recommendations' => 'nullable|string',
             'session_duration' => 'required|integer|min:15',
@@ -421,20 +472,29 @@ class KonselorController extends Controller
     /**
      * MANAJEMEN SLOT
      */
-    public function storeSlot(Request $request)
+   public function storeSlot(Request $request)
     {
+        $redirectResponse = $this->validateKonselorAccess();
+        if ($redirectResponse) return $redirectResponse;
+
         $request->validate([
             'date' => 'required|date|after_or_equal:today',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
         ]);
 
-        $user = Auth::user();
-        $counselor = Counselor::where('email', $user->email)
-            ->orWhere('name', $user->name)
-            ->first();
+        // Proteksi Waktu Real-Time (Mencegah input jam yang sudah lewat di hari yang sama)
+        $inputDateTime = Carbon::parse($request->date . ' ' . $request->start_time, 'Asia/Jakarta');
+        $now = Carbon::now('Asia/Jakarta');
 
-        if (! $counselor) {
+        if ($inputDateTime->isPast()) {
+            return back()->withErrors(['date' => 'Anda tidak bisa membuat jadwal di waktu yang sudah lewat.']);
+        }
+
+        $user = Auth::user();
+        $counselor = Counselor::where('user_id', $user->id)->first();
+
+        if (!$counselor) {
             return back()->withErrors(['error' => 'Profil konselor tidak ditemukan.']);
         }
 
@@ -450,41 +510,29 @@ class KonselorController extends Controller
             return back()->with('success', 'Jadwal berhasil ditambahkan!');
         } catch (\Exception $e) {
             Log::error('Store Slot Error: '.$e->getMessage());
-
-            return back()->withErrors(['error' => 'Gagal menambah jadwal.']);
+            return back()->withErrors(['error' => 'Terjadi kesalahan sistem saat menyimpan.']);
         }
     }
 
     public function deleteSlot($slotId)
     {
-        $user = Auth::user();
-        $counselor = Counselor::where('email', $user->email)
-            ->orWhere('name', $user->name)
-            ->first();
+        $redirectResponse = $this->validateKonselorAccess();
+        if ($redirectResponse) return $redirectResponse;
 
-        if (! $counselor) {
-            abort(403);
-        }
+        $slot = CounselorSlot::findOrFail($slotId);
 
-        $slot = CounselorSlot::where('id', $slotId)
-            ->where('counselor_id', $counselor->id)
-            ->first();
-
-        if (! $slot) {
-            return back()->withErrors(['error' => 'Slot tidak ditemukan.']);
-        }
-
+        // Proteksi: Jangan hapus jika sudah ada booking
         $hasBooking = CounselingBooking::where('slot_id', $slot->id)
             ->whereIn('status', ['pending', 'accepted'])
             ->exists();
 
         if ($hasBooking) {
-            return back()->withErrors(['error' => 'Slot sudah ada booking.']);
+            return back()->withErrors(['error' => 'Jadwal ini sudah dibooking mahasiswa dan tidak dapat dihapus.']);
         }
 
         $slot->delete();
-
         return back()->with('success', 'Slot berhasil dihapus.');
+    
     }
 
     /**
@@ -504,6 +552,11 @@ class KonselorController extends Controller
      */
     public function updateSlot(Request $request, $slotId)
     {
+        $redirectResponse = $this->validateKonselorAccess();
+        if ($redirectResponse) {
+            return $redirectResponse;
+        }
+
         // Validasi Input
         $request->validate([
             'date' => 'required|date|after_or_equal:today',

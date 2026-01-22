@@ -57,7 +57,6 @@ class CampusHiringSeeder extends Seeder
                 <p><strong>Lokasi Kerja:</strong> Posisi ini berbasis di Jakarta.</p>
                 <p>Kami menawarkan kondisi kerja yang sangat baik, gaji kompetitif sesuai pengalaman, dan tunjangan sosial yang menarik dalam lingkungan internasional yang dinamis.</p>
             ',
-                'image' => 'images/campushiring.jpg',
                 'registration_link' => 'https://www.eda.admin.ch/jakarta',
                 'is_active' => true,
             ],

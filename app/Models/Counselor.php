@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Counselor extends Model
 {
@@ -36,20 +36,17 @@ class Counselor extends Model
 
     protected static function booted()
     {
-        // Saat Konselor DIBUAT (Create)
-        static::created(function ($counselor) {
-            if ($counselor->user_id) {
-                // Ubah role user tersebut menjadi 'konselor'
-                $counselor->user->update(['role' => 'konselor']);
-            }
-        });
-
-        // Saat Konselor DIHAPUS (Delete)
-        static::deleted(function ($counselor) {
-            if ($counselor->user_id) {
-                // Balikkan role user tersebut menjadi 'dosen_staf'
-                $counselor->user->update(['role' => 'dosen_staf']);
-            }
+        // Setiap kali model Counselor diakses, hapus slot yang sudah lewat dan tidak laku
+        static::retrieved(function ($counselor) {
+            $counselor->slots()
+                ->where('is_available', true)
+                ->where(function ($q) {
+                    $q->where('date', '<', now()->toDateString())
+                        ->orWhere(function ($sub) {
+                            $sub->where('date', now()->toDateString())
+                                ->where('start_time', '<', now()->toTimeString());
+                        });
+                })->delete(); // Slot "sampah" langsung hilang dari database
         });
     }
 
@@ -60,8 +57,22 @@ class Counselor extends Model
 
     public function slots(): HasMany
     {
-        return $this->hasMany(CounselorSlot::class, 'counselor_id');
+        return $this->hasMany(CounselorSlot::class)
+            ->where(function ($query) {
+                // Tampilkan slot jika:
+                // Waktunya belum lewat (Masa Depan)
+                $query->where('date', '>', now()->toDateString())
+                    ->orWhere(function ($sub) {
+                        $sub->where('date', now()->toDateString())
+                            ->where('start_time', '>=', now()->toTimeString());
+                    })
+                    //atau sudah ada yang booking (Meskipun sudah lewat, tetap muncul agar bisa diedit admin)
+                    ->orWhere('is_available', false);
+            })
+            ->orderBy('date', 'asc')
+            ->orderBy('start_time', 'asc');
     }
+
     public function bookings()
     {
         return $this->hasMany(CounselingBooking::class);

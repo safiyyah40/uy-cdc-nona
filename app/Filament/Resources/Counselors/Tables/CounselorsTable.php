@@ -48,7 +48,7 @@ class CounselorsTable
                     ->color('info'),
 
                 ToggleColumn::make('is_active')
-                    ->label('Tampil'),
+                    ->label('Aktif'),
             ])
             ->actions([
                 ViewAction::make(),

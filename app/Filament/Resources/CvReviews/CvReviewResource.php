@@ -32,12 +32,12 @@ class CvReviewResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Permohonan CV Review';
+        return 'Permohonan Tinjau CV';
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'CV Review';
+        return 'Tinjau CV';
     }
 
     public static function form(Schema $schema): Schema

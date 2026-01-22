@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Counselor;
 use Illuminate\Http\Request;
+use App\Models\CounselorSlide;
 use Inertia\Inertia;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -61,6 +62,9 @@ class ProfilKonselorController extends Controller
 
         return Inertia::render('Profil/ProfilKonselor', [
             'counselors' => $counselors,
+            'slides' => CounselorSlide::where('is_active', true)
+                ->orderBy('sort_order', 'asc')
+                ->get(),
             'auth' => ['user' => Auth::user()],
         ]);
     }

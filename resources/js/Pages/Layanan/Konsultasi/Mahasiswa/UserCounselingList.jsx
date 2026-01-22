@@ -3,8 +3,8 @@ import MainLayout from "@/Layouts/MainLayout";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import {
     ChevronLeft, ChevronRight, Clock, Trash2, Eye,
-    Calendar, User, MessageCircle, Search, Filter, X,
-    AlertCircle, CheckCircle, FileText
+    Calendar, User, MessageCircle, Search, Filter, X, ArrowLeft,
+    AlertCircle, CheckCircle,
 } from "lucide-react";
 
 // COMPONENT: STATUS BADGE
@@ -30,7 +30,7 @@ const StatusBadge = ({ status }) => {
 
 // MAIN COMPONENT (Pastikan nama function ini benar) 
 const UserCounselingList = ({ bookings, filters }) => {
-    const { auth, flash } = usePage().props;
+    const { auth, flash, contactInfo } = usePage().props;
     const user = auth.user;
 
     const safeBookings = bookings || { data: [], links: [], from: 0, to: 0, total: 0, current_page: 1, last_page: 1 };
@@ -96,7 +96,7 @@ const UserCounselingList = ({ bookings, filters }) => {
 
     // ACTIONS 
     const handleChatAdmin = (booking) => {
-        const adminPhone = "6281295986204";
+        const adminPhone = contactInfo?.whatsapp_number || "6281295986204";
         const fakultas = user.faculty || '-';
         const prodi = user.study_program || '-';
         const idNumber = user.id_number || '-';
@@ -147,6 +147,7 @@ const UserCounselingList = ({ bookings, filters }) => {
         { value: 'rejected', label: 'Ditolak' },
         { value: 'cancelled', label: 'Dibatalkan' },
     ];
+    const handleKembali = () => router.visit(route('layanan.konsultasi'));
 
     return (
         <MainLayout user={user}>
@@ -154,6 +155,15 @@ const UserCounselingList = ({ bookings, filters }) => {
 
             <div className="bg-gray-50 min-h-screen py-12">
                 <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                        <div className="space-y-3">
+                            <button onClick={handleKembali} className="inline-flex items-center gap-2 text-emerald-800 hover:text-emerald-900 font-bold text-lg transition group">
+                                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition" />
+                                Kembali
+                            </button>
+
+                        </div>
+                    </div>
 
                     {/*  HEADER  */}
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
@@ -306,7 +316,7 @@ const UserCounselingList = ({ bookings, filters }) => {
                                                     <button
                                                         onClick={() => handleChatAdmin(booking)}
                                                         className="flex items-center justify-center w-10 h-10 rounded-xl bg-green-50 text-green-600 hover:bg-green-600 hover:text-white transition-all shadow-sm border border-green-100"
-                                                        title="Tanya Admin via WhatsApp"
+                                                        title="Konfirmasi ke Admin via WhatsApp"
                                                     >
                                                         <MessageCircle className="w-5 h-5" />
                                                     </button>

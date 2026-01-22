@@ -1,6 +1,6 @@
 import React from 'react';
 import MainLayout from "@/Layouts/MainLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import {
     ArrowLeft, User, Calendar, Clock, FileText,
     CheckCircle, XCircle, AlertCircle, Download,
@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 
 const DetailKonsultasi = ({ consultation, auth }) => {
+    const {contactInfo} = usePage().props;
     const user = auth.user;
 
     // Helper Status Badge
@@ -39,7 +40,7 @@ const DetailKonsultasi = ({ consultation, auth }) => {
     };
 
     const handleChatAdmin = (booking) => {
-        const adminPhone = "6281295986204";
+        const adminPhone = contactInfo?.whatsapp_number || "6281295986204";
         const fakultas = user.faculty || '-';
         const prodi = user.study_program || '-';
         const idNumber = user.id_number || '-';

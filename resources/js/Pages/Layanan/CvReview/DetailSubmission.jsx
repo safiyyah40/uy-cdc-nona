@@ -35,11 +35,11 @@ const DataRow = ({ label, value, icon: Icon, highlight = false }) => (
 );
 
 const DetailSubmission = () => {
-    const { reviewData, auth } = usePage().props;
+    const { reviewData, auth, contactInfo } = usePage().props;
     const user = auth.user;
     const isCounselor = user?.role === 'konselor';
     const handleChatAdminCv = (item) => {
-        const adminPhone = "6281295986204";
+        const adminPhone = contactInfo?.whatsapp_number || "6281295986204";
         const messageText =
             `Assalamualaikum Wr. Wb.\n` +
             `Selamat Pagi/Siang Admin PUSKAKA.\n\n` +

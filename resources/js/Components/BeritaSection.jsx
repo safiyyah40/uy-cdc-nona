@@ -57,7 +57,8 @@ const BeritaSection = ({ latestNews = [] }) => {
     const displayNews = latestNews.slice(0, 4);
 
     return (
-        <section className="relative py-20 bg-white overflow-hidden">
+        <section className=" rounded-2xl h-full relative overflow-hidden">
+            
             {/* Dekorasi background berupa bulatan-bulatan blur (pemanis visual) */}
             <div className="absolute top-0 inset-x-0 h-full w-full pointer-events-none overflow-hidden">
                 <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-emerald-50 rounded-full blur-[100px] opacity-60 mix-blend-multiply"></div>

@@ -1,20 +1,49 @@
-import React from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import React, { useState } from 'react';
+import { usePage, router } from '@inertiajs/react';
 import { Calendar, Clock, ArrowRight, UserCheck } from 'lucide-react';
+import CounselorRoleAccessModal from '@/Components/CounselorRoleAccessModal';
 
 /**
  * Komponen Seksi Konsultasi
- * Menampilkan ringkasan layanan konsultasi karir dengan fitur deteksi status login user.
+ * Menampilkan ringkasan layanan konsultasi karir dengan deteksi role user.
  */
 const KonsultasiComp = () => {
     const { auth } = usePage().props;
     const user = auth?.user;
 
+    // 1. State untuk kontrol Modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const buttonLabel = !user
+        ? 'Cek Jadwal Konselor'
+        : (user.role === 'konselor' || user.role === 'dosen_staf')
+            ? 'Dasbor Konsultasi'
+            : 'Reservasi Sesi Sekarang';
+
+    // 2. Logika handle klik
+    const handleMainClick = () => {
+        if (!user) {
+            router.get(route('layanan.konsultasi.auth') + '#list-konselor');
+            return;
+        }
+
+        // Jika Dosen/Staf, panggil Modal Custom
+        if (user.role === 'dosen_staf') {
+            setIsModalOpen(true);
+            return;
+        }
+
+        if (user.role === 'konselor') {
+            router.get(route('konselor.table_konsultasi'));
+            return;
+        }
+
+        router.get(route('layanan.konsultasi'));
+    };
+
     return (
-        <section
-            id="layanan-konsultasi"
-            className="relative pt-20 pb-12 overflow-hidden"
-        >
+        <section id="layanan-konsultasi" className="relative pt-20 pb-12 overflow-hidden">
+            
             {/* Background Decorative Elements */}
             <div className="absolute top-0 inset-x-0 h-full w-full pointer-events-none overflow-hidden">
                 <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-emerald-50 rounded-full blur-[100px] opacity-60 mix-blend-multiply"></div>
@@ -35,7 +64,6 @@ const KonsultasiComp = () => {
                             </span>
                         </h2>
                     </div>
-
                     <p className="text-gray-500 max-w-sm text-base md:text-lg leading-relaxed text-left md:text-right font-medium">
                         Sarana bagi mahasiswa untuk berbagi cerita, mendapatkan arahan, serta menemukan solusi akademik maupun personal.
                     </p>
@@ -70,57 +98,51 @@ const KonsultasiComp = () => {
                                         <UserCheck className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-gray-900 text-lg">
-                                            Konselor Profesional
-                                        </h4>
-                                        <p className="text-gray-500 text-sm">
-                                            Dibimbing langsung oleh para ahli di bidang pengembangan karir dan psikologi.
-                                        </p>
+                                        <h4 className="font-bold text-gray-900 text-lg">Konselor Profesional</h4>
+                                        <p className="text-gray-500 text-sm">Dibimbing oleh ahli pengembangan karir dan psikologi.</p>
                                     </div>
                                 </div>
-
                                 <div className="flex items-start gap-4">
                                     <div className="p-3 bg-emerald-50 rounded-xl text-[#004d40]">
                                         <Calendar className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-gray-900 text-lg">
-                                            Jadwal Fleksibel
-                                        </h4>
-                                        <p className="text-gray-500 text-sm">
-                                            Pilih waktu sesi yang paling sesuai dengan jadwal perkuliahan Anda.
-                                        </p>
+                                        <h4 className="font-bold text-gray-900 text-lg">Jadwal Fleksibel</h4>
+                                        <p className="text-gray-500 text-sm">Pilih waktu sesi yang paling sesuai dengan jadwal kuliah Anda.</p>
                                     </div>
                                 </div>
-
                                 <div className="flex items-start gap-4">
                                     <div className="p-3 bg-emerald-50 rounded-xl text-[#004d40]">
                                         <Clock className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-gray-900 text-lg">
-                                            Sesi Tatap Muka
-                                        </h4>
-                                        <p className="text-gray-500 text-sm">
-                                            Ruang konsultasi yang nyaman untuk mendukung privasi dan kenyamanan diskusi.
-                                        </p>
+                                        <h4 className="font-bold text-gray-900 text-lg">Sesi Tatap Muka</h4>
+                                        <p className="text-gray-500 text-sm">Ruang konsultasi nyaman untuk menjaga privasi diskusi.</p>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="pt-6 border-t border-gray-100">
-                                <Link
-                                    href={route('layanan.konsultasi')}
-                                    className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#004d40] text-white font-bold rounded-xl hover:bg-[#00382e] shadow-lg hover:shadow-[#004d40]/30 transition-all transform hover:-translate-y-1 w-full sm:w-auto"
+                                <button
+                                    onClick={handleMainClick}
+                                    className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#004d40] text-white font-bold rounded-xl hover:bg-[#00382e] shadow-lg transition-all transform hover:-translate-y-1 w-full sm:w-auto"
                                 >
-                                    {user ? 'Reservasi Sesi Sekarang' : 'Cek Jadwal Konselor'}
+                                    {buttonLabel}
                                     <ArrowRight className="w-5 h-5" />
-                                </Link>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* --- PEMANGGILAN KOMPONEN MODAL --- */}
+            <CounselorRoleAccessModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                userName={user?.name} 
+            />
+            
         </section>
     );
 };

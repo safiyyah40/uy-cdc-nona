@@ -94,22 +94,19 @@ class CvReviewForm
                     ])
                     ->columns(2),
 
-                Section::make('Status & Assignment')
+                Section::make('Status & Manajemen Penugasan')
                     ->schema([
                         Select::make('counselor_id')
-                            ->label('Assign ke Konselor')
+                            ->label('Konselor Penanggung Jawab')
                             ->relationship('counselor', 'name')
                             ->searchable()
                             ->preload()
-                            ->reactive()
-                            ->afterStateUpdated(function ($state, callable $set, $get) {
-                                if ($state && $get('status') === 'submitted') {
-                                    $set('status', 'assigned');
-                                }
-                            }),
+                            // KEAMANAN: Jika sudah Selesai/Batal, konselor tidak bisa diganti lagi
+                            ->disabled(fn ($get) => in_array($get('status'), ['completed', 'cancelled']))
+                            ->dehydrated(), // Tetap simpan ke DB meski di-disable
 
                         Select::make('status')
-                            ->label('Status')
+                            ->label('Status Review Saat Ini')
                             ->options([
                                 'submitted' => 'Diajukan',
                                 'assigned' => 'Ditugaskan',
@@ -117,37 +114,44 @@ class CvReviewForm
                                 'completed' => 'Selesai',
                                 'cancelled' => 'Dibatalkan',
                             ])
-                            ->required()
-                            ->native(false),
+                            ->disabled()
+                            ->native(false)
+                            ->dehydrated(),
 
                         Select::make('priority')
+                            ->label('Prioritas')
                             ->options([
                                 'normal' => 'Normal',
                                 'tinggi' => 'Tinggi',
                                 'mendesak' => 'Mendesak',
                             ])
                             ->required()
-                            ->native(false),
+                            ->native(false)
+                            // Prioritas dikunci jika sudah selesai
+                            ->disabled(fn ($get) => $get('status') === 'completed'),
                     ])
                     ->columns(3),
 
-                Section::make('Feedback dari Konselor')
+                Section::make('Hasil Tinjauan (Feedback)')
                     ->schema([
                         Textarea::make('feedback_text')
-                            ->label('Feedback Teks')
+                            ->label('Ulasan/Komentar Konselor')
                             ->rows(5)
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->placeholder('Tuliskan masukan untuk CV mahasiswa di sini...')
+                            ->disabled(fn ($get) => $get('status') === 'completed'),
 
                         FileUpload::make('feedback_files')
-                            ->label('File Feedback')
+                            ->label('Lampiran File Perbaikan (Jika Ada)')
                             ->multiple()
                             ->disk('public')
                             ->directory('cv_feedback')
                             ->maxFiles(5)
-                            ->maxSize(10240)
                             ->columnSpanFull()
-                            ->downloadable(),
+                            ->downloadable()
+                            ->disabled(fn ($get) => $get('status') === 'completed'),
                     ])
+                    // Hanya tampil jika status sudah masuk tahap review atau selesai
                     ->visible(fn ($get) => in_array($get('status'), ['in_review', 'completed']))
                     ->collapsible(),
             ]);

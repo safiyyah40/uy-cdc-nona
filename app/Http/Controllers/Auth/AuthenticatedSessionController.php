@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
-use Filament\Facades\Filament;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -35,21 +34,19 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
-        if (session()->has('url.intended')) {
-        return redirect()->intended();
-    }
-        
-        // Cek apakah user perlu melengkapi profil?
+        // Cek apakah ada URL yang dituju sebelumnya (intended)
+        // filter: jika tujuannya adalah /admin, kita arahkan ke / dulu agar tidak "kaget"
+        if (session()->has('url.intended') && ! str_contains(session('url.intended'), '/admin')) {
+            return redirect()->intended();
+        }
+
+        // Cek kelengkapan profil
         if ($user->needsProfileCompletion()) {
             return redirect()->route('profile.complete');
         }
 
-        if (in_array($user->role, ['admin'])) {
-        return redirect()->intended(Filament::getUrl()); 
-        // Atau manual: return redirect()->intended('/admin');
-    }
-
-       return redirect()->intended(route('dashboard'));
+        // SEMUA USER (termasuk Admin) diarahkan ke Beranda Utama dulu
+        return redirect()->route('dashboard');
     }
 
     /**

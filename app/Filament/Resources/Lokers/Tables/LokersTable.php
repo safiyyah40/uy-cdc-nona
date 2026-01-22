@@ -6,7 +6,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -23,7 +23,7 @@ class LokersTable
                 TextColumn::make('type')->badge()->color('info'),
                 TextColumn::make('work_model')->badge()->color('success'),
                 TextColumn::make('deadline')->date()->sortable(),
-                IconColumn::make('is_active')->boolean(),
+                ToggleColumn::make('is_active')->label('Aktif'),
             ])
             ->filters([
                 SelectFilter::make('type'),

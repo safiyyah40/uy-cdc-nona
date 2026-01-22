@@ -53,6 +53,7 @@ return new class extends Migration
             $table->index('provider_name');
             $table->index('type');
             $table->index('status');
+            $table->boolean('is_active')->default(true);
             $table->index('published_at');
         });
     }

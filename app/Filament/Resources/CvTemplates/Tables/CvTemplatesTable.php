@@ -2,19 +2,20 @@
 
 namespace App\Filament\Resources\CvTemplates\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\BadgeColumn;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Actions\DeleteAction;
-use Filament\Tables\Filters\SelectFilter;
 use App\Models\CvTemplate;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
@@ -60,13 +61,8 @@ class CvTemplatesTable
                     ->trueColor('warning')
                     ->falseColor('gray'),
 
-                IconColumn::make('is_aktif')
-                    ->label('Aktif')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
-                    ->trueColor('success')
-                    ->falseColor('danger'),
+                ToggleColumn::make('is_active')
+                    ->label('Aktif'),
 
                 TextColumn::make('jumlah_view')
                     ->label('Views')
@@ -129,7 +125,7 @@ class CvTemplatesTable
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
-                
+
                 Action::make('lihat_template')
                     ->label('Buka Template')
                     ->icon('heroicon-o-arrow-top-right-on-square')
@@ -140,14 +136,14 @@ class CvTemplatesTable
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
-                    
+
                     BulkAction::make('aktifkan')
                         ->label('Aktifkan')
                         ->icon('heroicon-o-check-circle')
                         ->action(fn ($records) => $records->each->update(['is_aktif' => true]))
                         ->deselectRecordsAfterCompletion()
                         ->requiresConfirmation(),
-                    
+
                     BulkAction::make('nonaktifkan')
                         ->label('Nonaktifkan')
                         ->icon('heroicon-o-x-circle')

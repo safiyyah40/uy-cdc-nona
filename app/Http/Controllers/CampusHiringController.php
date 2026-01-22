@@ -28,10 +28,10 @@ class CampusHiringController extends Controller
             'description' => $program->description,
             'content' => $program->content,
             'imageSrc' => $program->image
-            ? (str_starts_with($program->image, 'http')
-                ? $program->image
-                : asset('storage/'.$program->image))
-            : asset('images/campushiring.jpg'),
+                ? (str_starts_with($program->image, 'http')
+                    ? $program->image
+                    : asset('storage/'.$program->image))
+                : asset('images/campushiring.jpg'),
             'registration_link' => $program->registration_link ?? '#',
         ];
     }
@@ -116,8 +116,8 @@ class CampusHiringController extends Controller
     public function show(Request $request, $id, $slug)
     {
         if (! Auth::check()) {
-           session()->put('url.intended', url()->current());
-            
+            session()->put('url.intended', url()->current());
+
             return redirect()->route('login')->with('message', 'Silakan login untuk melihat detail program.');
         }
 

@@ -12,7 +12,7 @@ const TipsCard = ({ tips = [] }) => {
     if (!tips || tips.length === 0) return null;
 
     return (
-        <section id="tips-section" className="relative py-20 bg-white overflow-hidden">
+        <section id="tips-section" className=" rounded-2xl h-full relative overflow-hidden">
 
             {/* Background Decor - Senada dengan SeminarCard */}
             <div className="absolute top-0 inset-x-0 h-full w-full pointer-events-none overflow-hidden">

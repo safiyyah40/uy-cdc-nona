@@ -1,7 +1,37 @@
+/**
+ * HALAMAN INDEX CV REVIEW 
+ * 
+ * Halaman utama untuk layanan CV Review CDC YARSI.
+ * Mendukung 3 role berbeda: Guest (tamu), Mahasiswa (student), dan Konselor (counselor).
+ * 
+ * ROLE DETECTION & ACCESS CONTROL:
+ * - Guest: Dapat melihat template CV, tapi tidak bisa upload
+ * - Mahasiswa: Dapat upload CV, melihat riwayat, download template
+ * - Konselor: Melihat antrian review CV
+ * - Dosen/Staf: Ditampilkan modal akses terbatas saat klik action button
+ * 
+ * FITUR UTAMA:
+ * 1. Hero Section - Banner dengan CTA berbeda per role
+ * 2. Template Gallery - Grid template CV dengan filter
+ * 3. Features Section - Benefit menggunakan layanan
+ * 4. Modal Protection - Proteksi untuk dosen_staf
+ * 
+ * PROPS DARI CONTROLLER:
+ * - templates: Array - Daftar template CV
+ * - pagination: Object - Data pagination
+ * - filters: Object - Filter yang aktif
+ * - auth.user: Object - Data user yang login
+ * 
+ * @componentG
+ * @author NONA
+ * @lastUpdate 2025-01-21 - Added MahasiswaRoleAccessModal protection
+ */
+
 import React, { useState, useEffect, useRef } from "react";
 import MainLayout from "@/Layouts/MainLayout";
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 import { Head, Link, usePage, router } from "@inertiajs/react";
+import MahasiswaRoleAccessModal from "@/Components/MahasiswaRoleAccessModal";
 import {
     FileText, Check, Zap, UserCheck,
     LayoutDashboard, Briefcase, Lock, Upload,
@@ -11,14 +41,19 @@ import {
 } from "lucide-react";
 
 // TEMPLATE CARD COMPONENT
-const TemplateCard = ({ template, onKlik }) => {
+/**
+ * Card untuk menampilkan template CV
+ * 
+ * @param {Object} template - Data template
+ * @param {Function} onKlik - Handler saat card diklik
+ * @param {Function} handleActionClick - Handler untuk proteksi dosen_staf
+ */
+const TemplateCard = ({ template, onKlik, handleActionClick }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);
 
-    // Placeholder Image
     const placeholderImage = "https://placehold.co/600x800/f1f5f9/94a3b8?text=No+Preview&font=roboto";
 
-    // Helper untuk mendapatkan URL gambar yang valid
     const getImageUrl = () => {
         if (hasError) return placeholderImage;
         const rawUrl = template.preview_url || template.url_preview;
@@ -108,23 +143,46 @@ const TemplateCard = ({ template, onKlik }) => {
     );
 };
 
-// HERO SECTION
-const HeroSection = ({ user, isCounselor, scrollToContent }) => {
+// HERO SECTION COMPONENT
+/**
+ * Hero section dengan CTA berbeda per role
+ * 
+ * @param {Object} user - Data user
+ * @param {Boolean} isCounselor - Flag konselor
+ * @param {Function} scrollToContent - Handler scroll
+ * @param {Function} handleActionClick - Handler proteksi dosen_staf
+ */
+const HeroSection = ({ user, isCounselor, scrollToContent, handleActionClick }) => {
     const heroTitle = useScrollFadeIn(0.2);
 
-    const title = isCounselor ? `HALO, ${user?.name?.toUpperCase() || 'KONSELOR'}!` : "REVIEW CV";
+    const title = isCounselor ? `HALO, ${user?.name?.toUpperCase() || 'KONSELOR'}!` : "TINJAU CV";
     const subtext = isCounselor
         ? "Anda masuk sebagai Konselor. Kelola antrean CV, berikan review mendalam, dan pantau statistik pekerjaan Anda melalui Dashboard ini."
         : "Tingkatkan peluang karirmu dengan CV yang profesional. Gunakan template gratis pilihan kami atau minta review langsung dari konselor ahli.";
 
     const badgeText = isCounselor ? "Manajemen Konselor" : "Persiapan Karir Mahasiswa";
 
-    const handleMainClick = (e) => {
-        if (isCounselor || user) {
-            router.get(route('layanan.tabel.cv.review'));
+    /**
+     * Handler untuk button "Lihat Riwayat Review"
+     * Proteksi untuk dosen_staf
+     */
+    const handleRiwayatClick = (e) => {
+        if (handleActionClick) {
+            handleActionClick(e, () => router.visit(route('layanan.tabel.cv.review')));
         } else {
-            e.preventDefault();
-            scrollToContent();
+            router.visit(route('layanan.tabel.cv.review'));
+        }
+    };
+
+    /**
+     * Handler untuk button "Upload CV Saya"
+     * Proteksi untuk dosen_staf
+     */
+    const handleUploadClick = (e) => {
+        if (handleActionClick) {
+            handleActionClick(e, () => router.visit(route('layanan.cv.review.upload')));
+        } else {
+            router.visit(route('layanan.cv.review.upload'));
         }
     };
 
@@ -148,24 +206,24 @@ const HeroSection = ({ user, isCounselor, scrollToContent }) => {
                             <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight font-serif ${isCounselor ? 'text-[#004d40]' : 'text-gray-900'}`}>
                                 {title}
                             </h1>
-                            <p className="text-lg text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                            <p className="text-lg text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed pt-4">
                                 {subtext}
                             </p>
 
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-8">
                                 {user && !isCounselor && (
                                     <button
-                                        onClick={() => router.visit(route('layanan.cv.review.upload'))}
+                                        onClick={handleUploadClick}
                                         className="px-8 py-4 bg-[#004d40] text-white font-bold rounded-xl hover:bg-[#00382e] shadow-lg shadow-emerald-900/20 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
                                     >
                                         <Upload className="w-5 h-5" />
-                                        Upload CV Saya
+                                        Unggah CV Saya
                                     </button>
                                 )}
 
                                 {user && (
                                     <button
-                                        onClick={handleMainClick}
+                                        onClick={handleRiwayatClick}
                                         className={`px-8 py-4 font-bold rounded-xl transition-all flex items-center justify-center gap-2
                                             ${isCounselor
                                                 ? "bg-[#004d40] text-white hover:bg-[#00382e] shadow-lg"
@@ -173,13 +231,13 @@ const HeroSection = ({ user, isCounselor, scrollToContent }) => {
                                             }`}
                                     >
                                         {isCounselor ? <LayoutDashboard className="w-5 h-5" /> : <Briefcase className="w-5 h-5" />}
-                                        {isCounselor ? "Dashboard Konselor" : "Riwayat Review"}
+                                        {isCounselor ? "Lihat Antrian Review CV" : "Riwayat Review"}
                                     </button>
                                 )}
 
                                 {!user && (
                                     <Link
-                                        href="/layanan/cv-review/auth"
+                                        href={route('layanan.cv.review.auth')}
                                         className="px-8 py-4 bg-[#004d40] text-white font-bold rounded-xl hover:bg-[#00382e] shadow-lg transition-all flex items-center justify-center gap-2"
                                     >
                                         <Upload className="w-5 h-5" />
@@ -193,7 +251,7 @@ const HeroSection = ({ user, isCounselor, scrollToContent }) => {
                             <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white rotate-1 hover:rotate-0 transition-transform duration-500">
                                 <img
                                     src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=2070&auto=format&fit=crop"
-                                    alt="Review CV Process"
+                                    alt="CV Review Process"
                                     className="w-full object-cover h-[400px] lg:h-[500px]"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#004d40]/90 to-transparent flex items-end p-8">
@@ -212,11 +270,15 @@ const HeroSection = ({ user, isCounselor, scrollToContent }) => {
 
 // MAIN PAGE COMPONENT
 function IndexCvReview(props) {
-    const { auth, templates, pagination, filters } = usePage().props;
+    const { auth, templates, pagination, filters, flash } = usePage().props;
     const user = auth.user;
     const isCounselor = user?.role === 'konselor';
+    const isDosenStaf = user?.role === 'dosen_staf';
 
-    // TEMPLATE LOGIC START
+    // State untuk modal
+    const [showStudentModal, setShowStudentModal] = useState(false);
+
+    // TEMPLATE LOGIC
     const safeTemplates = templates || [];
     const safePagination = pagination || { links: [], from: 0, to: 0, total: 0 };
     const safeFilters = filters || { kategori: 'semua', sumber: 'semua', search: '' };
@@ -229,6 +291,23 @@ function IndexCvReview(props) {
 
     const isFirstRender = useRef(true);
 
+    /**
+     * CORE HANDLER: Proteksi Dosen/Staf
+     * Intercept semua action dan tampilkan modal jika role = dosen_staf
+     */
+    const handleActionClick = (e, defaultAction) => {
+        if (isDosenStaf) {
+            e.preventDefault();
+            setShowStudentModal(true);
+            return;
+        }
+        // Jika bukan dosen_staf, lanjutkan action normal
+        if (defaultAction) {
+            defaultAction();
+        }
+    };
+
+    // Search debounce
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
@@ -279,12 +358,13 @@ function IndexCvReview(props) {
         }
     };
 
+    /**
+     * Handler untuk download/open template
+     */
     const handleTemplateAction = (template) => {
         if (template.sumber === 'manual') {
-            // JIKA MANUAL -> DOWNLOAD FILE
             window.location.href = route('layanan.cv.template.download', { id: template.id });
         } else {
-            // JIKA CANVA/SLIDES -> BUKA TAB BARU
             if (template.url_template && template.url_template.startsWith('http')) {
                 window.open(template.url_template, '_blank');
             } else {
@@ -298,26 +378,6 @@ function IndexCvReview(props) {
         setFilterKategori('semua');
         setFilterSumber('semua');
         router.get(route('layanan.cv.review'));
-    };
-
-
-    const handleTemplateKlik = (templateId, urlTemplate) => {
-        // Cek apakah ini URL eksternal (Canva/Google Slides)
-        const isExternal = urlTemplate && (urlTemplate.startsWith('http') || urlTemplate.startsWith('https'));
-
-        if (user) {
-            if (isExternal) {
-                window.open(urlTemplate, '_blank');
-            } else {
-                window.location.href = urlTemplate;
-            }
-        } else {
-            if (isExternal) {
-                window.open(urlTemplate, '_blank');
-            } else {
-                router.visit(route('login'));
-            }
-        }
     };
 
     const scrollToContent = () => {
@@ -342,7 +402,6 @@ function IndexCvReview(props) {
 
     const activeFiltersCount = [filterKategori !== 'semua', filterSumber !== 'semua', searchTerm !== ''].filter(Boolean).length;
 
-    // Feature Data
     const features = isCounselor ? [
         { icon: FileText, title: "Kelola Daftar Tunggu", description: "Lihat semua pengajuan CV dari pengguna yang menunggu untuk ditinjau." },
         { icon: Check, title: "Berikan Umpan Balik", description: "Lakukan review mendalam dan kirimkan feedback konstruktif." },
@@ -355,240 +414,242 @@ function IndexCvReview(props) {
 
     return (
         <MainLayout user={user}>
-            <Head title={isCounselor ? "Dashboard Review CV" : "Layanan Review CV"} />
+            <Head title={isCounselor ? "Dashboard CV Review" : "Layanan CV Review"} />
+
+            {/* MODAL AKSES TERBATAS - UNTUK DOSEN/STAF */}
+            <MahasiswaRoleAccessModal
+                isOpen={showStudentModal}
+                onClose={() => setShowStudentModal(false)}
+                userName={user?.name || "Pengguna"}
+                contactInfo={{ whatsapp_number: "6281295986204" }}
+            />
 
             <div className="min-h-screen bg-gray-50 font-sans">
                 <HeroSection
                     user={user}
                     isCounselor={isCounselor}
                     scrollToContent={scrollToContent}
+                    handleActionClick={isDosenStaf ? handleActionClick : null}
                 />
 
-                {/* SECTION 1: TEMPLATE GALLERY (Hanya untuk Mahasiswa / Umum) */}
-                {!isCounselor && (
-                    <section id="template-gallery" className="py-20 bg-white">
-                        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-                            <div className="relative text-center mb-16 space-y-4">
-                                {/* Judul */}
-                                <h2 className="text-4xl md:text-5xl font-black text-gray-900 font-serif tracking-tight">
-                                    Template CV{' '}
-                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#004d40] to-emerald-500">
-                                        Siap Pakai
-                                    </span>
-                                </h2>
+                {/* TEMPLATE GALLERY SECTION (Hanya untuk non-konselor) */}
 
-                                {/* Deskripsi yang lebih lega */}
-                                <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                                    Bingung mulai dari mana? Gunakan koleksi template gratis kami.
-                                    Mulai dari format <span className="font-semibold text-gray-800">ATS Friendly</span> hingga desain <span className="font-semibold text-gray-800">Kreatif</span> yang memukau rekruter.
-                                </p>
-                            </div>
+                <section id="template-gallery" className="py-20 bg-white">
+                    <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+                        <div className="relative text-center mb-16 space-y-4">
+                            <h2 className="text-4xl md:text-5xl font-black text-gray-900 font-serif tracking-tight">
+                                Template CV{' '}
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#004d40] to-emerald-500">
+                                    Siap Pakai
+                                </span>
+                            </h2>
 
-                            {/* FILTER BAR */}
-                            <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-gray-200 mb-10">
-                                <div className="flex flex-col lg:flex-row gap-4">
-                                    {/* Search */}
-                                    <div className="flex-grow">
-                                        <div className="relative group">
-                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#004d40] transition-colors" />
-                                            <input
-                                                type="text"
-                                                placeholder="Cari judul, tag, atau jenis pekerjaan..."
-                                                value={searchTerm}
-                                                onChange={(e) => setSearchTerm(e.target.value)}
-                                                className="w-full pl-12 pr-12 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#00CA65] focus:border-transparent text-gray-700 placeholder-gray-400 bg-gray-50 focus:bg-white transition-all"
-                                            />
-                                            {searchTerm && (
-                                                <button
-                                                    onClick={() => setSearchTerm('')}
-                                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 transition"
-                                                >
-                                                    <X className="w-5 h-5" />
-                                                </button>
-                                            )}
-                                        </div>
-                                    </div>
+                            <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                                Bingung mulai dari mana? Gunakan koleksi template gratis kami.
+                                Mulai dari format <span className="font-semibold text-gray-800">ATS Friendly</span> hingga desain <span className="font-semibold text-gray-800">Kreatif</span> yang memukau rekruter.
+                            </p>
+                        </div>
 
-                                    <div className="flex flex-col sm:flex-row gap-3">
-                                        {/* Filter Kategori */}
-                                        <div className="relative">
+                        {/* FILTER BAR */}
+                        <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-gray-200 mb-10">
+                            <div className="flex flex-col lg:flex-row gap-4">
+                                {/* Search */}
+                                <div className="flex-grow">
+                                    <div className="relative group">
+                                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#004d40] transition-colors" />
+                                        <input
+                                            type="text"
+                                            placeholder="Cari judul, tag, atau jenis pekerjaan..."
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            className="w-full pl-12 pr-12 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#00CA65] focus:border-transparent text-gray-700 placeholder-gray-400 bg-gray-50 focus:bg-white transition-all"
+                                        />
+                                        {searchTerm && (
                                             <button
-                                                onClick={() => { setShowKategoriDropdown(!showKategoriDropdown); setShowSumberDropdown(false); }}
-                                                className={`w-full sm:w-48 px-5 py-3.5 border rounded-xl font-bold flex items-center justify-between transition-all ${filterKategori !== 'semua' ? 'bg-emerald-50 border-[#00CA65] text-[#004d40]' : 'bg-white border-gray-200 text-gray-600 hover:border-[#00CA65]/50'
-                                                    }`}
-                                            >
-                                                <span className="flex items-center gap-2 text-sm truncate">
-                                                    <Filter className="w-4 h-4" />
-                                                    {filterKategori === 'semua' ? 'Kategori' : filterKategori}
-                                                </span>
-                                                {filterKategori !== 'semua' && <span className="bg-[#004d40] text-white text-[10px] px-2 py-0.5 rounded-full">1</span>}
-                                            </button>
-
-                                            {showKategoriDropdown && (
-                                                <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-100 z-30 py-2 animate-scale-in">
-                                                    {kategoriOptions.map((opt) => (
-                                                        <button
-                                                            key={opt.value}
-                                                            onClick={() => handleKategoriChange(opt.value)}
-                                                            className={`w-full text-left px-5 py-3 hover:bg-emerald-50 text-sm flex items-center gap-3 transition ${filterKategori === opt.value ? 'font-bold text-[#004d40] bg-emerald-50' : 'text-gray-600'
-                                                                }`}
-                                                        >
-                                                            <opt.icon className="w-4 h-4" /> {opt.label}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* Filter Sumber */}
-                                        <div className="relative">
-                                            <button
-                                                onClick={() => { setShowSumberDropdown(!showSumberDropdown); setShowKategoriDropdown(false); }}
-                                                className={`w-full sm:w-48 px-5 py-3.5 border rounded-xl font-bold flex items-center justify-between transition-all ${filterSumber !== 'semua' ? 'bg-blue-50 border-blue-400 text-blue-700' : 'bg-white border-gray-200 text-gray-600 hover:border-blue-300'
-                                                    }`}
-                                            >
-                                                <span className="flex items-center gap-2 text-sm truncate">
-                                                    <Palette className="w-4 h-4" />
-                                                    {filterSumber === 'semua' ? 'Sumber' : filterSumber}
-                                                </span>
-                                                {filterSumber !== 'semua' && <span className="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-full">1</span>}
-                                            </button>
-
-                                            {showSumberDropdown && (
-                                                <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-100 z-30 py-2 animate-scale-in">
-                                                    {sumberOptions.map((opt) => (
-                                                        <button
-                                                            key={opt.value}
-                                                            onClick={() => handleSumberChange(opt.value)}
-                                                            className={`w-full text-left px-5 py-3 hover:bg-gray-50 text-sm transition ${filterSumber === opt.value ? 'font-bold text-blue-700 bg-blue-50' : 'text-gray-600'
-                                                                }`}
-                                                        >
-                                                            {opt.label}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* Reset */}
-                                        {activeFiltersCount > 0 && (
-                                            <button
-                                                onClick={handleReset}
-                                                className="px-5 py-3.5 bg-red-50 text-red-600 border border-red-200 rounded-xl font-bold hover:bg-red-100 transition flex items-center justify-center"
-                                                title="Reset Filter"
+                                                onClick={() => setSearchTerm('')}
+                                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 transition"
                                             >
                                                 <X className="w-5 h-5" />
                                             </button>
                                         )}
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* GRID TEMPLATE */}
-                            {safeTemplates.length > 0 ? (
-                                <>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-                                        {safeTemplates.map((tpl) => (
-                                            <TemplateCard
-                                                key={tpl.id}
-                                                template={tpl}
-                                                // INI YANG PENTING: Passing fungsi handleTemplateAction ke child
-                                                onKlik={handleTemplateAction}
-                                            />
-                                        ))}
-                                    </div>
-                                    {/* PAGINATION */}
-                                    {safePagination.links && safePagination.links.length > 3 && (
-                                        <div className="flex justify-center mt-12">
-                                            <div className="bg-white rounded-2xl shadow-sm p-3 border border-gray-200 inline-flex flex-col items-center gap-3">
-                                                <div className="flex items-center gap-2">
-                                                    {safePagination.links.map((link, i) => {
-                                                        let label = link.label;
-                                                        if (label.includes('&laquo;') || label === 'Previous') label = <ChevronLeft className="w-5 h-5" />;
-                                                        if (label.includes('&raquo;') || label === 'Next') label = <ChevronRight className="w-5 h-5" />;
+                                <div className="flex flex-col sm:flex-row gap-3">
+                                    {/* Filter Kategori */}
+                                    <div className="relative">
+                                        <button
+                                            onClick={() => { setShowKategoriDropdown(!showKategoriDropdown); setShowSumberDropdown(false); }}
+                                            className={`w-full sm:w-48 px-5 py-3.5 border rounded-xl font-bold flex items-center justify-between transition-all ${filterKategori !== 'semua' ? 'bg-emerald-50 border-[#00CA65] text-[#004d40]' : 'bg-white border-gray-200 text-gray-600 hover:border-[#00CA65]/50'
+                                                }`}
+                                        >
+                                            <span className="flex items-center gap-2 text-sm truncate">
+                                                <Filter className="w-4 h-4" />
+                                                {filterKategori === 'semua' ? 'Kategori' : filterKategori}
+                                            </span>
+                                            {filterKategori !== 'semua' && <span className="bg-[#004d40] text-white text-[10px] px-2 py-0.5 rounded-full">1</span>}
+                                        </button>
 
-                                                        return (
-                                                            <button
-                                                                key={i}
-                                                                onClick={() => handlePageChange(link.url)}
-                                                                disabled={!link.url || link.active}
-                                                                className={`
-                                                                    w-10 h-10 flex items-center justify-center rounded-xl text-sm font-bold transition-all duration-200
-                                                                    ${link.active
-                                                                        ? 'bg-[#004d40] text-white shadow-lg scale-110'
-                                                                        : 'bg-white border border-gray-200 text-gray-500 hover:bg-emerald-50 hover:text-[#004d40]'}
-                                                                    ${!link.url && 'opacity-40 cursor-not-allowed hover:bg-white hover:text-gray-500'}
-                                                                `}
-                                                            >
-                                                                {label}
-                                                            </button>
-                                                        );
-                                                    })}
-                                                </div>
-                                                <p className="text-xs text-gray-400 font-medium">
-                                                    Menampilkan {safePagination.from}-{safePagination.to} dari {safePagination.total} template
-                                                </p>
+                                        {showKategoriDropdown && (
+                                            <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-100 z-30 py-2 animate-scale-in">
+                                                {kategoriOptions.map((opt) => (
+                                                    <button
+                                                        key={opt.value}
+                                                        onClick={() => handleKategoriChange(opt.value)}
+                                                        className={`w-full text-left px-5 py-3 hover:bg-emerald-50 text-sm flex items-center gap-3 transition ${filterKategori === opt.value ? 'font-bold text-[#004d40] bg-emerald-50' : 'text-gray-600'
+                                                            }`}
+                                                    >
+                                                        <opt.icon className="w-4 h-4" /> {opt.label}
+                                                    </button>
+                                                ))}
                                             </div>
-                                        </div>
-                                    )}
-                                </>
-                            ) : (
-                                <div className="bg-gray-50 rounded-2xl p-12 text-center border-2 border-dashed border-gray-200">
-                                    <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-                                        <FileText className="w-10 h-10 text-gray-300" />
+                                        )}
                                     </div>
-                                    <h3 className="text-xl font-bold text-gray-800 mb-2">Tidak Ada Template Ditemukan</h3>
-                                    <p className="text-gray-500 mb-6">Coba ubah kata kunci pencarian atau filter Anda.</p>
-                                    <button onClick={handleReset} className="text-[#004d40] font-bold hover:underline">Reset Filter</button>
-                                </div>
-                            )}
-                            {/* CTA EXTERNAL LINK */}
-                            <div className="mt-16 bg-emerald-50 rounded-2xl p-8 border border-emerald-100 text-center container mx-auto max-w-7xl">
-                                <h3 className="text-2xl font-bold text-gray-900 mb-3 font-serif">Butuh Lebih Banyak Pilihan?</h3>
-                                <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                                    Jelajahi ribuan template CV premium lainnya dari partner kami Canva dan Google Slides untuk menemukan desain yang sempurna.
-                                </p>
-                                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                    <a
-                                        href="https://www.canva.com/resumes/templates/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center px-6 py-3 bg-[#004d40] text-white font-bold rounded-xl hover:bg-[#00382e] transition shadow-lg"
-                                    >
-                                        <Palette className="w-5 h-5 mr-2" />
-                                        Jelajahi Canva
-                                        <ExternalLink className="w-4 h-4 ml-2" />
-                                    </a>
 
-                                    <a
-                                        href="https://slidesgo.com/search?q=resume#rs=search"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center px-6 py-3 bg-white text-[#004d40] border-2 border-[#004d40] font-bold rounded-xl hover:bg-emerald-50 transition"
-                                    >
-                                        📊 SLIDESGO
-                                        <ExternalLink className="w-4 h-4 ml-2" />
-                                    </a>
+                                    {/* Filter Sumber */}
+                                    <div className="relative">
+                                        <button
+                                            onClick={() => { setShowSumberDropdown(!showSumberDropdown); setShowKategoriDropdown(false); }}
+                                            className={`w-full sm:w-48 px-5 py-3.5 border rounded-xl font-bold flex items-center justify-between transition-all ${filterSumber !== 'semua' ? 'bg-blue-50 border-blue-400 text-blue-700' : 'bg-white border-gray-200 text-gray-600 hover:border-blue-300'
+                                                }`}
+                                        >
+                                            <span className="flex items-center gap-2 text-sm truncate">
+                                                <Palette className="w-4 h-4" />
+                                                {filterSumber === 'semua' ? 'Sumber' : filterSumber}
+                                            </span>
+                                            {filterSumber !== 'semua' && <span className="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-full">1</span>}
+                                        </button>
+
+                                        {showSumberDropdown && (
+                                            <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-100 z-30 py-2 animate-scale-in">
+                                                {sumberOptions.map((opt) => (
+                                                    <button
+                                                        key={opt.value}
+                                                        onClick={() => handleSumberChange(opt.value)}
+                                                        className={`w-full text-left px-5 py-3 hover:bg-gray-50 text-sm transition ${filterSumber === opt.value ? 'font-bold text-blue-700 bg-blue-50' : 'text-gray-600'
+                                                            }`}
+                                                    >
+                                                        {opt.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Reset */}
+                                    {activeFiltersCount > 0 && (
+                                        <button
+                                            onClick={handleReset}
+                                            className="px-5 py-3.5 bg-red-50 text-red-600 border border-red-200 rounded-xl font-bold hover:bg-red-100 transition flex items-center justify-center"
+                                            title="Reset Filter"
+                                        >
+                                            <X className="w-5 h-5" />
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>
-                    </section>
-                )}
 
-                {/* SECTION 2: FEATURES / WHY US */}
+                        {/* GRID TEMPLATE */}
+                        {safeTemplates.length > 0 ? (
+                            <>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                                    {safeTemplates.map((tpl) => (
+                                        <TemplateCard
+                                            key={tpl.id}
+                                            template={tpl}
+                                            onKlik={handleTemplateAction}
+                                            handleActionClick={isDosenStaf ? handleActionClick : null}
+                                        />
+                                    ))}
+                                </div>
+
+                                {/* PAGINATION */}
+                                {safePagination.links && safePagination.links.length > 3 && (
+                                    <div className="flex justify-center mt-12">
+                                        <div className="bg-white rounded-2xl shadow-sm p-3 border border-gray-200 inline-flex flex-col items-center gap-3">
+                                            <div className="flex items-center gap-2">
+                                                {safePagination.links.map((link, i) => {
+                                                    let label = link.label;
+                                                    if (label.includes('&laquo;') || label === 'Previous') label = <ChevronLeft className="w-5 h-5" />;
+                                                    if (label.includes('&raquo;') || label === 'Next') label = <ChevronRight className="w-5 h-5" />;
+
+                                                    return (
+                                                        <button
+                                                            key={i}
+                                                            onClick={() => handlePageChange(link.url)}
+                                                            disabled={!link.url || link.active}
+                                                            className={`
+                                                                    w-10 h-10 flex items-center justify-center rounded-xl text-sm font-bold transition-all duration-200
+                                                                    ${link.active
+                                                                    ? 'bg-[#004d40] text-white shadow-lg scale-110'
+                                                                    : 'bg-white border border-gray-200 text-gray-500 hover:bg-emerald-50 hover:text-[#004d40]'}
+                                                                    ${!link.url && 'opacity-40 cursor-not-allowed hover:bg-white hover:text-gray-500'}
+                                                                `}
+                                                        >
+                                                            {label}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                            <p className="text-xs text-gray-400 font-medium">
+                                                Menampilkan {safePagination.from}-{safePagination.to} dari {safePagination.total} template
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <div className="bg-gray-50 rounded-2xl p-12 text-center border-2 border-dashed border-gray-200">
+                                <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+                                    <FileText className="w-10 h-10 text-gray-300" />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-800 mb-2">Tidak Ada Template Ditemukan</h3>
+                                <p className="text-gray-500 mb-6">Coba ubah kata kunci pencarian atau filter Anda.</p>
+                                <button onClick={handleReset} className="text-[#004d40] font-bold hover:underline">Reset Filter</button>
+                            </div>
+                        )}
+
+                        {/* CTA EXTERNAL LINK */}
+                        <div className="mt-16 bg-emerald-50 rounded-2xl p-8 border border-emerald-100 text-center container mx-auto max-w-7xl">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-3 font-serif">Butuh Lebih Banyak Pilihan?</h3>
+                            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                                Jelajahi ribuan template CV premium lainnya dari partner kami Canva dan Google Slides untuk menemukan desain yang sempurna.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <a
+                                    href="https://www.canva.com/resumes/templates/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center px-6 py-3 bg-[#004d40] text-white font-bold rounded-xl hover:bg-[#00382e] transition shadow-lg"
+                                >
+                                    <Palette className="w-5 h-5 mr-2" />
+                                    Jelajahi Canva
+                                    <ExternalLink className="w-4 h-4 ml-2" />
+                                </a>
+
+                                <a
+                                    href="https://slidesgo.com/search?q=resume#rs=search"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center px-6 py-3 bg-white text-[#004d40] border-2 border-[#004d40] font-bold rounded-xl hover:bg-emerald-50 transition"
+                                >
+                                    📊 SLIDESGO
+                                    <ExternalLink className="w-4 h-4 ml-2" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* FEATURES SECTION */}
                 <section className="relative py-24 bg-[#004d40] overflow-hidden">
-
-                    {/* Background Pattern */}
                     <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-
-                    {/* Ambient Glows */}
                     <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00CA65] rounded-full mix-blend-overlay filter blur-[120px] opacity-20 pointer-events-none"></div>
                     <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-teal-400 rounded-full mix-blend-overlay filter blur-[100px] opacity-10 pointer-events-none"></div>
 
                     <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                         <div className="flex flex-col lg:flex-row gap-16 items-start">
-
-                            {/* LEFT SIDE: Sticky Text */}
                             <div className="lg:w-2/5 lg:sticky lg:top-28 space-y-6">
                                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-emerald-300 text-xs font-bold tracking-wider uppercase mb-2 backdrop-blur-sm">
                                     <span className="w-2 h-2 rounded-full bg-[#00CA65] animate-pulse"></span>
@@ -610,13 +671,12 @@ function IndexCvReview(props) {
                                     <div className="mt-8 p-6 rounded-2xl bg-white/5 border border-white/10 relative overflow-hidden group backdrop-blur-md">
                                         <div className="absolute -top-4 -right-4 text-8xl text-white/5 font-serif select-none">"</div>
                                         <p className="text-[15px] font-medium italic text-emerald-50 leading-relaxed relative z-10">
-                                            "Pembeda antara CV yang dibuang dan yang dipanggil interview seringkali hanya pada **kejelasan struktur** dan **relevansi kata kunci**."
+                                            "Pembeda antara CV yang dibuang dan yang dipanggil interview seringkali hanya pada <strong>kejelasan struktur</strong> dan <strong>relevansi kata kunci</strong>."
                                         </p>
                                     </div>
                                 )}
                             </div>
 
-                            {/* RIGHT SIDE: Cards */}
                             <div className="lg:w-3/5 grid grid-cols-1 md:grid-cols-2 gap-6 w-full pl-0 lg:pl-10">
                                 {features.map((feature, index) => {
                                     const IconComponent = feature.icon;
@@ -628,7 +688,6 @@ function IndexCvReview(props) {
                                         shadow-2xl shadow-black/20
                                         flex flex-col relative overflow-hidden z-0"
                                         >
-                                            {/* Icon Box */}
                                             <div className="mb-6 w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center group-hover:bg-[#004d40] group-hover:rotate-6 transition-all duration-500 ease-out">
                                                 <IconComponent className="w-8 h-8 text-[#004d40] group-hover:text-[#00CA65] transition-colors duration-300" />
                                             </div>
@@ -644,12 +703,11 @@ function IndexCvReview(props) {
                                     )
                                 })}
                             </div>
-
                         </div>
                     </div>
                 </section>
 
-                {/* SECTION 3: CTA LOGIN (Jika belum login) */}
+                {/* CTA LOGIN (Guest only) */}
                 {!user && !isCounselor && (
                     <section className="py-20 bg-emerald-50 border-t border-emerald-100">
                         <div className="container mx-auto px-4 text-center max-w-3xl">
@@ -662,7 +720,7 @@ function IndexCvReview(props) {
                                     Akses penuh ke fitur upload CV dan konsultasi karir hanya tersedia untuk mahasiswa terdaftar.
                                 </p>
                                 <Link
-                                    href="/layanan/cv-review/auth"
+                                    href={route('layanan.cv.review.auth')}
                                     className="px-10 py-4 bg-[#004d40] hover:bg-[#00382e] text-white font-bold rounded-xl shadow-lg transition-all inline-flex items-center gap-2"
                                 >
                                     Masuk ke Akunmu

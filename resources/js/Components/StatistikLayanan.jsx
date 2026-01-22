@@ -29,7 +29,7 @@ const StatistikLayanan = () => {
         fetchStatistik();
     }, []);
 
-    // Perbaikan: Fungsi highlight yang bisa dipanggil dari chart maupun list
+    // Fungsi highlight yang bisa dipanggil dari chart maupun list
     const onMouseEnter = (_, index) => setActiveIndex(index);
     const onMouseLeave = () => setActiveIndex(null);
 
@@ -45,7 +45,7 @@ const StatistikLayanan = () => {
     }
 
     return (
-        <section className="bg-white py-12 w-full overflow-hidden">
+        <section className=" rounded-2xl h-full relative overflow-hidden">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     
@@ -65,7 +65,7 @@ const StatistikLayanan = () => {
                             {dataStatistik.map((entry, index) => (
                                 <div
                                     key={entry.name}
-                                    onMouseEnter={() => setActiveIndex(index)} // Tambahan: Hover di list efek ke chart
+                                    onMouseEnter={() => setActiveIndex(index)}
                                     onMouseLeave={onMouseLeave}
                                     className={`flex items-center justify-between p-3 rounded-xl transition-all duration-300 cursor-pointer ${
                                         activeIndex === index ? 'bg-green-50 translate-x-2' : 'bg-transparent'
@@ -86,7 +86,7 @@ const StatistikLayanan = () => {
                         </div>
                     </div>
 
-                    {/* Sisi Kanan: Chart (Perbaikan pembungkus grid) */}
+                    {/* Sisi Kanan: Chart */}
                     <div className="h-[450px] w-full min-w-0 relative flex justify-center items-center">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
@@ -95,7 +95,7 @@ const StatistikLayanan = () => {
                                     activeShape={(props) => (
                                         <Sector
                                             {...props}
-                                            outerRadius={props.outerRadius + 12} // Diperbesar sedikit agar lebih cantik
+                                            outerRadius={props.outerRadius + 12}
                                             innerRadius={props.innerRadius - 2}
                                             fill={props.fill}
                                         />

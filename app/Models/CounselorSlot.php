@@ -21,6 +21,23 @@ class CounselorSlot extends Model
         'is_available' => 'boolean',
     ];
 
+    protected static function booted()
+    {
+        // Setiap kali Admin menekan "Simpan" di Filament dan data Slot berubah
+        static::updated(function ($slot) {
+            // Cari apakah ada booking mahasiswa yang tertempel di slot ini
+            $booking = $slot->booking;
+
+            if ($booking) {
+                // Update data di tabel counseling_bookings agar SAMA dengan slot yang baru diedit
+                $booking->update([
+                    'scheduled_date' => $slot->date,
+                    'scheduled_time' => $slot->start_time,
+                ]);
+            }
+        });
+    }
+
     public function counselor(): BelongsTo
     {
         return $this->belongsTo(Counselor::class, 'counselor_id');

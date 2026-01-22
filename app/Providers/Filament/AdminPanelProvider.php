@@ -16,6 +16,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Navigation\NavigationItem;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -26,8 +27,15 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->homeUrl('/')
+            ->navigationItems([
+            NavigationItem::make('HALAMAN WEBSITE UTAMA')
+                ->url('/', shouldOpenInNewTab: false)
+                ->icon('heroicon-o-arrow-left-circle')
+                
+                ->sort(1),
+        ])
             ->brandName('CDC-UY Admin')
-            ->brandLogo(asset('/images/LOGO CDC-UY.png')) 
+            ->brandLogo(asset('/images/LOGO CDC-UY-BGPUTIH.png')) 
             ->brandLogoHeight('3rem')
             ->authGuard('web')
             ->authPasswordBroker('users')

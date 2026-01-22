@@ -345,7 +345,7 @@ const TesRiasec = ({ auth }) => {
                                 </div>
 
                                 <div className="p-8 md:p-12 flex flex-col justify-center flex-grow text-center">
-                                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-12 leading-snug">
+                                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-10 leading-snug">
                                         "{currentQuestion.text}"
                                     </h2>
                                     <div className="grid grid-cols-5 gap-3 md:gap-6 w-full max-w-xl mx-auto">
@@ -354,17 +354,19 @@ const TesRiasec = ({ auth }) => {
                                                 key={num}
                                                 onClick={() => handleAnswer(num)}
                                                 className={`aspect-square rounded-2xl md:rounded-3xl border-2 font-black text-lg md:text-2xl transition-all duration-300 flex items-center justify-center ${answers[currentQuestion.id] === num
-                                                    ? "bg-emerald-600 text-white border-emerald-600 shadow-lg shadow-emerald-200 scale-110"
-                                                    : "bg-white text-gray-300 border-gray-100 hover:border-emerald-200 hover:text-emerald-600 hover:shadow-md"
+                                                        ? "bg-emerald-600 text-white border-emerald-600 shadow-lg shadow-emerald-200 scale-110"
+                                                        : "bg-white text-gray-500 border-gray-200 hover:border-emerald-400 hover:text-emerald-600 hover:shadow-md"
                                                     }`}
                                             >
                                                 {num}
                                             </button>
                                         ))}
                                     </div>
-                                    <div className="flex justify-between mt-10 text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-[0.25em] px-2">
-                                        <span>Sangat Tidak Setuju</span>
-                                        <span>Sangat Setuju</span>
+
+                                    {/* Labels - Warna ditingkatkan ke gray-600 dan ukuran sedikit diperbesar */}
+                                    <div className="flex justify-between mt-10 text-[10px] md:text-xs font-bold text-gray-600 uppercase tracking-wider px-2">
+                                        <span className="max-w-[80px] md:max-w-none">Sangat Tidak Setuju</span>
+                                        <span className="max-w-[80px] md:max-w-none text-right">Sangat Setuju</span>
                                     </div>
                                 </div>
                             </div>
@@ -410,13 +412,13 @@ const TesRiasec = ({ auth }) => {
                                 <div className="text-center mb-10 pb-8 border-b-2 border-gray-100">
                                     <div className="mb-4">
                                         <div className="inline-block px-4 py-2 bg-emerald-100 rounded-full">
-                                            <p className="text-xs font-black text-emerald-700 tracking-widest uppercase">Career Development Center</p>
+                                            <p className="text-xs font-black text-emerald-700 tracking-widest uppercase">Career Development Center Universitas YARSI</p>
                                         </div>
                                     </div>
                                     <h3 className="text-2xl font-black text-gray-900 mb-2">LAPORAN HASIL TES RIASEC</h3>
                                     <div className="mt-4 space-y-1">
                                         <p className="text-emerald-600 font-bold text-xl">{auth.user?.name}</p>
-                                        <p className="text-gray-500 text-sm">{auth.user?.study_program || 'Mahasiswa'}</p>
+                                        <p className="text-gray-500 text-sm">{auth.user?.study_program}</p>
                                         <p className="text-gray-400 text-xs">{new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
                                     </div>
                                 </div>

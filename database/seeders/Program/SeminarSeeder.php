@@ -316,7 +316,7 @@ class SeminarSeeder extends Seeder
                 'organizer' => 'HMJA Universitas YARSI & IAPI',
                 'location' => 'Zoom Meeting & YouTube Live',
                 'type' => 'Online',
-                'image' => 'seminars/webinar-acpa-iapi.jpg',
+                'image' => 'seminars/webinar-acpa-iapi.png',
                 'date' => '2021-03-16',
                 'time' => '09:00',
                 'registration_link' => 'https://bit.ly/WebinarACPAYARSI',

@@ -118,7 +118,7 @@ const InfoMagang = ({ latestMagang = [] }) => {
     const isGuest = !auth.user;
 
     return (
-        <section className="pt-8 pb-16 md:pt-12 md:pb-24 bg-white relative overflow-hidden">
+        <section className=" rounded-2xl h-full relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute -top-24 -right-24 w-96 h-96 bg-emerald-50/50 rounded-full blur-3xl"></div>
             </div>

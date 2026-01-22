@@ -8,7 +8,6 @@ import {
 } from 'lucide-react';
 
 // Helper Components
-
 const StatusBadge = ({ status }) => {
     const getStatusConfig = (s) => {
         switch (s) {
@@ -66,7 +65,7 @@ const Modal = ({ children, title, onClose, isVisible }) => {
 
 // Main Component
 const TabelCvReview = ({ reviews, stats }) => {
-    const { auth, flash } = usePage().props;
+    const { auth, flash, contactInfo } = usePage().props;
     const user = auth.user || {};
     
     const isGuest = !auth.user; 
@@ -217,7 +216,7 @@ const TabelCvReview = ({ reviews, stats }) => {
     };
 
     const handleChatAdmin = (item) => {
-        const adminPhone = "6281295986204";
+        const adminPhone = contactInfo?.whatsapp_number || "6281295986204";
         const messageText =
         `Assalamualaikum Wr. Wb.\n` +
         `Selamat Pagi/Siang Admin PUSKAKA.\n\n` +
@@ -302,7 +301,7 @@ const TabelCvReview = ({ reviews, stats }) => {
                         <div className="space-y-3">
                             <button onClick={handleKembali} className="inline-flex items-center gap-2 text-emerald-800 hover:text-emerald-900 font-bold text-lg transition group">
                                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition" />
-                                Kembali ke Dashboard
+                                Kembali
                             </button>
                             <h1 className="text-5xl font-black text-gray-800 leading-tight">{headerTitle}</h1>
                             <p className="text-xl text-gray-600 leading-relaxed">{headerSubtitle}</p>
@@ -621,7 +620,7 @@ const TabelCvReview = ({ reviews, stats }) => {
                                                             <button 
                                                                 onClick={() => handleChatAdmin(item)} 
                                                                 className="p-2.5 rounded-xl bg-green-50 text-green-600 border border-green-100 hover:bg-green-100 hover:border-green-200 shadow-sm transition-all duration-200 hover:scale-105" 
-                                                                title="Hubungi Admin via WA"
+                                                                title="Konfimasi ke Admin via WA"
                                                             >
                                                                 <MessageCircle className="w-5 h-5" />
                                                             </button>

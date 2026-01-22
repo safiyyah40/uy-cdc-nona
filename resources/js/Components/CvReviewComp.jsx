@@ -1,11 +1,12 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
 import { Link, usePage, router } from "@inertiajs/react";
+import CounselorRoleAccessModal from '@/Components/CounselorRoleAccessModal';
 import {
     Briefcase, Upload,
     Download, Palette,
     Sparkles, X,
-    MousePointerClick, Eye, ArrowRight, LayoutGrid
+    MousePointerClick, Eye, ArrowRight, LayoutGrid, LayoutDashboard
 } from "lucide-react";
 
 // TEMPLATE CARD COMPONENT
@@ -104,11 +105,13 @@ const TemplateCard = ({ template, onKlik }) => {
 */
 const CvReviewComp = () => {
     // Ambil props dari page
-    const { auth, templates, pagination } = usePage().props;
+    const { auth, templates, pagination, contact } = usePage().props;
     const user = auth?.user;
     const isCounselor = user?.role === 'konselor';
     const scrollFade = useScrollFadeIn(0.2);
     const safeTemplates = templates || [];
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Cek apakah pagination ada isinya sebelum akses .links
     const safePagination = pagination || { links: [] };
@@ -149,85 +152,120 @@ const CvReviewComp = () => {
                         <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-[1.15] font-serif">
                             Template & <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#004d40] to-emerald-500">
-                                Review CV.
+                                Tinjau CV.
                             </span>
                         </h2>
                     </div>
-                    <p className="text-gray-500 max-w-sm text-base md:text-lg leading-relaxed text-left md:text-right font-medium">
-                        Pilih template profesional yang telah dioptimasi sistem ATS atau kirimkan CV kamu untuk direview langsung oleh konselor karir kami.
-                    </p>
+                    
                 </div>
 
-                {/* Barisan tombol utama (Upload dan Riwayat) */}
+                {/* Barisan tombol utama */}
                 <div className="flex flex-wrap gap-4 mb-12">
-                    {!isCounselor && (
+                    {!(user?.role === 'konselor' || user?.role === 'dosen_staf') && (
                         <button
                             onClick={() => router.visit(route('layanan.cv.review.upload'))}
-                            // ^^^ Ini kuncinya. Saat diklik tamu, Laravel akan mendeteksi route ini butuh login,
-                            // melempar ke login page, menyimpan 'intended url', dan mengembalikan user ke sini setelah login.
                             className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#004d40] text-white font-bold rounded-xl hover:bg-[#00382e] shadow-lg hover:shadow-[#004d40]/30 transition-all transform hover:-translate-y-1 w-full sm:w-auto"
                         >
                             <Upload className="w-5 h-5" />
-                            Upload CV Sekarang
+                            Unggah CV Sekarang
                         </button>
                     )}
-                    {/* TOMBOL RIWAYAT */}
+
+                    {/* Tombol DASHBOARD / RIWAYAT */}
                     <button
-                        onClick={() => router.visit(route('layanan.tabel.cv.review'))}
-                        className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#004d40] border-2 border-[#004d40] font-bold rounded-xl hover:bg-emerald-50 transition-all transform hover:-translate-y-1 w-full sm:w-auto"
+                        onClick={() => {
+                            if (user?.role === 'dosen_staf') {
+                                setIsModalOpen(true);
+                            } else if (user?.role === 'konselor') {
+                                router.visit(route('layanan.tabel.cv.review'));
+                            } else {
+                                // Untuk mahasiswa/user biasa
+                                router.get(route('layanan.tabel.cv.review'));
+                            }
+                        }}
+                        className={`inline-flex items-center justify-center gap-2 px-8 py-4 font-bold rounded-xl transition-all transform hover:-translate-y-1 w-full sm:w-auto ${(user?.role === 'konselor' || user?.role === 'dosen_staf')
+                                ? "bg-[#004d40] text-white shadow-lg hover:bg-[#00382e]"
+                                : "bg-white text-[#004d40] border-2 border-[#004d40] hover:bg-emerald-50"
+                            }`}
                     >
-                        <Briefcase className="w-5 h-5" />
-                        {isCounselor ? "Dashboard Konselor" : "Riwayat Review"}
+                        {/* BAGIAN TAMPILAN LABEL */}
+                        {user?.role === 'konselor' || user?.role === 'dosen_staf' ? (
+                            <>
+                                <LayoutDashboard className="w-5 h-5" />
+                                <span>Dasbor Tinjau CV</span>
+                            </>
+                        ) : (
+                            <>
+                                <Briefcase className="w-5 h-5" />
+                                <span>Riwayat Review</span>
+                            </>
+                        )}
                         <ArrowRight className="w-5 h-5 ml-1" />
                     </button>
+
+                    {/* Panggil Modal agar bisa muncul saat dosen_staf klik */}
+                    <CounselorRoleAccessModal
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        userName={user?.name}
+                        whatsappNumber={contact?.whatsapp_number}
+                    />
+
                 </div>
 
-                {/* Grid Template */}
-                {!isCounselor && (
-                    <>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-                            {safeTemplates.slice(0, 4).map((tpl) => (
-                                <TemplateCard key={tpl.id} template={tpl} onKlik={handleTemplateKlik} />
-                            ))}
-                        </div>
+                {/* --- PEMANGGILAN MODAL --- */}
+                <CounselorRoleAccessModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    userName={user?.name}
+                    whatsappNumber={contact?.whatsapp_number}
+                />
 
-                        {/* TOMBOL LIHAT SEMUA */}
-                        <div className="text-center relative z-20">
-                            <Link
-                                href={route('layanan.cv.review')}
-                                className="group inline-flex items-center justify-center gap-3 px-10 py-4 bg-white border border-gray-200 text-gray-700 font-bold rounded-full hover:border-[#00CA65] hover:text-[#004d40] hover:shadow-xl transition-all duration-300"
-                            >
-                                <LayoutGrid className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                                <span>Lihat Semua Template</span>
-                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                            </Link>
-
-                            {!user && (
-                                <p className="mt-4 text-sm text-gray-500 animate-pulse">
-                                    Login untuk akses penuh ke 50+ template premium lainnya!
-                                </p>
-                            )}
-                        </div>
-                    </>
-                )}
-
-                {/* Komponen pagination otomatis dari Laravel/Inertia */}
-                {!isCounselor && safePagination.links.length > 3 && (
-                    <div className="flex justify-center mt-16 gap-3">
-                        {safePagination.links.map((link, i) => (
-                            <button
-                                key={i}
-                                onClick={() => link.url && router.get(link.url)}
-                                disabled={!link.url || link.active}
-                                className={`min-w-[48px] h-[48px] flex items-center justify-center rounded-xl font-bold transition-all ${link.active
-                                    ? 'bg-[#004d40] text-white shadow-lg shadow-[#004d40]/30'
-                                    : 'bg-white border border-gray-200 text-gray-500 hover:border-emerald-500 hover:text-emerald-600'
-                                    } ${!link.url ? 'opacity-30 cursor-not-allowed' : ''}`}
-                                dangerouslySetInnerHTML={{ __html: link.label }}
-                            />
+                <div className="space-y-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                        {safeTemplates.slice(0, 4).map((tpl) => (
+                            <TemplateCard key={tpl.id} template={tpl} onKlik={handleTemplateKlik} />
                         ))}
                     </div>
-                )}
+
+                    {/* TOMBOL LIHAT SEMUA */}
+                    <div className="text-center relative z-20">
+                        <Link
+                            href={route('layanan.cv.review')}
+                            className="group inline-flex items-center justify-center gap-3 px-10 py-4 bg-white border border-gray-200 text-gray-700 font-bold rounded-full hover:border-[#00CA65] hover:text-[#004d40] hover:shadow-xl transition-all duration-300"
+                        >
+                            <LayoutGrid className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                            <span>Lihat Semua Template</span>
+                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+
+                        {/* Pesan ini hanya muncul jika pengunjung belum login sama sekali */}
+                        {!user && (
+                            <p className="mt-4 text-sm text-gray-500 animate-pulse">
+                                Login untuk akses penuh ke 50+ template premium lainnya!
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Komponen pagination otomatis - Sekarang terbuka untuk konselor juga */}
+                    {safePagination.links.length > 3 && (
+                        <div className="flex justify-center mt-16 gap-3">
+                            {safePagination.links.map((link, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => link.url && router.get(link.url)}
+                                    disabled={!link.url || link.active}
+                                    className={`min-w-[48px] h-[48px] flex items-center justify-center rounded-xl font-bold transition-all ${link.active
+                                        ? 'bg-[#004d40] text-white shadow-lg shadow-[#004d40]/30'
+                                        : 'bg-white border border-gray-200 text-gray-500 hover:border-emerald-500 hover:text-emerald-600'
+                                        } ${!link.url ? 'opacity-30 cursor-not-allowed' : ''}`}
+                                    dangerouslySetInnerHTML={{ __html: link.label }}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+
             </div>
         </section>
     );

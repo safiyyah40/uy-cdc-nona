@@ -60,6 +60,7 @@ export default function ProfilPuskaka({ teamMembers = [], photos = [], contactIn
     const heroImage = useScrollFadeIn(0.4);
     const teamTitle = useScrollFadeIn(0.2);
     const contactTitle = useScrollFadeIn(0.2);
+    const hasMultiplePhotos = photos && photos.length > 1;
     const { auth } = usePage().props;
     const targetUrl = auth?.user ? '/dashboard#layanan-tes' : '/#layanan-tes';
 
@@ -79,7 +80,7 @@ export default function ProfilPuskaka({ teamMembers = [], photos = [], contactIn
                 <Head title="Profil Puskaka UY - CDC Universitas YARSI" />
 
                 {/* HERO SECTION */}
-                <section className="relative w-full py-14 md:py-20 -mt-10 md:-mt-32 bg-gradient-to-br from-white to-emerald-50 overflow-hidden">
+                <section className="relative w-full py-14 md:py-20 bg-gradient-to-br from-white to-emerald-50 overflow-hidden">
                     <div className="absolute inset-0 opacity-[0.05]"
                         style={{ backgroundImage: 'radial-gradient(circle, #044732 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
                     </div>
@@ -98,7 +99,7 @@ export default function ProfilPuskaka({ teamMembers = [], photos = [], contactIn
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yarsi-accent opacity-75"></span>
                                         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yarsi-accent"></span>
                                     </span>
-                                    Pusat Kemahasiswaan, Karir dan Alumni-UY
+                                    Pusat Kemahasiswaan, Karir dan Alumni - UY
                                 </div>
 
                                 <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 font-kaisei mb-6 leading-tight">
@@ -133,53 +134,76 @@ export default function ProfilPuskaka({ teamMembers = [], photos = [], contactIn
                             </div>
 
                             <div className="lg:w-1/2 relative w-full" ref={heroImage.ref} style={heroImage.style}>
-                                <Swiper
-                                    modules={[Navigation, Pagination, Mousewheel, Autoplay, Parallax, A11y]}
-                                    spaceBetween={0}
-                                    slidesPerView={1}
-                                    parallax={true}
-                                    speed={1000}
-                                    navigation
-                                    pagination={{
-                                        clickable: true,
-                                        dynamicBullets: true,
-                                    }}
-                                    mousewheel={true}
-                                    grabCursor={true}
-                                    loop={true}
-                                    autoplay={{
-                                        delay: 5000,
-                                        disableOnInteraction: false,
-                                    }}
-                                    className="aspect-[4/3] relative rounded-[2rem] overflow-hidden border-4 border-white/80 ring-1 ring-gray-100/50 transform rotate-1 hover:rotate-0 transition-all duration-700 ease-out shadow-xl shadow-emerald-900/20 group aesthetic-pagination"
-                                >
-                                    <div slot="container-start" className="parallax-bg absolute inset-0 bg-cover bg-center" data-swiper-parallax="-23%"></div>
-                                    {photos.map((photo) => (
-                                        <SwiperSlide key={photo.id} className="overflow-hidden rounded-[2rem]">
-                                            <div
-                                                className="w-full h-full bg-cover bg-center transform scale-110 group-hover:scale-100 transition-transform duration-[2s] ease-out"
-                                                style={{ backgroundImage: `url('/storage/${photo.image_path}')` }}
-                                                data-swiper-parallax="-20%"
-                                            >
-                                                <div className="absolute inset-0 bg-gradient-to-t from-yarsi-green-dark/80 via-yarsi-green/20 to-transparent mix-blend-overlay"></div>
-                                                <div className="absolute inset-0 bg-black/10"></div>
-                                            </div>
-                                            <div
-                                                className="absolute bottom-8 left-8 flex items-center gap-3 p-3 bg-white/70 backdrop-blur-md rounded-2xl shadow-sm border border-white/40 transition-all duration-300 hover:bg-white/90 hover:shadow-md hover:scale-105"
-                                                data-swiper-parallax="-300"
-                                                data-swiper-parallax-opacity="0.5"
-                                            >
-                                                <div className="bg-emerald-100/80 p-2 rounded-full text-yarsi-green shadow-inner">
-                                                    <Newspaper className="w-5 h-5" />
+                                {photos && photos.length > 0 ? (
+                                    <Swiper
+                                        modules={[Navigation, Pagination, Mousewheel, Autoplay, Parallax, A11y]}
+                                        spaceBetween={0}
+                                        slidesPerView={1}
+                                        parallax={true}
+                                        speed={1000}
+                                        navigation
+                                        pagination={{
+                                            clickable: true,
+                                            dynamicBullets: true,
+                                        }}
+                                        mousewheel={true}
+                                        grabCursor={true}
+                                        loop={photos.length > 1}
+                                        autoplay={
+                                            photos.length > 1
+                                                ? {
+                                                    delay: 5000,
+                                                    disableOnInteraction: false,
+                                                }
+                                                : false
+                                        }
+                                        className="aspect-[4/3] relative rounded-[2rem] overflow-hidden border-4 border-white/80 ring-1 ring-gray-100/50 transform rotate-1 hover:rotate-0 transition-all duration-700 ease-out shadow-xl shadow-emerald-900/20 group aesthetic-pagination"
+                                    >
+                                        <div
+                                            slot="container-start"
+                                            className="parallax-bg absolute inset-0 bg-cover bg-center"
+                                            data-swiper-parallax="-23%"
+                                        ></div>
+
+                                        {photos.map((photo) => (
+                                            <SwiperSlide key={photo.id} className="overflow-hidden rounded-[2rem]">
+                                                <div
+                                                    className="w-full h-full bg-cover bg-center transform scale-110 group-hover:scale-100 transition-transform duration-[2s] ease-out"
+                                                    style={{ backgroundImage: `url('/storage/${photo.image_path}')` }}
+                                                    data-swiper-parallax="-20%"
+                                                >
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-yarsi-green-dark/80 via-yarsi-green/20 to-transparent mix-blend-overlay"></div>
+                                                    <div className="absolute inset-0 bg-black/10"></div>
                                                 </div>
-                                                <div>
-                                                    <div className="text-[10px] text-gray-500 uppercase font-semibold tracking-widest">Dokumentasi</div>
-                                                    <div className="text-sm font-bold text-gray-900">{photo.title || "Kegiatan Puskaka"}</div>
+
+                                                {/* Box Informasi Dokumentasi */}
+                                                <div
+                                                    className="absolute bottom-8 left-8 flex items-center gap-3 p-3 bg-white/70 backdrop-blur-md rounded-2xl shadow-sm border border-white/40 transition-all duration-300 hover:bg-white/90 hover:shadow-md hover:scale-105"
+                                                    data-swiper-parallax="-300"
+                                                    data-swiper-parallax-opacity="0.5"
+                                                >
+                                                    <div className="bg-emerald-100/80 p-2 rounded-full text-yarsi-green shadow-inner">
+                                                        <Newspaper className="w-5 h-5" />
+                                                    </div>
+                                                    <div>
+                                                        <div className="text-[10px] text-gray-500 uppercase font-semibold tracking-widest">
+                                                            Dokumentasi
+                                                        </div>
+                                                        <div className="text-sm font-bold text-gray-900">
+                                                            {photo.title || "Kegiatan Puskaka"}
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </SwiperSlide>
-                                    ))}
-                                </Swiper>
+                                            </SwiperSlide>
+                                        ))}
+                                    </Swiper>
+                                ) : (
+                                    /* Fallback jika tidak ada foto agar kontainer tidak kosong/error */
+                                    <div className="aspect-[4/3] bg-gray-100 rounded-[2rem] flex flex-col items-center justify-center border-2 border-dashed border-gray-300 text-gray-400">
+                                        <Users className="w-16 h-16 opacity-20 mb-2" />
+                                        <p className="text-sm">Belum ada dokumentasi foto</p>
+                                    </div>
+                                )}
                                 <div className="absolute -z-10 top-10 -right-10 w-full h-full border-2 border-yarsi-green/20 rounded-[2rem] transform rotate-6"></div>
                             </div>
                         </div>
@@ -229,7 +253,7 @@ export default function ProfilPuskaka({ teamMembers = [], photos = [], contactIn
                 </div>
 
                 {/* SECTION INFORMASI KONTAK */}
-                <section className="py-20 md:py-28 bg-white relative overflow-hidden">
+                <section className="py-20 md:py-2 bg-white relative overflow-hidden">
                     <div className="absolute inset-0 opacity-[0.03]"
                         style={{ backgroundImage: 'radial-gradient(circle, #044732 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
                     </div>

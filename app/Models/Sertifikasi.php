@@ -46,6 +46,7 @@ class Sertifikasi extends Model
         'meta_title',
         'meta_description',
         'tags',
+        'is_active',
         'published_at',
     ];
 
@@ -63,6 +64,7 @@ class Sertifikasi extends Model
         'quota' => 'integer',
         'enrolled_count' => 'integer',
         'view_count' => 'integer',
+        'is_active' => 'boolean',
     ];
 
     // Auto-generate slug

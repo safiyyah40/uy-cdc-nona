@@ -7,9 +7,9 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Table;
 
@@ -30,9 +30,8 @@ class BerandaSlidesTable
                     ->limit(40)
                     ->placeholder('(Tidak ada deskripsi)'),
 
-                IconColumn::make('is_active')
-                    ->label('Aktif')
-                    ->boolean(),
+                ToggleColumn::make('is_active')
+                    ->label('Aktif'),
 
                 TextColumn::make('sort_order')
                     ->label('Urutan')

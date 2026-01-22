@@ -2,24 +2,26 @@
 
 namespace App\Filament\Resources\ContactInfos;
 
-use App\Filament\Resources\ContactInfos\Pages\ManageContactInfos;
 use App\Filament\Resources\ContactInfos\Pages\EditContactInfo;
+use App\Filament\Resources\ContactInfos\Pages\ManageContactInfos;
 use App\Models\ContactInfo;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Forms\Components\Textarea;
-use Filament\Schemas\Components\Section;
+use Illuminate\Support\HtmlString;
 
 class ContactInfoResource extends Resource
 {
@@ -54,29 +56,41 @@ class ContactInfoResource extends Resource
                             ->required()
                             ->prefixIcon('heroicon-o-envelope')
                             ->placeholder('bidang1@yarsi.ac.id'),
-                        
+
                         TextInput::make('instagram_username')
                             ->label('Username Instagram')
                             ->required()
                             ->prefixIcon('heroicon-o-camera')
                             ->placeholder('kariralumni.yarsi')
                             ->helperText('Tanpa @ di depan'),
-                        
+
                         TextInput::make('whatsapp_number')
                             ->label('Nomor WhatsApp')
                             ->tel()
                             ->required()
                             ->prefixIcon('heroicon-o-device-phone-mobile')
                             ->placeholder('6281234567890')
-                            ->helperText('Format: 62xxx (dengan kode negara, tanpa +)'),
-                        
+                            ->regex('/^62[0-9]{8,15}$/')
+                            ->validationMessages([
+                                'regex' => 'Format salah! Harus dimulai dengan 62 dan hanya angka (minimal 10 digit).',
+                            ])
+                            ->afterStateUpdated(fn ($state, $set) => $set('whatsapp_number', preg_replace('/[^0-9]/', '', $state)))
+                            ->helperText(new HtmlString('Penting: Gunakan kode negara tanpa tanda +. Contoh: <strong>62</strong>812...'))
+                            ->suffixAction(
+                                Action::make('test_link')
+                                    ->icon('heroicon-m-chat-bubble-left-right')
+                                    ->tooltip('Buka WhatsApp')
+                                    ->url(fn ($state) => $state ? "https://wa.me/{$state}" : null)
+                                    ->openUrlInNewTab()
+                            ),
+
                         TextInput::make('phone_number')
                             ->label('Nomor Telepon Kantor')
                             ->tel()
                             ->prefixIcon('heroicon-o-phone')
                             ->placeholder('021-4244574'),
                     ])->columns(2),
-                
+
                 Section::make('Alamat')
                     ->schema([
                         Textarea::make('address_university')
@@ -84,7 +98,7 @@ class ContactInfoResource extends Resource
                             ->required()
                             ->rows(3)
                             ->placeholder('Menara YARSI, Jl. Let. Jend. Suprapto Kav. 13...'),
-                        
+
                         Textarea::make('address_cdc')
                             ->label('Alamat CDC')
                             ->required()

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Filament\Models\Contracts\FilamentUser;
-use App\Models\Counselor;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +11,6 @@ use Illuminate\Notifications\Notifiable;
 use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
 use LdapRecord\Laravel\Auth\HasLdapUser;
 use LdapRecord\Laravel\Auth\LdapAuthenticatable;
-
 
 class User extends Authenticatable implements FilamentUser, LdapAuthenticatable
 {
@@ -196,6 +194,11 @@ class User extends Authenticatable implements FilamentUser, LdapAuthenticatable
     public function counselingBookings()
     {
         return $this->hasMany(CounselingBooking::class);
+    }
+
+    public function canDelete(): bool
+    {
+        return $this->username !== 'admin.puskaka';
     }
 
     /**

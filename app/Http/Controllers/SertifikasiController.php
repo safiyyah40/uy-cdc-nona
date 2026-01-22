@@ -13,11 +13,10 @@ class SertifikasiController extends Controller
     {
         $isGuest = !Auth::check();
 
-        $query = Sertifikasi::query();
-        
-        // Base query: hanya yang Published dan published_at sudah lewat
+        // Published, Is Active, dan Waktu Publish sudah lewat
         $query = Sertifikasi::query()
             ->where('status', 'Published')
+            ->where('is_active', true)
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now());
 
@@ -53,15 +52,13 @@ class SertifikasiController extends Controller
             $filteredQuery = clone $query;
             $filteredResults = $filteredQuery->get();
 
-            // Pagination
+            // Pagination logic
             $perPage = $request->get('per_page', 12);
             
             if ($perPage === '1000' || $perPage === 'all') {
-                // Show all
                 $sertifikasis = $filteredResults;
                 $pagination = null;
             } else {
-                // Paginate
                 $perPage = (int) $perPage;
                 $page = $request->get('page', 1);
                 $offset = ($page - 1) * $perPage;
@@ -71,17 +68,13 @@ class SertifikasiController extends Controller
                 $totalFiltered = $filteredResults->count();
                 $lastPage = ceil($totalFiltered / $perPage);
                 
-                // Build pagination links
                 $links = [];
-                
-                // Previous
                 $links[] = [
                     'url' => $page > 1 ? route('sertifikasi.index', array_merge($request->all(), ['page' => $page - 1])) : null,
                     'label' => '&laquo; Previous',
                     'active' => false,
                 ];
                 
-                // Page numbers
                 for ($i = 1; $i <= $lastPage; $i++) {
                     $links[] = [
                         'url' => route('sertifikasi.index', array_merge($request->all(), ['page' => $i])),
@@ -90,7 +83,6 @@ class SertifikasiController extends Controller
                     ];
                 }
                 
-                // Next
                 $links[] = [
                     'url' => $page < $lastPage ? route('sertifikasi.index', array_merge($request->all(), ['page' => $page + 1])) : null,
                     'label' => 'Next &raquo;',
@@ -108,8 +100,10 @@ class SertifikasiController extends Controller
                 ];
             }
             
-            // Get unique categories and providers for filters
-            $allSertifikasis = Sertifikasi::where('status', 'Published')->get();
+            // List unik kategori & provider tetap mengikuti filter is_active
+            $allSertifikasis = Sertifikasi::where('status', 'Published')
+                ->where('is_active', true)
+                ->get();
             
             $categoriesList = $allSertifikasis->pluck('categories')
                 ->flatten()
@@ -149,10 +143,12 @@ class SertifikasiController extends Controller
              return redirect()->guest(route('login'));
         }
         
-        // Find sertifikasi by id or slug
-        $sertifikasi = Sertifikasi::where('id', $id)
-            ->orWhere('slug', $id)
+        // Find sertifikasi by id or slug dengan filter is_active
+        $sertifikasi = Sertifikasi::where(function($q) use ($id) {
+                $q->where('id', $id)->orWhere('slug', $id);
+            })
             ->where('status', 'Published')
+            ->where('is_active', true)
             ->firstOrFail();
 
         // Increment view count

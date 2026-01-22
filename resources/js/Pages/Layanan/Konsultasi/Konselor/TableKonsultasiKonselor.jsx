@@ -128,7 +128,7 @@ const TableKonsultasiKonselor = ({ consultations, pagination, stats }) => {
                                 href={route('konselor.dashboard')}
                                 className="inline-flex items-center text-gray-500 hover:text-[#004d40] font-bold text-lg transition-colors"
                             >
-                                <ArrowLeft className="w-5 h-5 mr-2" /> Kembali ke Dashboard
+                                <ArrowLeft className="w-5 h-5 mr-2" /> Kembali
                             </Link>
                             <h1 className="text-4xl font-extrabold text-[#004d40] font-serif">
                                 Daftar Sesi Konsultasi

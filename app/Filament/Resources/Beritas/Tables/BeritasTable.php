@@ -9,7 +9,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Table;
 use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\DatePicker;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables;
@@ -37,13 +37,8 @@ class BeritasTable
                     ->date('d M Y')
                     ->sortable(),
 
-                IconColumn::make('is_active')
-                    ->label('Status')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
-                    ->trueColor('success')
-                    ->falseColor('danger'),
+                ToggleColumn::make('is_active')
+                    ->label('Aktif'),
 
                 TextColumn::make('views')
                     ->label('Views')

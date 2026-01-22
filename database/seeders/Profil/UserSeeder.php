@@ -35,8 +35,8 @@ class UserSeeder extends Seeder
             'role' => 'konselor',
             'id_number' => '198505152015011002',
             'phone' => '628123456789',
-            'faculty' => 'Psikologi',
-            'study_program' => 'Psikologi',
+            'faculty' => 'Teknologi Informasi',
+            'study_program' => 'Teknik Informatika',
             'is_profile_complete' => true,
         ]);
 
@@ -50,6 +50,17 @@ class UserSeeder extends Seeder
             'phone' => '628123456789',
             'faculty' => 'Teknologi Informasi',
             'study_program' => 'Teknik Informatika',
+            'is_profile_complete' => true,
+        ]);
+
+        User::create([
+            'name' => 'Dosen/Staf Test',
+            'username' => 'dosen_staf.test',
+            'email' => 'dosenstaf@yarsi.ac.id',
+            'password' => Hash::make('Dosenstaf@2025'),
+            'role' => 'dosen_staf',
+            'id_number' => '198505152015011002',
+            'phone' => '628123456789',
             'is_profile_complete' => true,
         ]);
     }

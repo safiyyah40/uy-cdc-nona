@@ -13,7 +13,7 @@ class DeveloperDoc extends Model
         'is_active'
     ];
 
-     protected $casts = [
+    protected $casts = [
         'is_active' => 'boolean',
     ];
     

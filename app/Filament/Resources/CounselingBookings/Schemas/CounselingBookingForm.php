@@ -5,11 +5,9 @@ namespace App\Filament\Resources\CounselingBookings\Schemas;
 use App\Models\Counselor;
 use App\Models\CounselorSlot;
 use App\Models\User;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TimePicker;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -29,6 +27,7 @@ class CounselingBookingForm
                             ->preload()
                             ->required()
                             ->live()
+                            // Tetap disabled saat edit untuk menjaga integritas data
                             ->disabled(fn ($operation) => $operation === 'edit')
                             ->afterStateUpdated(function ($state, callable $set) {
                                 if (blank($state)) {
@@ -36,13 +35,10 @@ class CounselingBookingForm
                                     $set('student_npm', null);
                                     $set('student_phone', null);
                                     $set('student_email', null);
-                                    $set('student_faculty', null);
-                                    $set('student_study_program', null);
 
                                     return;
                                 }
                                 $user = User::find($state);
-
                                 if ($user) {
                                     $set('student_name', $user->name);
                                     $set('student_npm', $user->id_number);
@@ -64,6 +60,7 @@ class CounselingBookingForm
                                     ->label('NIM')
                                     ->required()
                                     ->disabled()
+                                    ->dehydrated()
                                     ->maxLength(255),
                             ]),
 
@@ -74,6 +71,7 @@ class CounselingBookingForm
                                     ->tel()
                                     ->required()
                                     ->disabled()
+                                    ->dehydrated()
                                     ->maxLength(255),
 
                                 TextInput::make('student_email')
@@ -81,13 +79,14 @@ class CounselingBookingForm
                                     ->email()
                                     ->required()
                                     ->disabled()
+                                    ->dehydrated()
                                     ->maxLength(255),
                             ]),
                     ])
                     ->columns(1)
                     ->collapsible(),
 
-                Section::make('Status & Catatan Admin')
+                Section::make('Status')
                     ->schema([
                         Select::make('status')
                             ->label('Status')
@@ -98,25 +97,24 @@ class CounselingBookingForm
                                 'completed' => 'Selesai',
                             ])
                             ->required()
+                            ->disabled()
                             ->native(false)
+                            ->dehydrated()
                             ->live(),
-
-                        Textarea::make('rejection_reason')
-                            ->label('Alasan Penolakan')
-                            ->visible(fn (callable $get) => $get('status') === 'rejected')
-                            ->rows(3)
-                            ->columnSpanFull(),
                     ])
                     ->columns(1),
+
                 Section::make('Detail Sesi')
                     ->schema([
                         Select::make('counselor_id')
-                            ->label('Konselor')
+                            ->label('Nama Konselor')
                             ->relationship('counselor', 'name')
                             ->searchable()
                             ->preload()
                             ->required()
                             ->reactive()
+                            // KEAMANAN: Kunci jika status bukan 'pending'
+                            ->disabled(fn ($get) => $get('status') !== 'pending')
                             ->afterStateUpdated(function ($state, callable $set) {
                                 if ($state) {
                                     $counselor = Counselor::find($state);
@@ -130,7 +128,6 @@ class CounselingBookingForm
                             ->label('Slot Waktu')
                             ->options(function (callable $get, ?string $operation, $record) {
                                 $counselorId = $get('counselor_id');
-
                                 if (! $counselorId) {
                                     return [];
                                 }
@@ -139,23 +136,18 @@ class CounselingBookingForm
                                     ->where('date', '>=', now()->toDateString())
                                     ->orderBy('date')
                                     ->orderBy('start_time');
+
                                 if ($operation === 'create') {
                                     $query->where('is_available', true);
                                 } elseif ($operation === 'edit' && $record) {
                                     $query->where(function ($q) use ($record) {
-                                        $q->where('is_available', true)
-                                            ->orWhere('id', $record->slot_id);
+                                        $q->where('is_available', true)->orWhere('id', $record->slot_id);
                                     });
                                 }
 
                                 return $query->get()->mapWithKeys(function ($slot) {
-                                    $dateFormatted = \Carbon\Carbon::parse($slot->date)
-                                        ->locale('id')
-                                        ->isoFormat('dddd, D MMMM YYYY');
-
+                                    $dateFormatted = \Carbon\Carbon::parse($slot->date)->locale('id')->isoFormat('dddd, D MMMM YYYY');
                                     $timeRange = substr($slot->start_time, 0, 5).' - '.substr($slot->end_time, 0, 5);
-
-                                    // indikator jika slot tidak available
                                     $label = "{$dateFormatted} | {$timeRange}";
                                     if (! $slot->is_available) {
                                         $label .= ' (Terpakai)';
@@ -167,6 +159,8 @@ class CounselingBookingForm
                             ->required()
                             ->searchable()
                             ->reactive()
+                            // KEAMANAN: Kunci jika status bukan 'pending'
+                            ->disabled(fn ($get) => $get('status') !== 'pending')
                             ->afterStateUpdated(function ($state, callable $set) {
                                 if ($state) {
                                     $slot = CounselorSlot::find($state);
@@ -175,42 +169,20 @@ class CounselingBookingForm
                                         $set('scheduled_time', $slot->start_time);
                                     }
                                 }
-                            })
-                            ->helperText(
-                                fn (?string $operation) => $operation === 'create'
-                                    ? 'Hanya menampilkan slot yang tersedia.'
-                                    : 'Menampilkan slot tersedia + slot yang sedang dipakai.'
-                            ),
-
-                        Grid::make(2)
-                            ->schema([
-                                DatePicker::make('scheduled_date')
-                                    ->label('Tanggal Sesi')
-                                    ->required()
-                                    ->native(false),
-                                TimePicker::make('scheduled_time')
-                                    ->label('Waktu Sesi')
-                                    ->required()
-                                    ->native(false),
-                            ]),
-
-                        TextInput::make('counselor_name')
-                            ->label('Nama Konselor')
-                            ->required()
-                            ->maxLength(255),
+                            }),
 
                         TextInput::make('topic')
                             ->label('Topik Konsultasi')
                             ->required()
-                            ->disabled()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->disabled(),
 
                         Textarea::make('notes')
                             ->label('Catatan / Keluhan Mahasiswa')
                             ->required()
-                            ->disabled()
                             ->rows(4)
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->disabled(),
                     ])
                     ->columns(2),
             ]);

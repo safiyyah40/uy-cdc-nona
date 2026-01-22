@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\PuskakaTeam\Pages;
+namespace App\Filament\Resources\PuskakaTeams\Pages;
 
-use App\Filament\Resources\PuskakaTeamResource;
+use App\Filament\Resources\PuskakaTeams\PuskakaTeamResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreatePuskakaTeam extends CreateRecord

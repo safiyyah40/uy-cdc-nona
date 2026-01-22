@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import MainLayout from '@/Layouts/MainLayout';
 import { Head, Link } from '@inertiajs/react';
 import { useScrollFadeIn } from '@/Hooks/useScrollFadeIn';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Mousewheel, Autoplay, Parallax, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 // ICON COMPONENTS
 const Icons = {
@@ -200,17 +205,18 @@ function CounselorCard({ name, title, faculty, expertise, photoUrl }) {
 }
 
 // HALAMAN UTAMA
-export default function ProfilKonselor({ counselors }) {
+export default function ProfilKonselor({ counselors, slides = [] }) {
     const heroTitle = useScrollFadeIn(0.2);
     const heroText = useScrollFadeIn(0.3);
     const heroImage = useScrollFadeIn(0.4);
+
+    const hasMultipleSlides = slides && slides.length > 1;
 
     // State untuk search dan filter
     const [searchTerm, setSearchTerm] = useState('');
     const [perPage, setPerPage] = useState(8);
     const [currentPage, setCurrentPage] = useState(1);
 
-    // Filter dan pagination
     const filteredCounselors = counselors?.filter(counselor => {
         const searchLower = searchTerm.toLowerCase();
         return (
@@ -221,102 +227,94 @@ export default function ProfilKonselor({ counselors }) {
         );
     }) || [];
 
-    // Pagination logic
-    const startIndex = perPage === 'all' ? 0 : (currentPage - 1) * perPage;
-
-    // Reset ke halaman 1 ketika search atau filter berubah
-    React.useEffect(() => {
-        setCurrentPage(1);
-    }, [searchTerm, perPage]);
-
     return (
         <MainLayout>
             <Head title="Profil Konselor - CDC Universitas YARSI" />
+
             {/* HERO SECTION */}
             <section className="relative w-full py-14 md:py-20 bg-gradient-to-br from-white to-emerald-50 overflow-hidden">
-                {/* Dekorasi Latar Belakang */}
-                <div className="absolute inset-0 opacity-[0.05]"
-                    style={{ backgroundImage: 'radial-gradient(circle, #044732 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
-                </div>
+                <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(circle, #044732 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
                 <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-yarsi-accent/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply animate-blob"></div>
-                <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w--80 h-80 bg-yarsi-green/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply animate-blob animation-delay-2000"></div>
+                <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-yarsi-green/10 rounded-full blur-3xl pointer-events-none mix-blend-multiply animate-blob animation-delay-2000"></div>
 
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
                         <div className="lg:w-1/2 text-center lg:text-left">
-                            {/* Badge */}
-                            <div
-                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-yarsi-green/20 shadow-sm text-yarsi-green text-xs font-bold uppercase tracking-wider mb-6"
-                                ref={heroTitle.ref}
-                                style={heroTitle.style}
-                            >
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-yarsi-green/20 shadow-sm text-yarsi-green text-xs font-bold uppercase tracking-wider mb-6" ref={heroTitle.ref} style={heroTitle.style}>
                                 <span className="relative flex h-2.5 w-2.5">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yarsi-accent opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yarsi-accent"></span>
                                 </span>
-                                Career Development Center
+                                Tim Konselor Profesional - UY
                             </div>
 
-                            {/* Main Heading */}
                             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 font-kaisei mb-6 leading-tight">
                                 Tim Konselor <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-yarsi-green to-yarsi-accent">
-                                    Profesional
-                                </span>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-yarsi-green to-yarsi-accent">Profesional</span>
                             </h1>
 
-                            {/* Description */}
-                            <p
-                                ref={heroText.ref}
-                                style={heroText.style}
-                                className="text-lg text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light mb-8"
-                            >
-                                Kami memiliki konselor terbaik yang tidak hanya berkompeten, tetapi juga peduli pada perkembangan mahasiswa YARSI. Dengan pendekatan personal, kami siap mendampingi langkah akademik maupun karir Anda.
+                            <p ref={heroText.ref} style={heroText.style} className="text-lg text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light mb-8">
+                                Kami memiliki konselor terbaik yang tidak hanya berkompeten, tetapi juga peduli pada perkembangan mahasiswa YARSI. Kami siap mendampingi langkah akademik maupun karir Anda.
                             </p>
 
-                            {/* Stats Grid */}
                             <div className="grid grid-cols-3 gap-4 border-t border-gray-200 pt-8 max-w-md mx-auto lg:mx-0">
-                                <div>
-                                    <div className="text-3xl font-bold font-kaisei text-yarsi-green">{counselors?.length || 0}+</div>
-                                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-1">Konselor</div>
-                                </div>
-                                <div className="border-l border-gray-200 pl-4">
-                                    <div className="text-3xl font-bold font-kaisei text-yarsi-green">100%</div>
-                                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-1">Terverifikasi</div>
-                                </div>
-                                <div className="border-l border-gray-200 pl-4">
-                                    <div className="text-xl font-bold font-kaisei text-yarsi-green mt-1">1-on-1</div>
-                                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-2">Bimbingan</div>
-                                </div>
+                                <div><div className="text-3xl font-bold font-kaisei text-yarsi-green">{counselors?.length || 0}+</div><div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-1">Konselor</div></div>
+                                <div className="border-l border-gray-200 pl-4"><div className="text-3xl font-bold font-kaisei text-yarsi-green">100%</div><div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-1">Terverifikasi</div></div>
+                                <div className="border-l border-gray-200 pl-4"><div className="text-xl font-bold font-kaisei text-yarsi-green mt-1">1-on-1</div><div className="text-xs text-gray-500 font-medium uppercase tracking-wide mt-2">Bimbingan</div></div>
                             </div>
                         </div>
 
-                        {/* VISUAL CARD */}
+                        {/* VISUAL CARD (SWIPER DENGAN PROTEKSI) */}
                         <div className="lg:w-1/2 relative w-full" ref={heroImage.ref} style={heroImage.style}>
-                            {/* Card Background */}
-                            <div
-                                className="aspect-[4/3] relative rounded-[2rem] overflow-hidden shadow-2xl flex items-center justify-center border-[6px] border-white ring-1 ring-gray-100 transform rotate-1 hover:rotate-0 transition-transform duration-500 bg-cover bg-center"
-                                style={{
-                                    backgroundImage: "url('/images/pict-profil-konselor.png')",
-                                }}
-                            >
-                                {/* Overlay gradient untuk memastikan teks tetap terbaca jika ada teks di atasnya nanti, atau agar gambar tidak terlalu terang */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-yarsi-green/60 to-transparent mix-blend-multiply"></div>
-
-                                {/* Badge Status di Pojok Kiri Bawah */}
-                                <div className="absolute bottom-8 left-8 flex items-center gap-3 p-3 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-white">
-                                    <div className="bg-green-100 p-1.5 rounded-full text-yarsi-green">
-                                        <Icons.CheckBadge />
-                                    </div>
-                                    <div>
-                                        <div className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Status</div>
-                                        <div className="text-xs font-bold text-gray-900">Professional</div>
+                            {slides && slides.length > 0 ? (
+                                <Swiper
+                                    modules={[Navigation, Pagination, Mousewheel, Autoplay, Parallax, A11y]}
+                                    spaceBetween={0}
+                                    slidesPerView={1}
+                                    parallax={true}
+                                    speed={1000}
+                                    navigation
+                                    pagination={{ clickable: true, dynamicBullets: true }}
+                                    mousewheel={true}
+                                    grabCursor={true}
+                                    loop={hasMultipleSlides}
+                                    autoplay={hasMultipleSlides ? { delay: 5000, disableOnInteraction: false } : false}
+                                    className="aspect-[4/3] relative rounded-[2rem] overflow-hidden border-[6px] border-white ring-1 ring-gray-100 shadow-2xl transform rotate-1 hover:rotate-0 transition-all duration-700 ease-out group aesthetic-pagination"
+                                >
+                                    <div slot="container-start" className="parallax-bg absolute inset-0 bg-cover bg-center" data-swiper-parallax="-23%"></div>
+                                    {slides.map((slide) => (
+                                        <SwiperSlide key={slide.id} className="overflow-hidden rounded-[2rem]">
+                                            <div
+                                                className="w-full h-full bg-cover bg-center transform scale-110 group-hover:scale-100 transition-transform duration-[2s] ease-out relative"
+                                                style={{ backgroundImage: `url('/storage/${slide.image_path}')` }}
+                                                data-swiper-parallax="-20%"
+                                            >
+                                                <div className="absolute inset-0 bg-gradient-to-t from-yarsi-green/60 to-transparent mix-blend-multiply"></div>
+                                            </div>
+                                            <div className="absolute bottom-8 left-8 flex items-center gap-3 p-3 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white transition-all duration-300 hover:scale-105" data-swiper-parallax="-300" data-swiper-parallax-opacity="0.5">
+                                                <div className="bg-green-100 p-1.5 rounded-full text-yarsi-green shadow-inner"><Icons.CheckBadge /></div>
+                                                <div>
+                                                    <div className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">{slide.title || "Dokumentasi"}</div>
+                                                    <div className="text-xs font-bold text-gray-900">Professional Team</div>
+                                                </div>
+                                            </div>
+                                        </SwiperSlide>
+                                    ))}
+                                </Swiper>
+                            ) : (
+                                /* FALLBACK: Jika data slide kosong */
+                                <div className="aspect-[4/3] relative rounded-[2rem] overflow-hidden shadow-2xl flex items-center justify-center border-[6px] border-white ring-1 ring-gray-100 transform rotate-1 hover:rotate-0 transition-transform duration-500 bg-cover bg-center" style={{ backgroundImage: "url('/images/pict-profil-konselor.png')" }}>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-yarsi-green/60 to-transparent mix-blend-multiply"></div>
+                                    <div className="absolute bottom-8 left-8 flex items-center gap-3 p-3 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-white">
+                                        <div className="bg-green-100 p-1.5 rounded-full text-yarsi-green"><Icons.CheckBadge /></div>
+                                        <div>
+                                            <div className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Status</div>
+                                            <div className="text-xs font-bold text-gray-900">Professional</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* Elemen Dekoratif di belakang Card */}
-                            <div className="absolute -z-10 top-10 -right-10 w-full h-full border-2 border-yarsi-green/20 rounded-[2rem] transform rotate-6"></div>
+                            )}
+                            <div className="absolute -z-10 top-10 -right-10 w-full h-full border-2 border-yarsi-green/20 rounded-[2rem] transform rotate-6 hidden md:block"></div>
                         </div>
                     </div>
                 </div>
@@ -521,7 +519,7 @@ export default function ProfilKonselor({ counselors }) {
                             Siap Konsultasi dengan Ahli?
                         </h2>
                         <p className="text-emerald-100 text-lg mb-10 font-light leading-relaxed">
-                            Booking sesi konsultasi Anda sekarang dan dapatkan bimbingan profesional.
+                            Reservasi sesi konsultasi Anda sekarang dan dapatkan bimbingan profesional.
                         </p>
                         <Link
                             href="/layanan/konsultasi"

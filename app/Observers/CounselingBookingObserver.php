@@ -51,7 +51,6 @@ class CounselingBookingObserver
      */
     public function deleted(CounselingBooking $counselingBooking): void
     {
-        $counselingBooking->calendarEvent()?->delete();
     }
 
     /**

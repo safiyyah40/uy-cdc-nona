@@ -7,7 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
@@ -41,9 +41,8 @@ class RiasecQuestionsTable
                     ->badge()
                     ->color('info'),
                 
-                IconColumn::make('is_active')
-                    ->label('Aktif')
-                    ->boolean(),
+                ToggleColumn::make('is_active')
+                    ->label('Aktif'),
                 
                 TextColumn::make('created_at')
                     ->label('Dibuat')

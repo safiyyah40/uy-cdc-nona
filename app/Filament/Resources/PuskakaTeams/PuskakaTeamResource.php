@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\PuskakaTeams;
 
-use App\Filament\Resources\PuskakaTeam\Pages\CreatePuskakaTeam;
-use App\Filament\Resources\PuskakaTeam\Pages\EditPuskakaTeam;
-use App\Filament\Resources\PuskakaTeam\Pages\ListPuskakaTeams;
-use App\Filament\Resources\PuskakaTeam\Schemas\PuskakaTeamForm;
-use App\Filament\Resources\PuskakaTeam\Schemas\PuskakaTeamInfolist;
-use App\Filament\Resources\PuskakaTeam\Tables\PuskakaTeamsTable;
+use App\Filament\Resources\PuskakaTeams\Pages\CreatePuskakaTeam;
+use App\Filament\Resources\PuskakaTeams\Pages\EditPuskakaTeam;
+use App\Filament\Resources\PuskakaTeams\Pages\ListPuskakaTeams;
+use App\Filament\Resources\PuskakaTeams\Pages\ViewPuskakaTeam;
+use App\Filament\Resources\PuskakaTeams\Schemas\PuskakaTeamForm;
+use App\Filament\Resources\PuskakaTeams\Schemas\PuskakaTeamInfolist;
+use App\Filament\Resources\PuskakaTeams\Tables\PuskakaTeamsTable;
 use App\Models\PuskakaTeam;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -20,7 +21,7 @@ class PuskakaTeamResource extends Resource
 {
     protected static ?string $model = PuskakaTeam::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
+     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
     protected static string|UnitEnum|null $navigationGroup = 'Manajemen Halaman Profil';
 
@@ -63,6 +64,7 @@ class PuskakaTeamResource extends Resource
         return [
             'index' => ListPuskakaTeams::route('/'),
             'create' => CreatePuskakaTeam::route('/create'),
+            'view' => ViewPuskakaTeam::route('/{record}'),
             'edit' => EditPuskakaTeam::route('/{record}/edit'),
         ];
     }

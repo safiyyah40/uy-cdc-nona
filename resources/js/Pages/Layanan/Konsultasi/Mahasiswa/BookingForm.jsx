@@ -190,7 +190,7 @@ const BookingForm = ({ counselor_id, counselor_name, slot_date, slot_time, slot_
                     <Link href={route('layanan.konsultasi')} className="inline-flex items-center text-sm text-gray-500 hover:text-[#004d40] transition mb-4">
                         <ChevronLeft className="w-4 h-4 mr-1" /> Kembali ke Daftar Konselor
                     </Link>
-                    <h1 className="text-3xl font-bold text-gray-900 font-serif">Formulir Resevasi Sesi Konsultasi</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 font-serif">Formulir Reservasi Sesi Konsultasi</h1>
                     <p className="text-gray-600 mt-1">Lengkapi data diri dan detail sesi Anda.</p>
                 </div>
             </div>

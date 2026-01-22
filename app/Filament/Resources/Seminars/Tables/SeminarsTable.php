@@ -2,18 +2,18 @@
 
 namespace App\Filament\Resources\Seminars\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\BadgeColumn;
-use Illuminate\Support\Str;
 use App\Models\Seminar;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class SeminarsTable
 {
@@ -24,7 +24,7 @@ class SeminarsTable
                 ImageColumn::make('image')
                     ->label('Poster')
                     ->circular(),
-                
+
                 TextColumn::make('title')
                     ->label('Judul')
                     ->searchable()
@@ -43,6 +43,8 @@ class SeminarsTable
                         'warning' => 'Hybrid',
                         'primary' => 'Offline',
                     ]),
+                ToggleColumn::make('is_active')
+                    ->label('Aktif'),
 
                 TextColumn::make('created_at')
                     ->label('Diposting')

@@ -6,7 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\ImageColumn;
@@ -61,13 +61,8 @@ class MagangsTable
                     ->sortable()
                     ->color(fn($record) => $record->deadline < now() ? 'danger' : 'success'),
 
-                IconColumn::make('is_active')
-                    ->label('Status')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
-                    ->trueColor('success')
-                    ->falseColor('danger'),
+                ToggleColumn::make('is_active')
+                    ->label('Aktif'),
 
                 TextColumn::make('created_at')
                     ->label('Dibuat')

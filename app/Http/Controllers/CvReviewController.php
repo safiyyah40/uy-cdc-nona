@@ -12,17 +12,35 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
+/**
+ * Controller untuk mengelola layanan CV Review CDC YARSI
+ * Mendukung 3 role: Guest, Mahasiswa, Konselor
+ *
+ * ROLE RESTRICTIONS:
+ * - dosen_staf: TIDAK BISA upload CV, lihat riwayat, atau akses detail
+ * - mahasiswa: BISA upload CV dan lihat riwayat sendiri
+ * - konselor: BISA review CV yang ditugaskan
+ *
+ * @author NONA
+ *
+ * @lastUpdate 2025-01-21 - Added dosen_staf protection
+ */
 class CvReviewController extends Controller
 {
     /**
      * LANDING PAGE CV REVIEW (Public/Mahasiswa/Konselor)
+     *
+     * Halaman ini bisa diakses semua role (termasuk dosen_staf)
+     * Tapi button action akan di-protect oleh frontend modal
+     *
+     * @return \Inertia\Response
      */
     public function index(Request $request)
     {
         $user = Auth::user();
-
         try {
             $query = CvTemplate::where('is_active', true);
+
             if ($request->filled('search')) {
                 $search = $request->input('search');
                 $query->where(function ($q) use ($search) {
@@ -63,8 +81,8 @@ class CvReviewController extends Controller
 
             return Inertia::render('Layanan/CvReview/IndexCvReview', [
                 'auth' => ['user' => $user],
-                'templates' => $mappedTemplates->items(), // Data array
-                'pagination' => [ // Data pagination untuk frontend
+                'templates' => $mappedTemplates->items(),
+                'pagination' => [
                     'links' => $mappedTemplates->linkCollection()->toArray(),
                     'from' => $mappedTemplates->firstItem(),
                     'to' => $mappedTemplates->lastItem(),
@@ -91,19 +109,18 @@ class CvReviewController extends Controller
     {
         session()->put('url.intended', route('layanan.cv.review'));
 
-        // Lempar ke login
         return redirect()->route('login');
     }
 
     /**
-     * DOWNLOAD TEMPLATE FILE (Untuk User/Guest)
+     * DOWNLOAD TEMPLATE FILE
+     * Public access - semua role bisa download template
      */
     public function downloadTemplate($id)
     {
         try {
             $template = CvTemplate::where('is_active', true)->findOrFail($id);
 
-            // Jika sumbernya bukan manual atau file tidak ada, abort
             if ($template->sumber !== 'manual' || empty($template->file_path)) {
                 return back()->with('error', 'File template tidak tersedia.');
             }
@@ -112,7 +129,6 @@ class CvReviewController extends Controller
                 return back()->with('error', 'File fisik tidak ditemukan di server.');
             }
 
-            // Hitung jumlah download
             $template->increment('jumlah_download');
             $template->increment('jumlah_klik');
 
@@ -130,8 +146,7 @@ class CvReviewController extends Controller
 
     /**
      * TABEL LIST CV REVIEW
-     * - Mahasiswa: Lihat riwayat submission sendiri
-     * - Konselor: Lihat CV yang ditugaskan kepadanya
+     * PROTECTED: Hanya mahasiswa dan konselor
      */
     public function table(Request $request)
     {
@@ -139,6 +154,12 @@ class CvReviewController extends Controller
 
         if (! $user) {
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        // PROTEKSI DOSEN/STAF
+        if ($user->role === 'dosen_staf') {
+            return redirect()->route('dashboard')
+                ->with('error', 'Anda tidak memiliki akses ke halaman ini. Halaman ini diperuntukkan untuk Mahasiswa.');
         }
 
         if ($user->role === 'konselor') {
@@ -153,10 +174,14 @@ class CvReviewController extends Controller
      */
     private function tableForStudent($user, $request)
     {
+        // Double check
+        if ($user->role === 'dosen_staf') {
+            abort(403, 'Unauthorized access');
+        }
+
         $query = CvReview::where('user_id', $user->id)
             ->with('counselor:id,name');
 
-        // FILTER SEARCH
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
@@ -166,7 +191,6 @@ class CvReviewController extends Controller
             });
         }
 
-        // FILTER STATUS
         if ($request->filled('status') && $request->input('status') !== 'all') {
             $statusMap = [
                 'submitted' => 'submitted',
@@ -182,11 +206,10 @@ class CvReviewController extends Controller
             }
         }
 
-        // SORTING WAKTU
         if ($request->filled('sort')) {
             if ($request->input('sort') === 'oldest') {
                 $query->orderBy('created_at', 'asc');
-            } else { // newest
+            } else {
                 $query->orderBy('created_at', 'desc');
             }
         } else {
@@ -250,7 +273,6 @@ class CvReviewController extends Controller
         $query = CvReview::where('counselor_id', $counselor->id)
             ->with('user:id,name,email');
 
-        // FILTER SEARCH
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
@@ -261,7 +283,6 @@ class CvReviewController extends Controller
             });
         }
 
-        // --- FILTER STATUS
         if ($request->filled('status') && $request->input('status') !== 'all') {
             $statusMap = [
                 'submitted' => 'submitted',
@@ -277,7 +298,6 @@ class CvReviewController extends Controller
             }
         }
 
-        // FILTER PRIORITY
         if ($request->filled('priority') && $request->input('priority') !== 'all') {
             $priorityMap = [
                 'normal' => 'normal',
@@ -293,7 +313,6 @@ class CvReviewController extends Controller
             }
         }
 
-        // FILTER SORTING WAKTU
         if ($request->filled('sort')) {
             if ($request->input('sort') === 'oldest') {
                 $query->orderBy('submitted_at', 'asc');
@@ -325,7 +344,6 @@ class CvReviewController extends Controller
             ];
         });
 
-        // STATISTICS untuk Konselor
         $stats = [
             'total' => CvReview::where('counselor_id', $counselor->id)->count(),
             'pending' => CvReview::where('counselor_id', $counselor->id)
@@ -355,11 +373,24 @@ class CvReviewController extends Controller
     }
 
     /**
-     * FORM UPLOAD CV (MAHASISWA)
+     * FORM UPLOAD CV (MAHASISWA ONLY)
+     * PROTECTED: Hanya mahasiswa
      */
     public function create()
     {
         $user = Auth::user();
+
+        // PROTEKSI DOSEN/STAF
+        if ($user->role === 'dosen_staf') {
+            return redirect()->route('layanan.cv.review')
+                ->with('error', 'Anda tidak memiliki akses untuk mengunggah CV. Fitur ini hanya untuk mahasiswa.');
+        }
+
+        // PROTEKSI KONSELOR
+        if ($user->role === 'konselor') {
+            return redirect()->route('layanan.tabel.cv.review')
+                ->with('info', 'Sebagai konselor, Anda tidak perlu mengunggah CV.');
+        }
 
         return Inertia::render('Layanan/CvReview/Mahasiswa/FormUnggahCv', [
             'auth' => ['user' => $user],
@@ -367,11 +398,21 @@ class CvReviewController extends Controller
     }
 
     /**
-     * SIMPAN CV BARU (MAHASISWA)
+     * SIMPAN CV BARU (MAHASISWA ONLY)
+     * PROTECTED: Hanya mahasiswa
      */
     public function store(Request $request)
     {
         $user = Auth::user();
+
+        // PROTEKSI ROLE
+        if ($user->role === 'dosen_staf') {
+            return back()->withErrors(['error' => 'Anda tidak memiliki akses untuk mengunggah CV.']);
+        }
+
+        if ($user->role === 'konselor') {
+            return back()->withErrors(['error' => 'Konselor tidak dapat mengunggah CV.']);
+        }
 
         $validated = $request->validate([
             'target_position' => 'required|string|max:255',
@@ -420,11 +461,19 @@ class CvReviewController extends Controller
     }
 
     /**
-     * DETAIL CV REVIEW (MAHASISWA & KONSELOR)
+     * DETAIL CV REVIEW
+     * PROTECTED: Hanya mahasiswa dan konselor yg ditugaskan
      */
     public function show($id)
     {
         $user = Auth::user();
+
+        // PROTEKSI DOSEN/STAF
+        if ($user->role === 'dosen_staf') {
+            return redirect()->route('dashboard')
+                ->with('error', 'Anda tidak memiliki akses ke halaman ini.');
+        }
+
         $review = CvReview::with(['counselor', 'user'])->findOrFail($id);
 
         // Security Check
@@ -489,17 +538,24 @@ class CvReviewController extends Controller
 
     /**
      * WORKSPACE KONSELOR (Halaman Review)
+     * PROTECTED: Hanya konselor
      */
     public function workspace($id)
     {
         $user = Auth::user();
+
+        // PROTEKSI NON-KONSELOR
+        if ($user->role !== 'konselor') {
+            return redirect()->route('dashboard')
+                ->with('error', 'Halaman ini hanya untuk konselor.');
+        }
 
         $counselor = Counselor::where('email', $user->email)
             ->orWhere('name', $user->name)
             ->first();
 
         if (! $counselor) {
-            abort(403);
+            abort(403, 'Data konselor tidak ditemukan');
         }
 
         $review = CvReview::where('id', $id)
@@ -535,11 +591,16 @@ class CvReviewController extends Controller
     }
 
     /**
-     * SUBMIT FEEDBACK (KONSELOR)
+     * SUBMIT FEEDBACK (HANYA KONSELOR)
      */
     public function submitFeedback(Request $request, $id)
     {
         $user = Auth::user();
+
+        // PROTEKSI NON-KONSELOR
+        if ($user->role !== 'konselor') {
+            abort(403, 'Unauthorized');
+        }
 
         $counselor = Counselor::where('email', $user->email)
             ->orWhere('name', $user->name)
@@ -558,7 +619,7 @@ class CvReviewController extends Controller
             'feedback_files' => 'nullable|array|max:5',
             'feedback_files.*' => 'file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
         ], [
-            'feedback_files.*.mimes' => 'Format file harus PDF, Word (doc/docx), atau Gambar (jpg/png). Excel dan PPT tidak diperbolehkan.',
+            'feedback_files.*.mimes' => 'Format file harus PDF, Word (doc/docx), atau Gambar (jpg/png).',
             'feedback_files.*.max' => 'Ukuran file maksimal 10MB per file.',
         ]);
 
@@ -592,11 +653,16 @@ class CvReviewController extends Controller
     }
 
     /**
-     * DELETE CV REVIEW (MAHASISWA)
+     * DELETE/CANCEL CV REVIEW (MAHASISWA ONLY)
      */
     public function destroy($id)
     {
         $user = Auth::user();
+
+        // PROTEKSI ROLE
+        if ($user->role === 'dosen_staf') {
+            return back()->withErrors(['error' => 'Anda tidak memiliki akses untuk membatalkan pengajuan.']);
+        }
 
         $review = CvReview::where('id', $id)
             ->where('user_id', $user->id)
@@ -613,7 +679,6 @@ class CvReviewController extends Controller
         DB::beginTransaction();
         try {
             $review->update(['status' => 'cancelled']);
-
             DB::commit();
 
             if (request()->wantsJson()) {
@@ -637,11 +702,18 @@ class CvReviewController extends Controller
 
     /**
      * DOWNLOAD CV FILE
+     * PROTECTED: Hanya mahasiswa dan assigned counselor
      */
     public function downloadCv($id)
     {
         try {
             $user = Auth::user();
+
+            // PROTEKSI DOSEN/STAF
+            if ($user->role === 'dosen_staf') {
+                abort(403, 'Anda tidak memiliki akses untuk mengunduh file ini.');
+            }
+
             $review = CvReview::findOrFail($id);
 
             // Validasi Akses
@@ -680,6 +752,7 @@ class CvReviewController extends Controller
 
         } catch (\Exception $e) {
             Log::error('CV Download Error: '.$e->getMessage());
+
             if (request()->wantsJson()) {
                 return response()->json([
                     'error' => 'Gagal mengunduh file: '.$e->getMessage(),

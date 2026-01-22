@@ -31,7 +31,7 @@ const LAYANAN_TES = [
 
 const TesMinatBakatComp = () => {
     return (
-        <section id="layanan-tes" className="relative py-14 pb-8 bg-white overflow-hidden">
+        <section id="layanan-tes" className=" rounded-2xl h-full relative overflow-hidden">
 
             <div className="absolute top-0 inset-x-0 h-full w-full pointer-events-none overflow-hidden">
                 <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-green-50 rounded-full blur-[100px] opacity-60 mix-blend-multiply"></div>

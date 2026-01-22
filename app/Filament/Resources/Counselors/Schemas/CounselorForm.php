@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\Counselors\Schemas;
 
 use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -14,8 +16,8 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
-use Illuminate\Support\Carbon;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Carbon;
 
 class CounselorForm
 {
@@ -82,28 +84,30 @@ class CounselorForm
                                 Repeater::make('slots')
                                     ->relationship('slots')
                                     ->schema([
+                                        // PENTING: Tambahkan Hidden ID agar sistem bisa membedakan data lama vs baru
+                                        Hidden::make('id'),
+
                                         Grid::make(3)->schema([
                                             DatePicker::make('date')
                                                 ->label('Tanggal')
                                                 ->required()
                                                 ->native(false)
                                                 ->displayFormat('d M Y')
-                                                // Tidak boleh pilih tanggal kemarin
                                                 ->minDate(now()->startOfDay())
-                                                ->live(), // Agar perubahan tanggal langsung terbaca oleh field jam
+                                                ->live(),
 
                                             TimePicker::make('start_time')
                                                 ->label('Mulai')
                                                 ->required()
                                                 ->seconds(false)
-                                                ->live()
-                                                // Jika tanggal adalah hari ini, jam mulai tidak boleh sudah lewat
                                                 ->rules([
                                                     fn ($get) => function (string $attribute, $value, $fail) use ($get) {
-                                                        $selectedDate = $get('date');
-                                                        if ($selectedDate && Carbon::parse($selectedDate)->isToday()) {
-                                                            if (Carbon::parse($value)->isBefore(now())) {
-                                                                $fail('Waktu mulai sudah terlewat untuk hari ini.');
+                                                        // Jika slot sudah ada di database (sudah ada ID), jangan validasi jam lampau lagi
+                                                        if (blank($get('id'))) {
+                                                            if ($get('date') === now()->toDateString() && $value) {
+                                                                if (Carbon::parse($value)->isBefore(now())) {
+                                                                    $fail('Waktu mulai sudah terlewat.');
+                                                                }
                                                             }
                                                         }
                                                     },
@@ -113,22 +117,22 @@ class CounselorForm
                                                 ->label('Selesai')
                                                 ->required()
                                                 ->seconds(false)
-                                                // Jam selesai harus setelah jam mulai
-                                                ->after('start_time')
-                                                ->rules([
-                                                    fn ($get) => function (string $attribute, $value, $fail) use ($get) {
-                                                        if ($get('start_time') === $value) {
-                                                            $fail('Waktu selesai tidak boleh sama dengan waktu mulai.');
-                                                        }
-                                                    },
-                                                ]),
+                                                ->after('start_time'),
                                         ]),
                                     ])
+                                    ->deleteAction(
+                                        fn (Action $action) => $action->requiresConfirmation()
+                                    )
                                     ->default([])
                                     ->addActionLabel('Tambah Slot Waktu Baru')
                                     ->collapsible()
                                     ->collapsed()
                                     ->cloneable()
+                                    ->deleteAction(
+                                        fn (Action $action) => $action->disabled(fn ($get) => $get('date') && $get('start_time') &&
+                                            Carbon::parse($get('date').' '.$get('start_time'))->isPast()
+                                        ),
+                                    )
                                     ->reorderableWithButtons()
                                     ->itemLabel(fn (array $state): ?string => isset($state['date'])
                                         ? Carbon::parse($state['date'])->translatedFormat('d F Y')." ({$state['start_time']} - {$state['end_time']})"
