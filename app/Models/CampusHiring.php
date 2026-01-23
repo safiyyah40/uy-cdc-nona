@@ -6,6 +6,43 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
 
+/**
+ * @property int $id
+ * @property string $slug
+ * @property string $title
+ * @property string $company_name
+ * @property string $location
+ * @property \Illuminate\Support\Carbon $date
+ * @property string $time
+ * @property string $description
+ * @property string $content
+ * @property string|null $image
+ * @property string|null $registration_link
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\CalendarEvent|null $calendarEvent
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring latest()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereCompanyName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereLocation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereRegistrationLink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CampusHiring whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class CampusHiring extends Model
 {
     protected $fillable = [

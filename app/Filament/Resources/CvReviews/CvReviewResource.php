@@ -82,7 +82,7 @@ class CvReviewResource extends Resource
 
      public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::where('status', 'submitted')->count();
+        return (string) static::getModel()::where('status', 'submitted')->count();
     }
     
     public static function getNavigationBadgeColor(): ?string

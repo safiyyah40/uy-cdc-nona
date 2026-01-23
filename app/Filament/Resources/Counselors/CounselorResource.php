@@ -77,7 +77,8 @@ class CounselorResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::where('is_active', true)->count();
+        // Gunakan 'static' bukan 'string', lalu ubah angka (int) menjadi string
+        return (string) static::getModel()::where('is_active', true)->count();
     }
 
     public static function getNavigationBadgeColor(): ?string

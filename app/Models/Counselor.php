@@ -7,6 +7,47 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int|null $user_id
+ * @property string $name
+ * @property string|null $email
+ * @property string|null $phone
+ * @property string $title
+ * @property string|null $photo_path
+ * @property string|null $photo
+ * @property int $is_active
+ * @property int $order_column
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CounselingBooking> $bookings
+ * @property-read int|null $bookings_count
+ * @property-read mixed $photo_url
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CounselingReport> $reports
+ * @property-read int|null $reports_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CounselorSlot> $slots
+ * @property-read int|null $slots_count
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor ordered()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor whereOrderColumn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor wherePhotoPath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Counselor whereUserId($value)
+ * @mixin \Eloquent
+ */
 class Counselor extends Model
 {
     use HasFactory;

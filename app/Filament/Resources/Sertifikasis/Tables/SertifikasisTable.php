@@ -45,6 +45,7 @@ class SertifikasisTable
                         'Kursus' => 'info',
                         'Workshop' => 'warning',
                         'Bootcamp' => 'danger',
+                        default => 'gray',
                     }),
 
                 TextColumn::make('mode')
@@ -54,11 +55,11 @@ class SertifikasisTable
                         'Online' => 'primary',
                         'Offline' => 'warning',
                         'Hybrid' => 'success',
+                        default => 'gray',
                     }),
 
                 TextColumn::make('fee')
                     ->label('Biaya')
-                    ->money('IDR')
                     ->sortable()
                     ->formatStateUsing(fn ($record) => $record->is_free ? 'Gratis' : 'Rp '.number_format($record->fee, 0, ',', '.')),
 
@@ -72,6 +73,7 @@ class SertifikasisTable
                         'Draft' => 'gray',
                         'Published' => 'success',
                         'Closed' => 'danger',
+                        default => 'gray',
                     }),
                 ToggleColumn::make('is_active')
                     ->label('Aktif'),

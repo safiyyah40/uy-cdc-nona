@@ -82,7 +82,6 @@ class ProfileController extends Controller
         // 1. Validasi Input
         $rules = [
             'phone' => ['required', 'string', 'regex:/^(08|628)[0-9]{8,13}$/'],
-            'gender' => [$user->gender ? 'nullable' : 'required', 'in:L,P'],
         ];
 
         // Jika dia mahasiswa, tambahkan syarat fakultas & prodi (sesuai needsProfileCompletion)
@@ -109,10 +108,6 @@ class ProfileController extends Controller
         if ($user->role === 'mahasiswa') {
             $user->faculty = $validated['faculty'];
             $user->study_program = $validated['study_program'];
-        }
-
-        if (empty($user->gender)) {
-            $user->gender = $validated['gender'];
         }
 
         // 4. SET FLAG SELESAI DISINI

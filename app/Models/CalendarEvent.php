@@ -6,6 +6,77 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property int $id
+ * @property int|null $user_id
+ * @property string|null $eventable_type
+ * @property int|null $eventable_id
+ * @property string $title
+ * @property string|null $description
+ * @property \Illuminate\Support\Carbon $start_date
+ * @property \Illuminate\Support\Carbon|null $end_date
+ * @property string|null $start_time
+ * @property string|null $end_time
+ * @property string $event_type
+ * @property string|null $location
+ * @property string|null $link
+ * @property string|null $registration_url
+ * @property string $color
+ * @property string|null $icon
+ * @property string $priority
+ * @property bool $is_visible_to_mahasiswa
+ * @property bool $is_visible_to_konselor
+ * @property bool $is_visible_to_admin
+ * @property bool $is_active
+ * @property bool $is_featured
+ * @property bool $send_notification
+ * @property int|null $remind_before_days
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read Model|\Eloquent|null $eventable
+ * @property-read string $date_range
+ * @property-read bool $is_past
+ * @property-read bool $is_today
+ * @property-read bool $is_upcoming
+ * @property-read string|null $time_range
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent inMonth($year, $month)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent visibleTo($role)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereEndTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereEventType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereEventableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereEventableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereIcon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereIsFeatured($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereIsVisibleToAdmin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereIsVisibleToKonselor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereIsVisibleToMahasiswa($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereLink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereLocation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent wherePriority($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereRegistrationUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereRemindBeforeDays($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereSendNotification($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereStartTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CalendarEvent withoutTrashed()
+ * @mixin \Eloquent
+ */
 class CalendarEvent extends Model
 {
     use SoftDeletes;

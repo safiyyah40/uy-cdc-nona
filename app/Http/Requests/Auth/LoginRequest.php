@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use App\Models\User;
+use App\Helpers\ActivityLogger;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +38,7 @@ class LoginRequest extends FormRequest
         // Coba Login Database Lokal Terlebih Dahulu
         if (Auth::attempt(['username' => $username, 'password' => $password], $this->boolean('remember'))) {
             RateLimiter::clear($this->throttleKey());
+            ActivityLogger::logLogin();
 
             return;
         }
@@ -56,6 +58,8 @@ class LoginRequest extends FormRequest
 
         Auth::login($user, $this->boolean('remember'));
         RateLimiter::clear($this->throttleKey());
+
+        ActivityLogger::logLogin();
     }
 
     /**

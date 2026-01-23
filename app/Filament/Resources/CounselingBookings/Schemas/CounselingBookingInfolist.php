@@ -61,6 +61,7 @@ class CounselingBookingInfolist
                                 'rejected' => 'danger',
                                 'completed' => 'primary',
                                 'cancelled' => 'gray',
+                                default => 'secondary',
                             })
                             ->formatStateUsing(fn (string $state): string => match ($state) {
                                 'pending' => 'Menunggu Verifikasi',

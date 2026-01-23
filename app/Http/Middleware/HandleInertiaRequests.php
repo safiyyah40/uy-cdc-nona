@@ -41,7 +41,6 @@ class HandleInertiaRequests extends Middleware
                     'id_number' => $request->user()->id_number,
                     'faculty' => $request->user()->faculty,
                     'study_program' => $request->user()->study_program,
-                    'gender' => $request->user()->gender,
                     'phone' => $request->user()->phone,
                     'role' => $request->user()->role,
                     'is_profile_complete' => $request->user()->is_profile_complete,
@@ -50,7 +49,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
             ],
-             'contactInfo' => ContactInfo::getContact(),
+             'contactInfo' => ContactInfo::getContact() ?? [],
         ];
     }
 }

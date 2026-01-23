@@ -8,6 +8,99 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+/**
+ * @property int $id
+ * @property string $title
+ * @property string $slug
+ * @property string|null $description
+ * @property string|null $content
+ * @property string $provider_name
+ * @property string|null $logo
+ * @property array<array-key, mixed> $categories
+ * @property string $type
+ * @property string $level
+ * @property string $mode
+ * @property string|null $location
+ * @property string|null $duration
+ * @property \Illuminate\Support\Carbon|null $start_date
+ * @property \Illuminate\Support\Carbon|null $end_date
+ * @property bool $is_self_paced
+ * @property numeric|null $fee
+ * @property bool $is_free
+ * @property string $fee_currency
+ * @property string|null $requirements
+ * @property string|null $benefits
+ * @property string|null $syllabus
+ * @property string|null $registration_url
+ * @property \Illuminate\Support\Carbon|null $registration_deadline
+ * @property bool $is_registration_open
+ * @property string|null $brochure_pdf
+ * @property string|null $certificate_sample
+ * @property int|null $quota
+ * @property int $enrolled_count
+ * @property string $status
+ * @property int $view_count
+ * @property string|null $meta_title
+ * @property string|null $meta_description
+ * @property array<array-key, mixed>|null $tags
+ * @property \Illuminate\Support\Carbon|null $published_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property bool $is_active
+ * @property-read \App\Models\CalendarEvent|null $calendarEvent
+ * @property-read mixed $formatted_fee
+ * @property-read mixed $is_deadline_soon
+ * @property-read mixed $is_full
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi published()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereBenefits($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereBrochurePdf($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereCategories($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereCertificateSample($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereDuration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereEnrolledCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereFeeCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereIsFree($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereIsRegistrationOpen($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereIsSelfPaced($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereLevel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereLocation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereLogo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereMetaDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereMetaTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereMode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereProviderName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi wherePublishedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereQuota($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereRegistrationDeadline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereRegistrationUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereRequirements($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereSyllabus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereTags($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi whereViewCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Sertifikasi withoutTrashed()
+ * @mixin \Eloquent
+ */
 class Sertifikasi extends Model
 {
     use HasFactory, SoftDeletes;

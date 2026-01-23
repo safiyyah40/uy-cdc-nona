@@ -4,6 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property string|null $email
+ * @property string|null $instagram_username
+ * @property string|null $whatsapp_number
+ * @property string|null $phone_number
+ * @property string|null $address_university
+ * @property string|null $address_cdc
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactInfo newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactInfo newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactInfo query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactInfo whereAddressCdc($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactInfo whereAddressUniversity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactInfo whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactInfo whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactInfo whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactInfo whereInstagramUsername($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactInfo wherePhoneNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactInfo whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactInfo whereWhatsappNumber($value)
+ * @mixin \Eloquent
+ */
 class ContactInfo extends Model
 {
     protected $table = 'contact_info';

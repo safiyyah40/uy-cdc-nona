@@ -6,6 +6,35 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
 
+/**
+ * @property int $id
+ * @property int $counselor_id
+ * @property \Illuminate\Support\Carbon $date
+ * @property string $start_time
+ * @property string $end_time
+ * @property bool $is_available
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\CounselingBooking|null $booking
+ * @property-read \App\Models\Counselor $counselor
+ * @property-read mixed $formatted_date
+ * @property-read mixed $formatted_time
+ * @property-read mixed $time_string
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CounselorSlot available()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CounselorSlot newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CounselorSlot newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CounselorSlot query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CounselorSlot upcoming()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CounselorSlot whereCounselorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CounselorSlot whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CounselorSlot whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CounselorSlot whereEndTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CounselorSlot whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CounselorSlot whereIsAvailable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CounselorSlot whereStartTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CounselorSlot whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class CounselorSlot extends Model
 {
     protected $fillable = [

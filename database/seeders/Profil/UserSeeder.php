@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin PUSKAKA',
             'username' => 'admin.puskaka',
             'email' => 'adminpuskaka@yarsi.ac.id',
-            'phone' => env('ADMIN_WHATSAPP', '6281295986204'),
+            'phone' => '6281295986204',
             'id_number' => '199001012020011001',
             'password' => Hash::make('AdminPuskaka@2025'),
             'role' => 'admin',
