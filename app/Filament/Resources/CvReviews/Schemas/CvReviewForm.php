@@ -101,9 +101,17 @@ class CvReviewForm
                             ->relationship('counselor', 'name')
                             ->searchable()
                             ->preload()
-                            // KEAMANAN: Jika sudah Selesai/Batal, konselor tidak bisa diganti lagi
+                            ->live()
+                            ->afterStateUpdated(function ($state, $set) {
+                                if ($state) {
+                                    $set('status', 'assigned');
+                                } else {
+                                    $set('status', 'submitted');
+                                }
+                            })
+                            // Jika sudah Selesai/Batal, konselor tidak bisa diganti lagi
                             ->disabled(fn ($get) => in_array($get('status'), ['completed', 'cancelled']))
-                            ->dehydrated(), // Tetap simpan ke DB meski di-disable
+                            ->dehydrated(),
 
                         Select::make('status')
                             ->label('Status Review Saat Ini')
@@ -114,8 +122,8 @@ class CvReviewForm
                                 'completed' => 'Selesai',
                                 'cancelled' => 'Dibatalkan',
                             ])
-                            ->disabled()
                             ->native(false)
+                            ->disabled()
                             ->dehydrated(),
 
                         Select::make('priority')

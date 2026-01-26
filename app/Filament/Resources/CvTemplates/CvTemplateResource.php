@@ -25,7 +25,7 @@ class CvTemplateResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Layanan Review CV';
+    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Konten Layanan Utama';
 
     protected static ?string $recordTitleAttribute = 'judul_template';
     

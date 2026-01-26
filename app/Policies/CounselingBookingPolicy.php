@@ -45,7 +45,7 @@ class CounselingBookingPolicy
      */
     public function delete(User $user, CounselingBooking $counselingBooking): bool
     {
-        return true;
+        return false;
     }
 
     /**

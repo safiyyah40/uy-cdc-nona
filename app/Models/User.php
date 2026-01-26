@@ -26,9 +26,9 @@ use LdapRecord\Laravel\Auth\LdapAuthenticatable;
  * @property string|null $password
  * @property string $role
  * @property string|null $photo_url
+ * @property string|null $guid LDAP GUID - jika ada berarti dari LDAP
+ * @property string|null $domain LDAP Domain
  * @property string|null $remember_token
- * /**
- * @property string $username
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CounselingBooking> $counselingBookings
@@ -42,6 +42,7 @@ use LdapRecord\Laravel\Auth\LdapAuthenticatable;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CounselorSlot> $slots
  * @property-read int|null $slots_count
+ *
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
@@ -62,17 +63,15 @@ use LdapRecord\Laravel\Auth\LdapAuthenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereStudyProgram($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUsername($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereGuid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereDomain($value)
+ *
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements FilamentUser, LdapAuthenticatable
 {
     use AuthenticatesWithLdap, HasFactory, HasLdapUser, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected $fillable = [
         'name',
         'username',
@@ -85,6 +84,8 @@ class User extends Authenticatable implements FilamentUser, LdapAuthenticatable
         'password',
         'role',
         'is_profile_complete',
+        'guid',
+        'domain',
     ];
 
     protected $hidden = [
@@ -102,33 +103,114 @@ class User extends Authenticatable implements FilamentUser, LdapAuthenticatable
     }
 
     /**
-     * Cek apakah user perlu melengkapi profil
-     * Fungsi ini sekarang HANYA membaca data, tidak mengubah database.
+     * PENTING: Cek apakah user berasal dari LDAP
+     * Dilihat dari kolom 'guid' - jika ada guid berarti dari LDAP
+     * 
+     * Ini yang membedakan:
+     * - User LDAP: punya guid (sinkron dari server LDAP)
+     * - User Dummy/Lokal: guid = null (dibuat manual di seeder/admin panel)
      */
-    public function needsProfileCompletion(): bool
+    public function isLdapUser(): bool
     {
-        // Jika di database sudah ditandai lengkap, maka tidak perlu (false)
-        if ($this->is_profile_complete) {
-            return false;
+        return !empty($this->guid);
+    }
+
+    /**
+     * Cek apakah user adalah akun lokal (dibuat manual, bukan dari LDAP)
+     * Akun lokal bisa role apapun, yang penting guid-nya kosong
+     */
+    public function isLocalUser(): bool
+    {
+        return empty($this->guid);
+    }
+
+    /**
+     * Cek tipe akun untuk display
+     */
+    public function getAccountTypeAttribute(): string
+    {
+        if ($this->username === 'admin.puskaka') {
+            return 'Super Admin';
         }
 
-        // Cek apakah nomor telepon kosong?
-        // Gunakan trim() untuk memastikan tidak hanya berisi spasi
+        if ($this->isLdapUser()) {
+            return 'LDAP';
+        }
+
+        return 'Lokal';
+    }
+
+    /**
+     * Cek apakah profil sudah lengkap berdasarkan role
+     */
+    public function checkProfileCompleteness(): bool
+    {
+        // Phone wajib untuk semua role
         if (empty(trim($this->phone))) {
-            return true; // Perlu melengkapi
+            return false;
         }
 
         // Khusus Mahasiswa wajib punya Fakultas & Prodi
         if ($this->role === 'mahasiswa') {
             if (empty(trim($this->faculty)) || empty(trim($this->study_program))) {
-                return true; // Perlu melengkapi
+                return false;
             }
         }
 
-        // Jika semua data di atas sudah ada tapi is_profile_complete masih false,
-        // biarkan sistem mengarahkan ke halaman pelengkap profil satu kali lagi
-        // sampai user menekan tombol 'Simpan' di form.
         return true;
+    }
+
+    /**
+     * Cek apakah user perlu melengkapi profil
+     */
+    public function needsProfileCompletion(): bool
+    {
+        // Jika sudah complete di database, tidak perlu lagi
+        if ($this->is_profile_complete) {
+            return false;
+        }
+
+        // Cek kelengkapan berdasarkan role
+        return !$this->checkProfileCompleteness();
+    }
+
+    /**
+     * Update status kelengkapan profil
+     */
+    public function updateProfileCompleteness(): void
+    {
+        $isComplete = $this->checkProfileCompleteness();
+
+        if ($this->is_profile_complete !== $isComplete) {
+            $this->is_profile_complete = $isComplete;
+            $this->saveQuietly(); // Save tanpa trigger event
+        }
+    }
+
+    /**
+     * Generate ID number unik untuk akun lokal (Admin/Konselor)
+     */
+    public static function generateLocalIdNumber(): string
+    {
+        // Format: LOKAL-YYYYMMDD-XXXX
+        // Contoh: LOKAL-20260126-0001
+        $prefix = 'LOKAL-'.date('Ymd').'-';
+
+        // Cari ID number terakhir dengan prefix hari ini
+        $lastUser = self::where('id_number', 'LIKE', $prefix.'%')
+            ->orderBy('id_number', 'desc')
+            ->first();
+
+        if ($lastUser) {
+            // Ambil 4 digit terakhir dan increment
+            $lastNumber = (int) substr($lastUser->id_number, -4);
+            $newNumber = $lastNumber + 1;
+        } else {
+            $newNumber = 1;
+        }
+
+        // Format dengan 4 digit (pad dengan 0)
+        return $prefix.str_pad($newNumber, 4, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -153,7 +235,7 @@ class User extends Authenticatable implements FilamentUser, LdapAuthenticatable
      */
     public function getFormattedPhoneAttribute(): string
     {
-        if (! $this->phone) {
+        if (!$this->phone) {
             return '-';
         }
 
@@ -185,35 +267,20 @@ class User extends Authenticatable implements FilamentUser, LdapAuthenticatable
 
     protected static function booted()
     {
-        static::updated(function ($user) {
-            // Cek apakah kolom role berubah
-            if ($user->wasChanged('role')) {
-
-                // Jika role berubah JADI konselor
-                if ($user->role === 'konselor') {
-                    // Buat data di tabel counselors jika belum ada
-                    Counselor::firstOrCreate(
-                        ['user_id' => $user->id],
-                        [
-                            'name' => $user->name,
-                            'email' => $user->email,
-                            'phone' => $user->phone,
-                            'title' => '-', // Default karena data belum ada
-                            'is_active' => true,
-                        ]
-                    );
-                }
-
-                // Jika role berubah DARI konselor ke yang lain
-                if ($user->getOriginal('role') === 'konselor' && $user->role !== 'konselor') {
-                    // Hapus data dari tabel counselors
-                    Counselor::where('user_id', $user->id)->delete();
-                }
+        // Event saat membuat user baru
+        static::creating(function ($user) {
+            // Auto-generate id_number HANYA untuk akun lokal Admin/Konselor
+            if ($user->isLocalUser() && in_array($user->role, ['admin', 'konselor']) && empty($user->id_number)) {
+                $user->id_number = self::generateLocalIdNumber();
             }
+
+            // Set initial profile completeness
+            $user->is_profile_complete = $user->checkProfileCompleteness();
         });
 
-        // Handle juga saat baru daftar/dibuat langsung sebagai konselor
+        // Event setelah user dibuat
         static::created(function ($user) {
+            // Buat counselor profile jika role konselor
             if ($user->role === 'konselor') {
                 Counselor::create([
                     'user_id' => $user->id,
@@ -225,10 +292,42 @@ class User extends Authenticatable implements FilamentUser, LdapAuthenticatable
                 ]);
             }
         });
+
+        // Event saat update user
+        static::updating(function ($user) {
+            // Auto-update profile completeness jika ada perubahan data relevan
+            if ($user->isDirty(['phone', 'faculty', 'study_program'])) {
+                $user->is_profile_complete = $user->checkProfileCompleteness();
+            }
+        });
+
+        // Event setelah user diupdate
+        static::updated(function ($user) {
+            // Handle perubahan role
+            if ($user->wasChanged('role')) {
+                // Jika berubah JADI konselor
+                if ($user->role === 'konselor') {
+                    Counselor::firstOrCreate(
+                        ['user_id' => $user->id],
+                        [
+                            'name' => $user->name,
+                            'email' => $user->email,
+                            'phone' => $user->phone,
+                            'title' => '-',
+                            'is_active' => true,
+                        ]
+                    );
+                }
+
+                // Jika berubah DARI konselor ke yang lain
+                if ($user->getOriginal('role') === 'konselor' && $user->role !== 'konselor') {
+                    Counselor::where('user_id', $user->id)->delete();
+                }
+            }
+        });
     }
 
-    // Helper untuk cek apakah user ini konselor
-    public function isCounselor()
+    public function isCounselor(): bool
     {
         return $this->role === 'konselor';
     }
@@ -238,7 +337,7 @@ class User extends Authenticatable implements FilamentUser, LdapAuthenticatable
      */
     public function getWhatsappLinkAttribute(): string
     {
-        if (! $this->phone) {
+        if (!$this->phone) {
             return '#';
         }
 
@@ -250,9 +349,31 @@ class User extends Authenticatable implements FilamentUser, LdapAuthenticatable
         return $this->hasMany(CounselingBooking::class);
     }
 
+    /**
+     * Cek apakah user bisa dihapus
+     * 
+     * TIDAK BISA DIHAPUS:
+     * - Super admin (admin.puskaka) - akun utama sistem
+     * - User dari LDAP (punya guid) - data sinkron, bukan milik lokal
+     * 
+     * BISA DIHAPUS:
+     * - Akun lokal (guid kosong) yang bukan admin.puskaka
+     *   Ini termasuk: admin lokal, konselor lokal, mahasiswa dummy, dosen_staf dummy
+     */
     public function canDelete(): bool
     {
-        return $this->username !== 'admin.puskaka';
+        // Super admin tidak bisa dihapus
+        if ($this->username === 'admin.puskaka') {
+            return false;
+        }
+
+        // User LDAP tidak bisa dihapus (punya guid = dari server LDAP)
+        if ($this->isLdapUser()) {
+            return false;
+        }
+
+        // Akun lokal bisa dihapus (termasuk dummy mahasiswa/dosen_staf)
+        return true;
     }
 
     /**
@@ -260,11 +381,11 @@ class User extends Authenticatable implements FilamentUser, LdapAuthenticatable
      */
     public function isAdmin(): bool
     {
-        return in_array($this->role, ['admin']);
+        return $this->role === 'admin';
     }
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return in_array($this->role, ['admin']);
+        return $this->isAdmin();
     }
 }

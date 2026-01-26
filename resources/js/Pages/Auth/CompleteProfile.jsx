@@ -59,7 +59,7 @@ export default function CompleteProfile({ user }) {
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-            <Head title="Lengkapi Data Dirimu - CDC UY" />
+            <Head title="Lengkapi Data Dirimu" />
 
             {/* Background Layer */}
             <div

@@ -4,7 +4,7 @@ namespace App\Filament\Resources\PuskakaGalleries;
 
 use App\Filament\Resources\PuskakaGalleries\Pages\CreatePuskakaGallery;
 use App\Filament\Resources\PuskakaGalleries\Pages\EditPuskakaGallery;
-use App\Filament\Resources\PuskakaGalleries\Pages\ListPuskakaGallerys;
+use App\Filament\Resources\PuskakaGalleries\Pages\ViewPuskakaGallery;
 use App\Filament\Resources\PuskakaGalleries\Schemas\PuskakaGalleryForm;
 use App\Filament\Resources\PuskakaGalleries\Schemas\PuskakaGalleryInfolist;
 use App\Filament\Resources\PuskakaGalleries\Pages\ListPuskakaGalleries;
@@ -64,6 +64,7 @@ class PuskakaGalleryResource extends Resource
         return [
             'index' => ListPuskakaGalleries::route('/'),
             'create' => CreatePuskakaGallery::route('/create'),
+            'view' => ViewPuskakaGallery::route('/{record}'),
             'edit' => EditPuskakaGallery::route('/{record}/edit'),
         ];
     }

@@ -2,17 +2,16 @@
 
 namespace App\Filament\Resources\Beritas\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Toggle;
-use Illuminate\Support\Str;
 use App\Models\Berita;
-
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class BeritaForm
 {
@@ -27,8 +26,7 @@ class BeritaForm
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn (string $operation, $state, $set) => 
-                                $operation === 'create' ? $set('slug', Str::slug($state)) : null
+                            ->afterStateUpdated(fn (string $operation, $state, $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null
                             ),
 
                         TextInput::make('slug')
@@ -50,7 +48,7 @@ class BeritaForm
                             ->required()
                             ->columnSpanFull()
                             ->toolbarButtons([
-                                'bold', 'bulletList', 'orderedList', 'h2', 'h3', 
+                                'bold', 'bulletList', 'orderedList', 'h2', 'h3',
                                 'italic', 'link', 'redo', 'underline', 'undo',
                             ]),
                     ])
@@ -63,6 +61,8 @@ class BeritaForm
                             ->image()
                             ->directory('news-images')
                             ->maxSize(2048)
+                            ->disk('public')
+                            ->visibility('public')
                             ->imageEditor()
                             ->helperText('Upload gambar (max 2MB)'),
 

@@ -23,6 +23,8 @@ class PuskakaGalleryForm
                     ->disk('public')
                     ->directory('puskaka-gallery')
                     ->required()
+                    ->imageEditor()
+                    ->visibility('public')
                     ->columnSpanFull(),
 
                 Toggle::make('is_active')

@@ -118,7 +118,7 @@ export default function IndexCampusHiring({ auth, programs, pagination, filters,
 
     return (
         <MainLayout user={auth?.user}>
-            <Head title="Campus Hiring - CDC UY" />
+            <Head title="Campus Hiring" />
             {/* HERO SECTION */}
             <div className={`pt-24 pb-24 relative overflow-hidden bg-gradient-to-br from-white to-emerald-100 border-b border-emerald-300`}>
                 <div className="container mx-auto px-6 lg:px-8 z-10 pt-16 md:pt-24">

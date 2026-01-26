@@ -45,7 +45,7 @@ class CvReviewPolicy
      */
     public function delete(User $user, CvReview $cvReview): bool
     {
-        return true;
+        return false;
     }
 
     /**

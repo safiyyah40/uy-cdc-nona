@@ -14,7 +14,7 @@ class BerandaSlideForm
         return $schema
             ->components([
                 FileUpload::make('image_path')
-                     ->label('Gambar Slide')
+                    ->label('Gambar Slide')
                     ->image()
                     ->imageEditor()
                     ->directory('beranda-slides')

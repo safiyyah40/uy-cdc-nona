@@ -36,18 +36,33 @@ class LoginRequest extends FormRequest
         $password = $this->input('password');
 
         // Coba Login Database Lokal Terlebih Dahulu
-        if (Auth::attempt(['username' => $username, 'password' => $password], $this->boolean('remember'))) {
-            RateLimiter::clear($this->throttleKey());
-            ActivityLogger::logLogin();
-
-            return;
+        // PENTING: Hanya coba login lokal jika user memang akun lokal (guid = null)
+        $localUser = User::where('username', $username)->first();
+        
+        if ($localUser && $localUser->isLocalUser() && $localUser->password) {
+            if (Auth::attempt(['username' => $username, 'password' => $password], $this->boolean('remember'))) {
+                RateLimiter::clear($this->throttleKey());
+                ActivityLogger::logSecurity('LOGIN_SUCCESS', [
+                    'username' => $username,
+                    'account_type' => 'lokal',
+                    'user_id' => $localUser->id,
+                ]);
+                return;
+            }
         }
 
         // Coba Login via LDAP YARSI
         $ldapData = $this->authenticateWithLDAP($username, $password);
 
-        if (! $ldapData) {
+        if (!$ldapData) {
             RateLimiter::hit($this->throttleKey());
+            
+            ActivityLogger::logSecurity('LOGIN_FAILED', [
+                'username' => $username,
+                'reason' => 'Invalid credentials',
+                'attempt_count' => RateLimiter::attempts($this->throttleKey()),
+            ]);
+            
             throw ValidationException::withMessages([
                 'username' => __('auth.failed'),
             ]);
@@ -59,7 +74,18 @@ class LoginRequest extends FormRequest
         Auth::login($user, $this->boolean('remember'));
         RateLimiter::clear($this->throttleKey());
 
-        ActivityLogger::logLogin();
+        ActivityLogger::logSecurity('LOGIN_SUCCESS', [
+            'username' => $username,
+            'account_type' => 'ldap',
+            'user_id' => $user->id,
+            'synced' => true,
+        ]);
+        
+        ActivityLogger::logLdapSync('USER_LOGIN_SYNCED', [
+            'username' => $username,
+            'role' => $user->role,
+            'guid' => $user->guid,
+        ]);
     }
 
     /**
@@ -75,12 +101,14 @@ class LoginRequest extends FormRequest
         ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
 
         try {
-            if (! @ldap_bind($ldap, $dn, $password)) {
+            if (!@ldap_bind($ldap, $dn, $password)) {
+                Log::channel('ldap')->warning('LDAP bind failed for user: ' . $username);
                 return null;
             }
 
             $read = @ldap_read($ldap, $dn, '(objectclass=*)');
-            if (! $read) {
+            if (!$read) {
+                Log::channel('ldap')->error('LDAP read failed for user: ' . $username);
                 return null;
             }
 
@@ -105,7 +133,23 @@ class LoginRequest extends FormRequest
                 $faculty = $map['f'];
                 $studyProgram = $map['p'];
             }
-            // Untuk Dosen/Staf, faculty dan studyProgram dibiarkan null agar tidak mengambil alamat dari LDAP
+
+            // PENTING: Extract GUID dari LDAP
+            // GUID biasanya ada di atribut 'entryUUID' atau 'objectGUID'
+            $guid = $getAttr('entryuuid') ?? $getAttr('objectguid');
+            
+            // Jika GUID tidak ada di LDAP, generate dari DN sebagai fallback
+            if (!$guid) {
+                $guid = md5($dn); // Unique identifier dari DN
+                Log::channel('ldap')->warning('GUID not found in LDAP, using DN hash for: ' . $username);
+            }
+
+            Log::channel('ldap')->info('LDAP authentication successful', [
+                'username' => $username,
+                'role' => $role,
+                'guid' => $guid,
+                'dn' => $dn,
+            ]);
 
             return [
                 'username' => $username,
@@ -114,15 +158,22 @@ class LoginRequest extends FormRequest
                 'email' => $getAttr('mailalternateaddress') ?? $getAttr('mail') ?? ($username.'@yarsi.ac.id'),
                 'role' => $role,
                 'phone' => $getAttr('telephonenumber') ?? $getAttr('homephone'),
-                'faculty' => $faculty, // Akan bernilai null untuk Dosen/Staf
-                'study_program' => $studyProgram, // Akan bernilai null untuk Dosen/Staf
+                'faculty' => $faculty,
+                'study_program' => $studyProgram,
                 'password' => $password,
+                'guid' => $guid, // PENTING: GUID dari LDAP
+                'domain' => 'yarsi.ac.id', // Domain LDAP
+                'dn' => $dn, // Distinguished Name untuk referensi
             ];
 
         } catch (\Exception $e) {
-            Log::error('LDAP Error: '.$e->getMessage());
-
+            Log::channel('ldap')->error('LDAP Error: ' . $e->getMessage(), [
+                'username' => $username,
+                'exception' => $e,
+            ]);
             return null;
+        } finally {
+            @ldap_close($ldap);
         }
     }
 
@@ -147,6 +198,7 @@ class LoginRequest extends FormRequest
 
     /**
      * Sinkronisasi data ke Database Lokal
+     * PENTING: Set guid dan domain untuk menandai ini adalah user LDAP
      */
     private function syncLdapUser(array $ldapData): User
     {
@@ -159,31 +211,60 @@ class LoginRequest extends FormRequest
             }
         }
 
+        // Cek kelengkapan profil berdasarkan role
+        $isProfileComplete = !empty($phone);
+        if ($ldapData['role'] === 'mahasiswa') {
+            // Mahasiswa perlu phone + faculty + study_program
+            $isProfileComplete = !empty($phone) && 
+                                !empty($ldapData['faculty']) && 
+                                !empty($ldapData['study_program']);
+        }
+
         // Simpan atau Update data user
-        return User::updateOrCreate(
-            ['username' => $ldapData['username']],
+        $user = User::updateOrCreate(
+            ['username' => $ldapData['username']], // Find by username
             [
                 'name' => $ldapData['name'],
                 'email' => $ldapData['email'],
                 'id_number' => $ldapData['id_number'],
-                'role' => $ldapData['role'], // Role yang sudah ditentukan di authenticateWithLDAP
+                'role' => $ldapData['role'],
                 'password' => Hash::make($ldapData['password']),
                 'phone' => $phone,
                 'faculty' => $ldapData['faculty'],
                 'study_program' => $ldapData['study_program'],
-                'is_profile_complete' => ! empty($phone),
+                'is_profile_complete' => $isProfileComplete,
+                
+                // PENTING: Set GUID dan DOMAIN untuk menandai ini user LDAP
+                'guid' => $ldapData['guid'],
+                'domain' => $ldapData['domain'],
             ]
         );
+
+        Log::channel('ldap')->info('LDAP user synced to database', [
+            'user_id' => $user->id,
+            'username' => $user->username,
+            'guid' => $user->guid,
+            'role' => $user->role,
+            'is_ldap' => $user->isLdapUser(),
+        ]);
+
+        return $user;
     }
 
     public function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
         event(new Lockout($this));
         $seconds = RateLimiter::availableIn($this->throttleKey());
+
+        ActivityLogger::logSecurity('LOGIN_RATE_LIMITED', [
+            'username' => $this->input('username'),
+            'ip_address' => $this->ip(),
+            'seconds_remaining' => $seconds,
+        ]);
 
         throw ValidationException::withMessages([
             'username' => trans('auth.throttle', [

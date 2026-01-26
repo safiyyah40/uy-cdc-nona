@@ -12,28 +12,7 @@ class TipsDanTrikInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('title'),
-                TextEntry::make('slug'),
-                TextEntry::make('category'),
-                TextEntry::make('thumbnail')
-                    ->placeholder('-'),
-                TextEntry::make('summary')
-                    ->columnSpanFull(),
-                TextEntry::make('content')
-                    ->columnSpanFull(),
-                TextEntry::make('reading_time')
-                    ->numeric(),
-                IconEntry::make('is_active')
-                    ->boolean(),
-                TextEntry::make('published_at')
-                    ->date()
-                    ->placeholder('-'),
-                TextEntry::make('created_at')
-                    ->dateTime()
-                    ->placeholder('-'),
-                TextEntry::make('updated_at')
-                    ->dateTime()
-                    ->placeholder('-'),
+                //
             ]);
     }
 }

@@ -29,7 +29,6 @@ class CounselorForm
                 Group::make()
                     ->schema([
                         Section::make('Informasi Akun')
-                            ->description('Cari akun dari sistem LDAP untuk mengisi data otomatis.')
                             ->schema([
                                 Select::make('user_search_id')
                                     ->label('Pilih Dosen/Staf')
@@ -45,7 +44,7 @@ class CounselorForm
                                             if ($user) {
                                                 $set('name', $user->name);
                                                 $set('email', $user->email);
-                                                $set('phone', $user->phone);
+                                                $set('phone_display', $user->phone);
                                             }
                                         }
                                     })
@@ -60,21 +59,26 @@ class CounselorForm
                                         ->disabled()
                                         ->dehydrated()
                                         ->required(),
+
                                     TextInput::make('email')
                                         ->label('Email')
                                         ->email()
                                         ->disabled()
                                         ->dehydrated()
                                         ->required(),
+
                                     TextInput::make('title')
-                                        ->label('Jab]atan/Gelar')
+                                        ->label('Jabatan/Gelar')
                                         ->placeholder('Contoh: Psikolog Klinis')
                                         ->required(),
-                                    TextInput::make('phone')
+
+                                    TextInput::make('phone_display')
                                         ->label('WhatsApp')
                                         ->disabled()
-                                        ->dehydrated()
+                                        ->dehydrated(false)
+                                        ->formatStateUsing(fn ($record) => $record?->user?->phone)
                                         ->tel(),
+
                                 ]),
                             ]),
 
@@ -84,7 +88,6 @@ class CounselorForm
                                 Repeater::make('slots')
                                     ->relationship('slots')
                                     ->schema([
-                                        // PENTING: Tambahkan Hidden ID agar sistem bisa membedakan data lama vs baru
                                         Hidden::make('id'),
 
                                         Grid::make(3)->schema([
@@ -166,6 +169,5 @@ class CounselorForm
                     ])
                     ->columnSpan(['lg' => 4]),
             ]);
-
     }
 }

@@ -4,15 +4,14 @@ namespace App\Filament\Resources\Lokers\Schemas;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\TagsInput;
-use Illuminate\Support\Str;
-
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class LokerForm
 {
@@ -92,8 +91,22 @@ class LokerForm
 
                 Section::make('Media & Link')
                     ->schema([
-                        FileUpload::make('logo')->directory('loker-logos')->image()->avatar(),
-                        FileUpload::make('image')->directory('loker-images')->image()->label('Flyer/Poster'),
+                        FileUpload::make('logo')
+                            ->directory('loker-logos')
+                            ->image()
+                            ->avatar()
+                            ->imageEditor()
+                            ->disk('public')
+                            ->visibility('public')
+                            ->columnSpanFull(),
+                        FileUpload::make('image')
+                            ->directory('loker-images')
+                            ->image()
+                            ->label('Flyer/Poster')
+                            ->imageEditor()
+                            ->disk('public')
+                            ->visibility('public')
+                            ->columnSpanFull(),
                         TextInput::make('application_url')->url()->prefix('https://')->label('Link Apply'),
                         Toggle::make('is_active')->default(true),
                     ])->columns(2),

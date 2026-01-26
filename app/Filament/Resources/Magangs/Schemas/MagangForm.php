@@ -3,15 +3,15 @@
 namespace App\Filament\Resources\Magangs\Schemas;
 
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\FileUpload;
-use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\RichEditor;
-use Illuminate\Support\Str;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class MagangForm
 {
@@ -26,7 +26,7 @@ class MagangForm
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state))),
+                            ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
 
                         TextInput::make('slug')
                             ->label('Slug (URL)')
@@ -111,7 +111,7 @@ class MagangForm
                     ])
                     ->columns(3),
 
-                    Section::make('Link & Status')
+                Section::make('Link & Status')
                     ->schema([
                         TextInput::make('application_url')
                             ->label('Link Pendaftaran')
@@ -170,7 +170,7 @@ class MagangForm
                             ]),
                     ]),
 
-                    Section::make('Media & Branding')
+                Section::make('Media & Branding')
                     ->schema([
                         FileUpload::make('logo')
                             ->label('Logo Perusahaan (Kecil)')
@@ -178,6 +178,9 @@ class MagangForm
                             ->directory('magang-logos')
                             ->visibility('public')
                             ->maxSize(2048)
+                            ->imageEditor()
+                            ->disk('public')
+                            ->columnSpanFull()
                             ->helperText('Maksimal 2MB, format: JPG, PNG'),
 
                         FileUpload::make('image')
@@ -185,6 +188,8 @@ class MagangForm
                             ->image()
                             ->directory('magang-images')
                             ->visibility('public')
+                            ->imageEditor()
+                            ->disk('public')
                             ->maxSize(5120)
                             ->columnSpanFull()
                             ->helperText('Upload flyer atau foto suasana kerja (Opsional). Maksimal 5MB, format: JPG, PNG'),

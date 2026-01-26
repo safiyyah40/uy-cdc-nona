@@ -13,16 +13,7 @@ class BerandaSlideInfolist
     {
         return $schema
             ->components([
-                ImageEntry::make('image_path'),
-                TextEntry::make('alt_text'),
-                TextEntry::make('sort_order')
-                    ->numeric(),
-                IconEntry::make('is_active')
-                    ->boolean(),
-                TextEntry::make('created_at')
-                    ->dateTime(),
-                TextEntry::make('updated_at')
-                    ->dateTime(),
+                
             ]);
     }
 }

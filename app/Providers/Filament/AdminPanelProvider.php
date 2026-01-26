@@ -35,20 +35,19 @@ class AdminPanelProvider extends PanelProvider
                 
                 ->sort(1),
         ])
-            ->brandName('CDC-UY Admin')
-            ->brandLogo(asset('/images/LOGO CDC-UY-BGPUTIH.png')) 
+            ->brandName('Admin - CDC YARSI')
+            ->brandLogo(asset('images/LOGO CDC-UY-BGPUTIH.png')) 
             ->brandLogoHeight('3rem')
             ->authGuard('web')
             ->authPasswordBroker('users')
 
             ->navigationGroups([
-                'Manajemen Konten Beranda',
+                'Manajemen Layanan Utama',
                 'Manajemen Halaman Profil',
                 'Manajemen Program',
-                'Manajemen Layanan Konsultasi',
-                'Manajemen Layanan Review CV',
-                'Manajemen Layanan Tes Minat & Bakat',
                 'Manajemen Peluang Karir',
+                'Manajemen Konten Layanan Utama',
+                'Manajemen Konten Beranda',
             ])
             ->colors([
                 'danger' => Color::Rose,

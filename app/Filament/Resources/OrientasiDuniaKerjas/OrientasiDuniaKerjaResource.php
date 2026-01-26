@@ -5,6 +5,7 @@ namespace App\Filament\Resources\OrientasiDuniaKerjas;
 use App\Filament\Resources\OrientasiDuniaKerjas\Pages\CreateOrientasiDuniaKerja;
 use App\Filament\Resources\OrientasiDuniaKerjas\Pages\EditOrientasiDuniaKerja;
 use App\Filament\Resources\OrientasiDuniaKerjas\Pages\ListOrientasiDuniaKerjas;
+use App\Filament\Resources\OrientasiDuniaKerjas\Pages\ViewOrientasiDuniaKerjas;
 use App\Filament\Resources\OrientasiDuniaKerjas\Schemas\OrientasiDuniaKerjaForm;
 use App\Filament\Resources\OrientasiDuniaKerjas\Tables\OrientasiDuniaKerjasTable;
 use App\Models\OrientasiDuniaKerja;
@@ -59,6 +60,7 @@ class OrientasiDuniaKerjaResource extends Resource
         return [
             'index' => ListOrientasiDuniaKerjas::route('/'),
             'create' => CreateOrientasiDuniaKerja::route('/create'),
+            'view' => ViewOrientasiDuniaKerjas::route('/{record}'),
             'edit' => EditOrientasiDuniaKerja::route('/{record}/edit'),
         ];
     }

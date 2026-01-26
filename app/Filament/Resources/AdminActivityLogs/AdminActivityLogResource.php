@@ -25,12 +25,12 @@ class AdminActivityLogResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Aktifitas Log';
+        return 'Riwayat Aktivitas';
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Aktifitas Log';
+        return 'Riwayat Aktivitas';
     }
 
     public static function form(Schema $schema): Schema

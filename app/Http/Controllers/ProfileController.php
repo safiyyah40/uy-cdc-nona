@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -30,7 +31,6 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-
         $validated = $request->validate([
             'phone' => [
                 'required',
@@ -55,6 +55,7 @@ class ProfileController extends Controller
         if (str_starts_with($phone, '0')) {
             $phone = '62'.substr($phone, 1);
         }
+
         $user->phone = $phone;
         $user->email = $validated['email'];
 
@@ -74,46 +75,59 @@ class ProfileController extends Controller
 
     /**
      * Method Utama: Complete Profile (Untuk user yang baru pertama login)
+     * STRICT: User HARUS melengkapi ini sebelum bisa akses fitur lain
      */
     public function store(Request $request)
     {
         $user = Auth::user();
 
-        // 1. Validasi Input
+        // VALIDASI: Cek apakah profil sudah complete
+        if ($user->is_profile_complete) {
+            return redirect()->route('dashboard')->with('info', 'Profil Anda sudah lengkap.');
+        }
+
+        // Validasi Input
         $rules = [
-            'phone' => ['required', 'string', 'regex:/^(08|628)[0-9]{8,13}$/'],
+            'phone' => [
+                'required',
+                'string',
+                'regex:/^(08|628)[0-9]{8,13}$/',
+                'unique:users,phone,'.$user->id,
+            ],
         ];
 
-        // Jika dia mahasiswa, tambahkan syarat fakultas & prodi (sesuai needsProfileCompletion)
+        // Jika dia mahasiswa, tambahkan syarat fakultas & prodi
         if ($user->role === 'mahasiswa') {
             $rules['faculty'] = 'required|string|max:255';
             $rules['study_program'] = 'required|string|max:255';
         }
 
         $validated = $request->validate($rules, [
+            
             'phone.regex' => 'Format nomor WhatsApp tidak valid (08... atau 628...).',
+            'phone.unique' => 'Nomor WhatsApp sudah terdaftar.',
             'faculty.required' => 'Fakultas wajib diisi.',
             'study_program.required' => 'Program studi wajib diisi.',
         ]);
 
-        // 2. Normalisasi Nomor HP
+        // Normalisasi Nomor HP
         $phone = preg_replace('/[^0-9]/', '', $validated['phone']);
         if (str_starts_with($phone, '0')) {
             $phone = '62'.substr($phone, 1);
         }
 
-        // 3. Update Data User
+        // Update Data User
         $user->phone = $phone;
-
+        
         if ($user->role === 'mahasiswa') {
             $user->faculty = $validated['faculty'];
             $user->study_program = $validated['study_program'];
         }
 
-        // 4. SET FLAG SELESAI DISINI
+        // SET FLAG SELESAI
         $user->is_profile_complete = true;
         $user->save();
 
-        return redirect()->route('dashboard')->with('success', 'Profil Anda telah dilengkapi!');
+        return redirect()->route('dashboard')->with('success', 'Profil Anda telah dilengkapi! Sekarang Anda dapat mengakses semua fitur.');
     }
 }

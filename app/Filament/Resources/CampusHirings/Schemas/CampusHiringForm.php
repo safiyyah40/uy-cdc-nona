@@ -4,15 +4,15 @@ namespace App\Filament\Resources\CampusHirings\Schemas;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Grid;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use Illuminate\Support\Str;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class CampusHiringForm
 {
@@ -69,9 +69,9 @@ class CampusHiringForm
                                     ->displayFormat('d/m/Y'),
 
                                 TimePicker::make('time')
-                                ->label('Waktu')
-                                ->seconds(false)
-                                ->required(),
+                                    ->label('Waktu')
+                                    ->seconds(false)
+                                    ->required(),
 
                                 TextInput::make('location')
                                     ->label('Lokasi')
@@ -110,6 +110,8 @@ class CampusHiringForm
                             ->directory('campus-hiring')
                             ->maxSize(2048)
                             ->imageEditor()
+                            ->disk('public')
+                            ->visibility('public')
                             ->imageEditorAspectRatios([
                                 '16:9',
                                 '4:3',

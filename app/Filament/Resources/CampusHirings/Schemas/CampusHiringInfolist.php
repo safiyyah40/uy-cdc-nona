@@ -13,29 +13,7 @@ class CampusHiringInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('slug'),
-                TextEntry::make('title'),
-                TextEntry::make('company'),
-                TextEntry::make('location'),
-                TextEntry::make('date')
-                    ->date(),
-                TextEntry::make('time'),
-                TextEntry::make('description')
-                    ->columnSpanFull(),
-                TextEntry::make('content')
-                    ->columnSpanFull(),
-                ImageEntry::make('image')
-                    ->placeholder('-'),
-                TextEntry::make('registration_link')
-                    ->placeholder('-'),
-                IconEntry::make('is_active')
-                    ->boolean(),
-                TextEntry::make('created_at')
-                    ->dateTime()
-                    ->placeholder('-'),
-                TextEntry::make('updated_at')
-                    ->dateTime()
-                    ->placeholder('-'),
+                //
             ]);
     }
 }

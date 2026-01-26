@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             'username' => 'admin.puskaka',
             'email' => 'adminpuskaka@yarsi.ac.id',
             'phone' => '6281295986204',
-            'id_number' => '199001012020011001',
+            'id_number' => 'LOCAL-20260126-0001',
             'password' => Hash::make('AdminPuskaka@2025'),
             'role' => 'admin',
             'is_profile_complete' => true,
@@ -33,11 +33,7 @@ class UserSeeder extends Seeder
             'email' => 'konselor@yarsi.ac.id',
             'password' => Hash::make('Konselor@2025'),
             'role' => 'konselor',
-            'id_number' => '198505152015011002',
-            'phone' => '628123456789',
-            'faculty' => 'Teknologi Informasi',
-            'study_program' => 'Teknik Informatika',
-            'is_profile_complete' => true,
+            'id_number' => 'LOCAL-20260126-0002',
         ]);
 
         User::create([
@@ -46,7 +42,7 @@ class UserSeeder extends Seeder
             'email' => 'mhs@yarsi.ac.id',
             'password' => Hash::make('Mahasiswa@2025'),
             'role' => 'mahasiswa',
-            'id_number' => '1402021001',
+            'id_number' => 'LOCAL-20260126-0003',
             'phone' => '628123456789',
             'faculty' => 'Teknologi Informasi',
             'study_program' => 'Teknik Informatika',
@@ -59,7 +55,7 @@ class UserSeeder extends Seeder
             'email' => 'dosenstaf@yarsi.ac.id',
             'password' => Hash::make('Dosenstaf@2025'),
             'role' => 'dosen_staf',
-            'id_number' => '198505152015011002',
+            'id_number' => 'LOCAL-20260126-0004',
             'phone' => '628123456789',
             'is_profile_complete' => true,
         ]);

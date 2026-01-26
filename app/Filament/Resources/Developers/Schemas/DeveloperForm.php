@@ -4,9 +4,9 @@ namespace App\Filament\Resources\Developers\Schemas;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
 class DeveloperForm
@@ -34,7 +34,11 @@ class DeveloperForm
                         ->image()
                         ->directory('developers')
                         ->label('Foto Profil')
-                        ->columnSpanFull(),
+                        ->columnSpanFull()
+                        ->imageEditor()
+                        ->disk('public')
+                        ->visibility('public')
+                        ->required(),
                 ]),
 
                 Section::make('Kontak & Media Sosial')->schema([

@@ -80,6 +80,8 @@ class SertifikasiForm
                                     ->image()
                                     ->directory('sertifikasi/logos')
                                     ->visibility('public')
+                                    ->imageEditor()
+                                    ->disk('public')
                                     ->maxSize(2048)
                                     ->helperText('Upload logo penyedia (maks. 2MB)')
                                     ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file, callable $get) {
@@ -220,6 +222,7 @@ class SertifikasiForm
                                     ->acceptedFileTypes(['application/pdf'])
                                     ->directory('sertifikasi/brochures')
                                     ->maxSize(10240)
+                                    ->disk('public')
                                     ->helperText('Upload brosur lengkap (maks. 10MB)')
                                     ->downloadable()
                                     ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file, callable $get) {
@@ -237,6 +240,7 @@ class SertifikasiForm
                                     ->image()
                                     ->directory('sertifikasi/certificates')
                                     ->maxSize(5120)
+                                    ->disk('public')
                                     ->helperText('Upload contoh sertifikat (maks. 5MB)')
                                     ->downloadable()
                                     ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file, callable $get) {

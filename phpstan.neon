@@ -4,7 +4,5 @@ includes:
 parameters:
     paths:
         - app/
-
-    # Level 5 (Menengah). Bisa diturunkan ke 0 jika terlalu banyak error.
     level: 5
     treatPhpDocTypesAsCertain: false

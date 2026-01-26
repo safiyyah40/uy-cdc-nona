@@ -1,16 +1,17 @@
 <?php
 
 namespace App\Filament\Resources\Seminars\Schemas;
+
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Group;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class SeminarForm
@@ -19,7 +20,7 @@ class SeminarForm
     {
         return $schema
             ->components([
-                   Group::make()
+                Group::make()
                     ->schema([
                         Section::make('Informasi Utama')
                             ->schema([
@@ -76,6 +77,9 @@ class SeminarForm
                                 FileUpload::make('image')
                                     ->label('Poster Seminar')
                                     ->image()
+                                    ->imageEditor()
+                                    ->disk('public')
+                                    ->visibility('public')
                                     ->directory('seminars')
                                     ->required()
                                     ->columnSpanFull(),

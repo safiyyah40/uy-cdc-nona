@@ -149,13 +149,4 @@ class CalendarController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-    private function getTimeRange($event)
-    {
-        if ($event->start_time && $event->end_time) {
-            return substr($event->start_time, 0, 5).' - '.substr($event->end_time, 0, 5);
-        }
-
-        return $event->start_time ? substr($event->start_time, 0, 5) : null;
-    }
 }

@@ -25,9 +25,10 @@ class RiasecTestResultResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Layanan Tes Minat & Bakat';
-    
+    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Layanan Utama';
 
+    protected static ?int $navigationSort = 2;
+    
     public static function getModelLabel(): string
     {
         return 'Hasil Tes RIASEC';

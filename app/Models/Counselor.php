@@ -75,6 +75,34 @@ class Counselor extends Model
         return null;
     }
 
+    /**
+     * Helper untuk UI: Label tipe akun
+     */
+    public function getAccountTypeLabelAttribute(): string
+    {
+        if ($this->isLdapUser()) {
+            return 'LDAP (Dosen/Staf)';
+        }
+        return 'Lokal (Manual)';
+    }
+
+    /**
+     * Cek apakah user terkait adalah user LDAP
+     */
+    public function isLdapUser(): bool
+    {
+        // Pastikan relasi user sudah di-load atau akses langsung
+        return $this->user ? $this->user->isLdapUser() : false;
+    }
+
+    /**
+     * Cek apakah user terkait adalah user Lokal
+     */
+    public function isLocalUser(): bool
+    {
+        return $this->user ? $this->user->isLocalUser() : true;
+    }   
+
     protected static function booted()
     {
         // Setiap kali model Counselor diakses, hapus slot yang sudah lewat dan tidak laku
@@ -87,7 +115,7 @@ class Counselor extends Model
                             $sub->where('date', now()->toDateString())
                                 ->where('start_time', '<', now()->toTimeString());
                         });
-                })->delete(); // Slot "sampah" langsung hilang dari database
+                })->delete();
         });
     }
 

@@ -214,25 +214,6 @@ class CounselingBookingsTable
                             ->body("Sesi {$record->student_name} telah ditolak.")
                             ->send();
                     }),
-                
-                Action::make('complete')
-                    ->label('Tandai Selesai')
-                    ->icon('heroicon-o-check-badge')
-                    ->color('primary')
-                    ->requiresConfirmation()
-                    ->visible(fn ($record) => $record->status === 'accepted')
-                    ->action(function ($record) {
-                        $record->update([
-                            'status' => 'completed',
-                            'completed_at' => now(),
-                        ]);
-                        
-                        Notification::make()
-                            ->success()
-                            ->title('Sesi Selesai')
-                            ->body("Sesi {$record->student_name} ditandai selesai.")
-                            ->send();
-                    }),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\BerandaSlides;
 use App\Filament\Resources\BerandaSlides\Pages\CreateBerandaSlide;
 use App\Filament\Resources\BerandaSlides\Pages\EditBerandaSlide;
 use App\Filament\Resources\BerandaSlides\Pages\ListBerandaSlides;
+use App\Filament\Resources\BerandaSlides\Pages\ViewBerandaSlide;
 use App\Filament\Resources\BerandaSlides\Schemas\BerandaSlideForm;
 use App\Filament\Resources\BerandaSlides\Schemas\BerandaSlideInfolist;
 use App\Filament\Resources\BerandaSlides\Tables\BerandaSlidesTable;
@@ -63,6 +64,7 @@ class BerandaSlideResource extends Resource
         return [
             'index' => ListBerandaSlides::route('/'),
             'create' => CreateBerandaSlide::route('/create'),
+            'view' => ViewBerandaSlide::route('/{record}'),
             'edit' => EditBerandaSlide::route('/{record}/edit'),
         ];
     }

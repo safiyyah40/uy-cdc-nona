@@ -29,9 +29,7 @@ export default function Dashboard({
 }) {
     return (
         <MainLayout>
-
-
-            <Head title="Beranda " />
+            <Head title="Beranda" />
 
             <div className="bg-white min-h-screen text-gray-800 font-sans">
 

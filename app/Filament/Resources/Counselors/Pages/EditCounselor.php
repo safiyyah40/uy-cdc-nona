@@ -7,6 +7,8 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
 
+/** @var \App\Models\Counselor $record */
+
 class EditCounselor extends EditRecord
 {
     protected static string $resource = CounselorResource::class;

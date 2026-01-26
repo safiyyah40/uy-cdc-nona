@@ -15,8 +15,13 @@ class DeveloperDocForm
             ->components([
                 TextInput::make('title')->required()->label('Judul Kegiatan'),
                 FileUpload::make('image')
+                    ->label('Gambar Slide')
                     ->image()
+                    ->imageEditor()
+                    ->disk('public')
+                    ->visibility('public')
                     ->required()
+                    ->columnSpanFull()
                     ->directory('developer-docs')
                     ->label('Foto Dokumentasi'),
                 TextInput::make('sort_order')

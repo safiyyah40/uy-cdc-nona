@@ -160,7 +160,7 @@ export default function IndexOrientasiDuniaKerja({
 
     return (
         <MainLayout user={auth?.user}>
-            <Head title="Orientasi Dunia Kerja - CDC UY" />
+            <Head title="Orientasi Dunia Kerja" />
 
             {/* HERO SECTION */}
             <div className={`pt-24 pb-24 relative overflow-hidden bg-gradient-to-br from-white to-emerald-100 border-b border-emerald-300`}>

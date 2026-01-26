@@ -30,7 +30,7 @@ export default function Login({ status }) {
     return (
         <div className="min-h-screen flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
             
-            <Head title="Masuk - CDC UY" />
+            <Head title="Masuk" />
             
             {/* BACKGROUND */}
             <div className="absolute inset-0 z-0">

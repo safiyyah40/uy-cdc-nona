@@ -37,6 +37,18 @@ class DeveloperDoc extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    protected $appends = ['photo_url'];
+
+    /**
+     * Get image URL
+     */
+    public function getPhotoUrlAttribute()
+    {
+        return $this->image
+        ? asset($this->image)
+        : null;
+    }
     
     // Scope untuk mengambil yang aktif & urut
     public function scopeActive($query)

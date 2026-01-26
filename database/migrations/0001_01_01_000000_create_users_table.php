@@ -22,12 +22,15 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->enum('role', ['mahasiswa', 'konselor', 'admin', 'dosen_staf'])->default('mahasiswa');
             $table->string('photo_url')->nullable();
+            
+            // Kolom Wajib LdapRecord
+            $table->string('guid')->unique()->nullable()->index(); // untuk sync LDAP
+            $table->string('domain')->nullable();
+            
             $table->rememberToken();
             $table->timestamps();
-            // Indexes untuk performa
-            $table->index('username');
-            $table->index('id_number');
             $table->index(['faculty', 'study_program']);
+            $table->index(['role', 'is_profile_complete']);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -48,8 +51,8 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };

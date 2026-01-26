@@ -79,7 +79,7 @@ export default function IndexSertifikasi({ auth, sertifikasis, pagination, filte
 
     return (
         <>
-            <Head title="Program Sertifikasi - CDC UY" />
+            <Head title="Program Sertifikasi"/>
 
             <MainLayout user={auth?.user}>
 

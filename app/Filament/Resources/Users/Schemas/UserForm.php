@@ -80,35 +80,40 @@ class UserForm
                                 if (! $record) {
                                     return false;
                                 }
+
                                 return $record->username === 'admin.puskaka' || $record->role === 'mahasiswa';
                             })
                             ->helperText('Hanya Admin & Konselor yang dapat dibuat secara manual. Dosen/Staf dan Mahasiswa dikelola via LDAP.'),
 
                         TextInput::make('id_number')
                             ->label('NPM / NIP')
-                            ->required(fn ($get) => ! in_array($get('role'), ['admin', 'konselor']))
-                            ->regex('/^[0-9]+$/')
-                            ->maxLength(20)
+                            ->regex('/^[0-9A-Z\-]+$/')
+                            ->maxLength(30)
                             ->validationMessages([
-                                'regex' => 'Kolom ini wajib diisi angka saja (tanpa spasi atau karakter lain).',
+                                'regex' => 'Kolom ini hanya boleh berisi angka, huruf kapital, dan tanda strip (-).',
                             ])
-                            ->disabled(fn ($operation) => $operation === 'edit')
-                            ->helperText(fn ($get) => in_array($get('role'), ['admin', 'konselor'])
-                                ? 'Boleh dikosongkan untuk Admin/Konselor.'
-                                : 'Wajib diisi untuk Mahasiswa/Dosen.'
-                            ),
+                            ->disabled()
+                            ->dehydrated(true)
+                            ->placeholder('Auto-generate saat menyimpan')
+                            ->helperText(new HtmlString('
+                                <strong>Otomatis diisi sistem</strong> dengan format: LOCAL-YYYYMMDD-XXXX<br>
+                                <small class="text-gray-500">Contoh: LOCAL-20260126-0001</small>
+                            ')),
 
                         TextInput::make('phone')
                             ->label('Nomor WhatsApp')
                             ->tel()
                             ->required()
                             ->prefixIcon('heroicon-o-device-phone-mobile')
-                            ->placeholder('6281234567890')
+                            ->placeholder('628xxxxxxxx')
+                            ->unique(table: 'users', column: 'phone', ignoreRecord: true)
                             ->regex('/^62[0-9]{8,15}$/')
                             ->validationMessages([
                                 'regex' => 'Format salah! Harus dimulai dengan 62 dan hanya angka (minimal 10 digit).',
+                                'unique' => 'Nomor WhatsApp ini sudah terdaftar oleh pengguna lain.',
                             ])
                             ->disabled(fn ($operation) => $operation === 'edit')
+                            ->dehydrated()
                             ->afterStateUpdated(fn ($state, $set) => $set('whatsapp_number', preg_replace('/[^0-9]/', '', $state)))
                             ->helperText(new HtmlString('Penting: Gunakan kode negara tanpa tanda +. Contoh: <strong>62</strong>812...'))
                             ->suffixAction(
@@ -118,12 +123,20 @@ class UserForm
                                     ->url(fn ($state) => $state ? "https://wa.me/{$state}" : null)
                                     ->openUrlInNewTab()
                             ),
-
+                            
                         Toggle::make('is_profile_complete')
                             ->label('Status Profil Lengkap')
                             ->onColor('success')
                             ->offColor('danger')
-                            ->default(false),
+                            ->disabled()
+                            ->dehydrated(false)
+                            ->helperText(new HtmlString('
+                                <small class="text-gray-600">
+                                    <strong>Otomatis tercentang</strong> jika:<br>
+                                    • Nomor WhatsApp sudah terisi (wajib semua role)<br>
+                                    • Untuk Mahasiswa: Fakultas & Prodi juga harus terisi
+                                </small>
+                            ')),
                     ]),
             ]);
     }

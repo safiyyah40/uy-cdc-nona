@@ -45,7 +45,7 @@ class CounselingReportPolicy
      */
     public function delete(User $user, CounselingReport $counselingReport): bool
     {
-        return true;
+        return false;
     }
 
     /**

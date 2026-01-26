@@ -5,12 +5,12 @@ namespace App\Filament\Resources\OrientasiDuniaKerjas\Schemas;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\TagsInput;
 use Filament\Schemas\Schema;
 
 class OrientasiDuniaKerjaForm
@@ -68,6 +68,11 @@ class OrientasiDuniaKerjaForm
                     FileUpload::make('image')
                         ->label('Gambar Sampul/Poster')
                         ->image()
+                        ->visibility('public')
+                        ->imageEditor()
+                    ->disk('public')
+                        ->imageEditor()
+                        ->disk('public')
                         ->directory('orientasi-images'),
 
                     RichEditor::make('content')

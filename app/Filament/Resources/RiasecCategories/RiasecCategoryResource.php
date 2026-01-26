@@ -15,7 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Unitenum;
+use UnitEnum;
 
 class RiasecCategoryResource extends Resource
 {
@@ -25,7 +25,7 @@ class RiasecCategoryResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Layanan Tes Minat & Bakat';
+    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Konten Layanan Utama';
 
     public static function getModelLabel(): string
     {
